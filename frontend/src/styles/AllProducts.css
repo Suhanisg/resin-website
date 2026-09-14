@@ -1,0 +1,251 @@
+.ap-section {
+  padding: 60px 24px;
+  background: #fdf6f0;
+  display: flex;
+  justify-content: center;
+}
+
+.ap-card-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1300px;
+  background: #fdf4ef;
+  border-radius: 24px;
+  padding: 50px 50px 40px;
+  box-shadow: 0 10px 40px rgba(122, 41, 70, 0.06);
+  overflow: hidden;
+}
+
+/* HEADER */
+.ap-header {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.ap-eyebrow-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.ap-line {
+  width: 40px;
+  height: 1px;
+  background: #c9a4a4;
+}
+
+.ap-eyebrow {
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  color: #a3798a;
+  font-weight: 600;
+}
+
+.ap-heart {
+  color: #7a2946;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.ap-header h2 {
+  font-family: Georgia, serif;
+  font-size: 38px;
+  color: #5c1d33;
+  margin-bottom: 8px;
+}
+
+.ap-subtitle {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #a3798a;
+  font-weight: 600;
+}
+
+/* SCRIPT TEXT — top right */
+.ap-script {
+  position: absolute;
+  top: 45px;
+  right: 50px;
+  font-family: "Brush Script MT", cursive;
+  font-size: 20px;
+  color: #b98fa6;
+  line-height: 1.3;
+  text-align: right;
+}
+
+/* GRID */
+.ap-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  margin-top: 30px;
+}
+
+/* CARD — ab poori card ek stacking context hai, image background + content overlay */
+.vf-card {
+  position: relative;
+  cursor: pointer;
+  border-radius: 150% 170% 200px 100px / 382px 356px 24px 24px;
+  overflow: hidden;
+  background: #f5d9d3;
+  height: 290px;
+  box-shadow: 0 10px 26px rgba(122, 41, 70, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.vf-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 34px rgba(122, 41, 70, 0.16);
+}
+
+/* PHOTO — ab poori card ka background, absolute fill */
+/* PHOTO — full cover, no gaps, clipped by the wave shape */
+.vf-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 80%;
+  clip-path: url(#vfWaveClip);
+  -webkit-clip-path: url(#vfWaveClip);
+  z-index: 1;
+  overflow: hidden;
+}
+
+.vf-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* object-position: center 30%; */
+  display: block;
+  transform: scale(1);
+}
+
+.vf-photo-fallback {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, #eadfd5, #c9a6b7, #8c6378);
+}
+
+/* CONTENT — thoda upar shift, better spacing */
+.vf-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  padding: 48px 20px 14px;   /* bottom badhaya (16px -> 26px) taaki content upar uthe */
+  background: linear-gradient(
+    to top,
+    rgba(20, 8, 14, 0.85) 0%,
+    rgba(20, 8, 14, 0.55) 45%,
+    rgba(20, 8, 14, 0) 100%
+  );
+}
+
+.vf-title {
+  font-family: Georgia, serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;              /* pure white, gradient ke upar crisp dikhega */
+  letter-spacing: 0.4px;
+  margin-bottom: 0px;
+  line-height:0.2;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); /* extra readability */
+}
+
+.vf-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.vf-subtitle {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.88);   /* soft white, dark text ki jagah */
+  line-height: 1.4;
+  flex: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.vf-arrow-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #fff;
+  color: #7a2946;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  transition: background 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+
+/* CONTENT */
+
+
+.vf-sticker {
+  width: 28px;
+  height: 36px;
+  margin-bottom: 6px;
+  object-fit: contain;
+}
+
+
+
+
+
+
+
+.vf-card:hover .vf-arrow-btn {
+  background: #7a2946;
+  color: #fff;
+  transform: rotate(-45deg);
+}
+
+/* DECORATIVE LEAF */
+.ap-leaf {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  font-size: 26px;
+  opacity: 0.35;
+  transform: rotate(-10deg);
+}
+
+@media (max-width: 1100px) {
+  .ap-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .ap-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ap-card-wrapper {
+    padding: 40px 20px 30px;
+  }
+  .ap-script {
+    display: none;
+  }
+  .ap-header h2 {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ap-grid {
+    grid-template-columns: 1fr;
+  }
+}

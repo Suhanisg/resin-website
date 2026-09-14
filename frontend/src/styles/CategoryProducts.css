@@ -1,0 +1,67 @@
+/* ============ SIMPLE BACK BAR ============ */
+.cp-back-bar {
+  background: #faf6f0;
+  padding: 24px 4% 10px;
+}
+
+.cp-back-btn {
+  background: transparent;
+  border: 1px solid #ddcfc2;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5c3a52;
+  cursor: pointer;
+}
+
+.cp-back-btn:hover {
+  background: #fff;
+  border-color: #c9a4c4;
+}
+/* ============ SECTION 2: PRODUCTS (completely separate) ============ */
+.cp-products-section {
+  background: #fdf6f0;
+  padding: 30px 4% 90px;
+}
+
+.cp-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1100px) {
+  .cp-products-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 750px) {
+  .cp-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .cp-hero {
+    height: 280px;
+  }
+  .cp-hero-title {
+    font-size: 32px;
+  }
+  .cp-hero-content {
+    padding: 24px;
+  }
+  .cp-hero-section {
+    padding: 40px 5%;
+  }
+  .cp-products-section {
+    padding: 40px 5% 60px;
+  }
+}
+
+@media (max-width: 500px) {
+  .cp-products-grid {
+    grid-template-columns: 1fr;
+  }
+}

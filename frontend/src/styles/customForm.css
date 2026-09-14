@@ -1,0 +1,270 @@
+.com-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.com-back {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: #7a2942;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 0;
+}
+
+/* ===== HEADER BLOCK (title + subtitle + pink note) ===== */
+.com-form-header {
+  text-align: center;
+  padding-top: 6px;
+}
+
+.com-title {
+  margin: 0;
+  color: #7a2946;                          /* theme color se match */
+  font-family: Georgia, serif;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  position: relative;
+  display: inline-block;
+}
+
+.com-title::after {
+  content: "";
+  display: block;
+  width: 46px;
+  height: 3px;
+  background: #c9a4c4;
+  border-radius: 2px;
+  margin: 8px auto 0;
+}
+
+.com-subtitle {
+  color: #9a6c82;
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 14.5px;
+  margin: 10px 0 14px;
+}
+
+.com-note {
+  display: flex;
+  align-items: center;        /* flex-start → center: heart beech mein aayega */
+  gap: 10px;
+  background: #f9e9ee;
+  border-radius: 12px;
+  padding: 10px 10px;
+  text-align: left;
+}
+
+.com-note-icon {
+  color: #b03a5b;
+  flex-shrink: 0;
+  margin-top: 0;
+}
+
+.com-muted {
+  color: #5c1b32;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 10px;
+}
+
+/* ===== FIELD: icon badge + label/input column, side by side ===== */
+.com-size-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: #7a2946;
+  margin-top: 2px;
+}
+
+.com-size-price-suffix {
+  font-size: 11px;
+  font-weight: 400;
+  color: #9a8a86;
+}
+.com-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.com-field-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f9e9ee; */
+  color: #511526;
+  flex-shrink: 0;
+  margin-top: 20px;   /* label ke neeche, input line se align hoga */
+}
+
+.com-field-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  font-size: 13px;
+  color: #5c4148;
+}
+
+.com-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #5d1931;      /* theme maroon color */
+}
+
+.com-field-content input,
+.com-field-content textarea {
+  border: 1px solid #e4d4d8;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.com-field-content input:focus,
+.com-field-content textarea:focus {
+  outline: none;
+  border-color: #c9a4c4;
+}
+
+.com-field-content textarea {
+  min-height: 64px;
+  resize: vertical;
+}
+
+.com-size-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ===== bade, bold size buttons ===== */
+.com-size-btn {
+  padding: 8px 16px;
+  border-radius: 30px;
+  border: 1px solid #e4d4d8;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.com-size-btn.active {
+  background: #7a2942;
+  color: #fff;
+  border-color: #7a2942;
+}
+
+/* ===== badi quantity control ===== */
+.com-qty {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.com-qty button {
+  width: 26px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #e4d4d8;
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.com-qty span {
+  font-size: 16px;
+  font-weight: 700;
+  min-width: 20px;
+  text-align: center;
+}
+
+.com-btn-outline,
+.com-btn-solid {
+  padding: 10px 16px;
+  border-radius: 30px;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid #7a2942;
+}
+
+.com-btn-outline {
+  background: #fff;
+  color: #7a2942;
+}
+
+.com-btn-solid {
+  background: #7a2942;
+  color: #fff;
+}
+
+.com-btn-full {
+  width: 100%;
+  text-align: center;
+}
+
+.com-fineprint {
+  font-size: 11.5px;
+  color: #b0a0a4;
+  text-align: center;
+  margin: 0;
+}
+
+.com-thankyou {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  text-align: center;
+  padding-top: 120px;
+}
+.com-thankyou .com-btn-full {
+  width: 80%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.com-check {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid #7a2942;
+  color: #7a2942;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.com-photo-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f9e9ee;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  text-align: left;
+}
+
+.com-photo-note-icon {
+  color: #b03a5b;
+  flex-shrink: 0;
+}
+
+.com-photo-note-text {
+  color: #5c1b32;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0;
+}

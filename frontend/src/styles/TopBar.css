@@ -1,0 +1,21 @@
+.topbar {
+  background-color: #363034;
+  text-align: center;
+  padding: 0.6rem 1rem;
+}
+
+.topbar p {
+  color: #f5ecf3;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+@media (max-width: 600px) {
+  .topbar p {
+    font-size: 0.7rem;
+    letter-spacing: 0.4px;
+  }
+}

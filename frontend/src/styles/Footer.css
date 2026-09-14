@@ -1,0 +1,326 @@
+.footer {
+  background-color: #2a1a24;
+  color: #e8dde6;
+  padding: 0 1rem 0;
+  position: relative;
+  /* overflow: hidden; */
+}
+
+.footer-wave {
+  position: absolute;
+  top: -60px;
+  left: 0;
+  width: 100%;
+  height: 65px;
+  display: block;
+}
+
+/* ===== FLOWER DECOR — subtle, corner placed ===== */
+.footer-flower {
+  position: absolute;
+  top: 20px;
+  right: 3rem;
+  width: 150px;
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 0;
+  transform: rotate(-19deg);
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: 1.1fr 0.8fr 0.8fr 1fr;
+  gap: 2.6rem;
+  max-width: 1200px;
+  margin: 0 0 0 auto;
+  padding: -0.2rem 3rem 0.2rem 4rem;   /* bottom padding 0.7rem se kam kiya */
+  position: relative;
+  z-index: 1;
+}
+
+.footer-logo {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2.2rem;
+  color: #f0a8c4;
+  /* margin-top: rem; */
+  margin-bottom: 0.25rem;
+  font-weight: 400;
+}
+.footer-col-links {
+  margin-left: 1.5rem;   /* sirf Resin Creations aur Quick Links ke beech ka extra gap */
+}
+
+.footer-col-touch {
+  margin-left: -2.5rem;   /* sirf Get in Touch ko left side shift karega */
+}
+.footer-col p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #cbb0be;
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+
+.footer-col h4 {
+  font-size: 1rem;
+  color: #f0a8c4;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.4px;
+  font-family: 'Playfair Display', serif;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-col ul li {
+  margin-bottom: 14px;
+}
+
+/* ===== QUICK LINKS / CATEGORIES — with right-aligned arrow ===== */
+
+
+.footer-links-list {
+  max-width: 180px;
+}
+
+.footer-links-list li {
+  margin-bottom: 0.55rem;   /* pehle 0.3rem tha — line spacing badhaya */
+}
+
+.footer-links-list li a,
+.footer-links-list li a:visited {
+  color: #cbb0be;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+  display: inline-flex;      /* full-width flex ki jagah inline-flex */
+  align-items: center;
+  gap: 0.5rem;                /* text aur arrow ke beech ka gap control karta hai */
+}
+
+.footer-links-list li a:hover {
+  color: #f0a8c4;
+}
+
+.link-arrow {
+  color: #8a5568;
+  transition: transform 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.footer-links-list li a:hover .link-arrow {
+  color: #f0a8c4;
+  transform: translateX(2px);
+}
+
+.footer-socials {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.4rem 0 0.5rem;
+}
+
+.footer-socials a {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #3d2831;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f0a8c4;
+  transition: all 0.2s ease;
+}
+
+.footer-socials a:hover {
+  background-color: #f0a8c4;
+  color: #2a1a24;
+}
+
+.footer-divider-1 {
+  width: 100%;
+  height: 1px;
+  background-color: #4a3542;
+  margin: 0.6rem 0;
+}
+.footer-divider-2 {
+  width: 56%;
+  height: 1px;
+  background-color: #4a3542;
+  margin: 0.6rem 0;
+}
+
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  margin-bottom: 0.4rem;
+}
+
+.contact-row .contact-icon {
+  color: #f0a8c4;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.contact-row p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #cbb0be;
+  margin: 0;
+}
+
+.footer-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.contact-row a.contact-link,
+.contact-row a.contact-link:visited {
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: #cbb0be;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.contact-row a.contact-link:hover {
+  color: #f0a8c4;
+}
+
+.footer-note-icon {
+  color: #f0a8c4;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.footer-note span {
+  font-style: italic;
+  font-size: 0.88rem;
+  color: #e8c3d3;
+  line-height: 1.5;
+}
+
+.inline-heart {
+  display: inline;
+  vertical-align: middle;
+  color: #f0a8c4;
+}
+
+.footer-madewithlove {
+  font-style: italic;
+  font-size: 0.88rem;
+  color: #cbb0be;
+}
+
+.footer-contact p svg {
+  color: #f0a8c4;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ===== FOOTER BOTTOM ===== */
+.footer-bottom {
+  background-color: #1c1219;
+  padding: 0.9rem 1rem;
+  margin: 1rem -1rem 0;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.footer-bottom-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-bottom-copyright {
+  font-size: 0.8rem;
+  color: #cbb0be;
+  margin: 0;
+}
+
+.footer-bottom-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.footer-bottom-links a {
+  color: #cbb0be;
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: color 0.2s ease;
+}
+
+.footer-bottom-links a:hover {
+  color: #f0a8c4;
+}
+
+.footer-bottom-links span {
+  color: #5c4652;
+  font-size: 0.8rem;
+}
+
+.footer-bottom-leaf {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 70px;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.footer-bottom-leaf-left {
+  left: 1rem;
+}
+
+.footer-bottom-leaf-right {
+  right: 1rem;
+  transform: translateY(-50%) scaleX(-1);
+}
+
+@media (max-width: 900px) {
+  .footer-container {
+    grid-template-columns: 1fr 1fr;
+    margin: 0 auto;
+    padding: 0.6rem 1rem 1rem;
+  }
+  .footer-flower {
+    width: 100px;
+    opacity: 0.35;
+  }
+}
+
+@media (max-width: 500px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+  }
+  .footer-wave {
+    top: -35px;
+    height: 40px;
+  }
+  .footer-bottom {
+    margin: 1rem -1rem 0;
+  }
+  .footer-flower {
+    display: none;
+  }
+}
