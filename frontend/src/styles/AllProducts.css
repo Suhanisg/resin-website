@@ -1,5 +1,5 @@
 .ap-section {
-  padding: 60px 24px;
+  padding: 10px 24px;
   background: #fdf6f0;
   display: flex;
   justify-content: center;
@@ -75,15 +75,63 @@
   text-align: right;
 }
 
-/* GRID */
-.ap-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 22px;
+/* SLIDER WRAPPER — arrows + track */
+.ap-slider {
+  position: relative;
+  display: flex;
+  align-items: center;
   margin-top: 30px;
+  gap: 10px;
 }
 
-/* CARD — ab poori card ek stacking context hai, image background + content overlay */
+/* TRACK — horizontal scroll instead of grid */
+.ap-grid {
+  display: flex;
+  flex: 1; 
+  min-width: 0;     
+  gap: 22px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 4px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.ap-grid::-webkit-scrollbar {
+  display: none;
+}
+
+/* NAV ARROW BUTTONS */
+.ap-nav-btn {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: #7a2946;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(122, 41, 70, 0.25);
+  transition: background 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+  z-index: 3;
+}
+
+.ap-nav-btn:hover:not(.ap-nav-disabled) {
+  background: #5c1d33;
+  transform: scale(1.05);
+}
+
+.ap-nav-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* CARD */
 .vf-card {
   position: relative;
   cursor: pointer;
@@ -93,6 +141,8 @@
   height: 290px;
   box-shadow: 0 10px 26px rgba(122, 41, 70, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  flex: 0 0 calc(25% - 17px); /* 4 cards visible on desktop */
+  scroll-snap-align: start;
 }
 
 .vf-card:hover {
@@ -100,8 +150,7 @@
   box-shadow: 0 16px 34px rgba(122, 41, 70, 0.16);
 }
 
-/* PHOTO — ab poori card ka background, absolute fill */
-/* PHOTO — full cover, no gaps, clipped by the wave shape */
+/* PHOTO — full cover, clipped by wave shape */
 .vf-photo {
   position: absolute;
   inset: 0;
@@ -117,7 +166,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* object-position: center 30%; */
   display: block;
   transform: scale(1);
 }
@@ -128,7 +176,7 @@
   background: linear-gradient(145deg, #eadfd5, #c9a6b7, #8c6378);
 }
 
-/* CONTENT — thoda upar shift, better spacing */
+/* CONTENT */
 .vf-content {
   position: absolute;
   left: 0;
@@ -137,7 +185,7 @@
   z-index: 2;
   display: flex;
   flex-direction: column;
-  padding: 48px 20px 14px;   /* bottom badhaya (16px -> 26px) taaki content upar uthe */
+  padding: 48px 20px 14px;
   background: linear-gradient(
     to top,
     rgba(20, 8, 14, 0.85) 0%,
@@ -150,11 +198,11 @@
   font-family: Georgia, serif;
   font-size: 16px;
   font-weight: 700;
-  color: #ffffff;              /* pure white, gradient ke upar crisp dikhega */
+  color: #ffffff;
   letter-spacing: 0.4px;
   margin-bottom: 0px;
-  line-height:0.2;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); /* extra readability */
+  line-height: 0.2;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 .vf-bottom-row {
@@ -167,7 +215,7 @@
 
 .vf-subtitle {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.88);   /* soft white, dark text ki jagah */
+  color: rgba(255, 255, 255, 0.88);
   line-height: 1.4;
   flex: 1;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
@@ -190,27 +238,17 @@
   flex-shrink: 0;
 }
 
-
-/* CONTENT */
-
+.vf-card:hover .vf-arrow-btn {
+  background: #7a2946;
+  color: #fff;
+  transform: rotate(-45deg);
+}
 
 .vf-sticker {
   width: 28px;
   height: 36px;
   margin-bottom: 6px;
   object-fit: contain;
-}
-
-
-
-
-
-
-
-.vf-card:hover .vf-arrow-btn {
-  background: #7a2946;
-  color: #fff;
-  transform: rotate(-45deg);
 }
 
 /* DECORATIVE LEAF */
@@ -223,15 +261,16 @@
   transform: rotate(-10deg);
 }
 
+/* RESPONSIVE */
 @media (max-width: 1100px) {
-  .ap-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .vf-card {
+    flex: 0 0 calc(33.333% - 15px); /* 3 cards */
   }
 }
 
 @media (max-width: 700px) {
-  .ap-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .vf-card {
+    flex: 0 0 calc(50% - 11px); /* 2 cards */
   }
   .ap-card-wrapper {
     padding: 40px 20px 30px;
@@ -242,10 +281,15 @@
   .ap-header h2 {
     font-size: 28px;
   }
+  .ap-nav-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 480px) {
-  .ap-grid {
-    grid-template-columns: 1fr;
+  .vf-card {
+    flex: 0 0 85%; /* 1 card + peek of next */
   }
 }

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import CategoryManager from "./CategoryManager"
 import ProductManager from "./ProductManager"
+import ReviewManager from "./ReviewManager"
 import "../styles/Admin.css"
 
 function AdminPanel() {
@@ -25,10 +26,18 @@ function AdminPanel() {
         >
           Products
         </button>
+        <button
+          className={activeTab === "reviews" ? "active" : ""}
+          onClick={() => setActiveTab("reviews")}
+        >
+          Reviews
+        </button>
       </div>
 
       <div className="admin-content">
-        {activeTab === "categories" ? <CategoryManager /> : <ProductManager />}
+        {activeTab === "categories" && <CategoryManager />}
+        {activeTab === "products" && <ProductManager />}
+        {activeTab === "reviews" && <ReviewManager />}
       </div>
     </div>
   )

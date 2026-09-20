@@ -26,9 +26,9 @@ function CategoryProducts() {
     <>
       {/* Simple back button bar */}
       <div className="cp-back-bar">
-        <button className="cp-back-btn" onClick={() => navigate("/")}>
-          ← Categories
-        </button>
+       <button className="cp-back-btn" onClick={() => navigate("/#products")}>
+  ← Categories
+</button>
       </div>
 
       {/* Products */}

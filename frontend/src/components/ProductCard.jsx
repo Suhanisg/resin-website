@@ -92,29 +92,25 @@ function ProductCard({ product }) {
   const toggleSection = (key) => {
     setOpenSection(openSection === key ? null : key);
   };
-  const renderAccordionContent = (content) => {
-    if (!content) return null;
-    const parts = content
-      .split("•")
-      .map((p) => p.trim())
-      .filter(Boolean);
+ const renderAccordionContent = (content) => {
+  if (!content) return null;
+  const parts = content
+    .split("•")
+    .map((p) => p.trim())
+    .filter(Boolean);
 
-    if (parts.length <= 1) {
-      return <p className="pc-accordion-text">{content}</p>;
-    }
+  if (parts.length <= 1) {
+    return <p className="pc-accordion-text">{content}</p>;
+  }
 
-    const [intro, ...points] = parts;
-    return (
-      <>
-        {intro && <p className="pc-accordion-text">{intro}</p>}
-        <ul className="pc-accordion-list">
-          {points.map((point, i) => (
-            <li key={i}>{point}</li>
-          ))}
-        </ul>
-      </>
-    );
-  };
+  return (
+    <ul className="pc-accordion-list">
+      {parts.map((point, i) => (
+        <li key={i}>{point}</li>
+      ))}
+    </ul>
+  );
+};
   const handleWishlist = () => {
     toggleWishlist(product);
   };

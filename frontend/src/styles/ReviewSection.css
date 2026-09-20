@@ -1,0 +1,234 @@
+/* .rs-section {
+  padding: 50px 24px;
+  display: flex;
+  justify-content: center;
+  background: #fdf3f0;
+} */
+.rs-section {
+  position: relative;
+  padding: 70px 140px 60px;
+  display: flex;
+  justify-content: center;
+   background: #fdf3f0;
+}
+
+/* Separation shadow line — sits right above the review card */
+.rs-section::before {
+  content: "";
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 48px);
+  max-width: 1140px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(60, 20, 35, 0.18) 20%,
+    rgba(60, 20, 35, 0.28) 50%,
+    rgba(60, 20, 35, 0.18) 80%,
+    transparent 100%
+  );
+  box-shadow: 0 4px 10px rgba(60, 20, 35, 0.08);
+}
+.rs-card {
+  position: relative;
+  width: 100%;
+  max-width: 1140px;
+  background-color: #fdf3f0;
+  background-size: cover;
+  background-position: center;
+  border-radius: 22px;
+  padding: 14px 40px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(122, 41, 70, 0.08);
+}
+
+/* decorative corner triangle (top-left), matches reference image */
+.rs-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 140px;
+  height: 140px;
+  background: linear-gradient(135deg, rgba(230, 168, 189, 0.35), rgba(230, 168, 189, 0) 70%);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  pointer-events: none;
+}
+
+/* decorative corner triangle (bottom-right) */
+.rs-card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 160px;
+  height: 160px;
+  background: linear-gradient(315deg, rgba(230, 168, 189, 0.35), rgba(230, 168, 189, 0) 70%);
+  clip-path: polygon(100% 100%, 100% 0, 0 100%);
+  pointer-events: none;
+}
+
+.rs-sparkle {
+  position: absolute;
+  color: #c9935a;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.rs-sparkle-1 {
+  bottom: 24px;
+  left: 60px;
+  font-size: 11px;
+}
+
+.rs-sparkle-2 {
+  top: 22px;
+  right: 90px;
+  font-size: 16px;
+}
+
+/* ICON */
+.rs-icon-wrap {
+  flex-shrink: 0;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #f5dde3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.rs-icon {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+/* TEXT CONTENT */
+.rs-content {
+  flex: 1;
+  min-width: 200px;
+  z-index: 2;
+      padding: 0px 0px 0px 17px;
+}
+
+.rs-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #b03a5b;
+  margin-bottom: 6px;
+}
+
+.rs-title {
+  font-family: Georgia, serif;
+  font-size: 32px;
+  color: #4a2340;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.rs-heart {
+  color: #7a2946;
+  font-size: 26px;
+}
+
+.rs-subtitle {
+  font-size: 14px;
+  color: #6d5b55;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rs-heart-small {
+  color: #b98fa6;
+  font-size: 13px;
+}
+
+/* BUTTON */
+.rs-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #7a2946;
+  color: #fff;
+  border: none;
+  padding: 14px 26px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.rs-btn:hover {
+  background: #5c1f36;
+  transform: translateY(-2px);
+}
+
+.rs-btn-arrow {
+  transition: transform 0.2s ease;
+}
+
+.rs-btn:hover .rs-btn-arrow {
+  transform: translateX(4px);
+}
+
+/* bottom-right decorative curve + heart */
+.rs-curve-wrap {
+  position: absolute;
+  bottom: 14px;
+  right: 130px;
+  width: 200px;
+  height: 80px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.rs-curve {
+  width: 100%;
+  height: 100%;
+}
+
+.rs-curve-heart {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  color: #7a2946;
+  font-size: 20px;
+}
+
+@media (max-width: 768px) {
+  .rs-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 28px 24px;
+    text-align: left;
+  }
+
+  .rs-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .rs-curve-wrap {
+    display: none;
+  }
+
+  .rs-title {
+    font-size: 24px;
+  }
+}

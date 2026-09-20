@@ -1,0 +1,342 @@
+/* Reviews.css */
+
+:root {
+  --cream: #fdf8f3;
+  --pink: #c76b86;
+  --maroon: #3a2632;
+  --maroon-dark: #2a1b24;
+  --maroon-soft: #6b5560;
+  --card-bg: #fffdfb;
+  --border: #ecdde2;
+  --input-bg: #fbf3f0;
+  --placeholder: #b79ba5;
+}
+
+.reviews-section {
+  position: relative;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  min-height: unset;
+  padding: 10px 2.5vw;
+  border-radius: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+/* soft cream wash over the photo so text stays readable, like the reference */
+.reviews-overlay {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 90px;
+  flex-wrap: wrap;
+}
+
+.reviews-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    var(--cream, #fdf8f3) 0%,
+    rgba(253, 248, 243, 0.92) 38%,
+    rgba(253, 248, 243, 0.55) 62%,
+    rgba(253, 248, 243, 0.15) 100%
+  );
+  z-index: 0;
+}
+
+/* ---------- left copy ---------- */
+.reviews-left {
+  position: relative;
+  max-width: 670px;
+  flex: 1 1 380px;
+}
+
+.reviews-eyebrow {
+  display: block;
+  color: var(--pink, #c76b86);
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  font-size: 0.78rem;
+}
+
+.heart-icon {
+  width: 30px;
+  height: auto;
+  vertical-align: middle;
+  margin-left: 2px;
+  display: inline-block;
+}
+
+.reviews-heading {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.1rem;
+  line-height: 1.2;
+  color: var(--maroon, #3a2632);
+  margin: 0 0 14px;
+}
+
+.reviews-heading .heart {
+  color: var(--pink, #c76b86);
+}
+
+.reviews-subtext {
+  color: var(--maroon-soft, #6b5560);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin-bottom: 18px;
+  max-width: 380px;
+}
+
+.reviews-features {
+  display: flex;
+  gap: 26px;
+  margin: 4px 0 30px;
+  flex-wrap: wrap;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 108px;
+}
+
+.feature-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--pink, #c76b86);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.feature-item span {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--maroon, #3a2632);
+  line-height: 1.35;
+}
+.reviews-note {
+    position: relative;
+    display: inline-block;
+    max-width: 218px;
+    transform: rotate(-10deg);
+    top: -33px;
+}
+
+.reviews-note-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+
+.sparkle {
+  position: absolute;
+  color: var(--pink, #c76b86);
+  font-size: 1.3rem;
+  opacity: 0.8;
+}
+
+.sparkle-1 {
+  top: -20px;
+  left: 300px;
+}
+
+.sparkle-2 {
+  bottom: 40px;
+  left: 40px;
+  font-size: 1rem;
+}
+
+/* ---------- right form card ---------- */
+.reviews-form-card {
+  position: relative;
+  flex: 0 1 320px;
+  align-self: flex-start;
+  margin-top: 10px;
+  background: var(--card-bg, #fffdfb);
+  border-radius: 16px;
+  margin-right: 250px;
+  padding: 22px 22px 20px;
+  box-shadow: 0 16px 34px rgba(58, 38, 50, 0.14);
+}
+
+.reviews-form-card h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.1rem;
+  color: var(--maroon, #3a2632);
+  margin: 0 0 12px;
+}
+
+.reviews-form-card form {
+  display: flex;
+  flex-direction: column;
+}
+
+.reviews-form-card label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--maroon, #3a2632);
+  margin: 8px 0 4px;
+}
+
+.reviews-form-card input[type='text'],
+.reviews-form-card textarea {
+  width: 100%;
+  border: 1px solid var(--border, #ecdde2);
+  background: var(--input-bg, #fbf3f0);
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  color: var(--maroon, #3a2632);
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.reviews-form-card input[type='text']:focus,
+.reviews-form-card textarea:focus {
+  border-color: var(--pink, #c76b86);
+}
+
+.reviews-form-card textarea {
+  min-height: 52px;
+  resize: vertical;
+}
+
+.reviews-form-card ::placeholder {
+  color: var(--placeholder, #b79ba5);
+}
+
+/* stars */
+/* stars */
+.star-rating {
+  display: flex;
+  gap: 6px;
+}
+
+.star {
+  width: 20px;
+  height: 20px;
+  color: var(--pink, #c76b86);
+  fill: none;
+  stroke-width: 1.75;
+  cursor: pointer;
+  transition: transform 0.15s ease, fill 0.15s ease;
+}
+
+.star.filled {
+  fill: var(--pink, #c76b86);
+}
+
+.star:hover {
+  transform: scale(1.1);
+}
+
+/* file upload */
+.file-upload {
+  position: relative;
+}
+
+.file-upload input[type='file'] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-upload-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px dashed var(--border, #ecdde2);
+  background: var(--input-bg, #fbf3f0);
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 0.74rem;
+  font-weight: 400;
+  color: var(--placeholder, #96808b);
+  margin: 0;
+}
+
+/* file upload */
+.file-icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--placeholder, #96808b);
+  flex-shrink: 0;
+}
+/* submit button */
+.submit-review-btn {
+  margin-top: 12px;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--maroon, #3a2632);
+  color: var(--cream, #fdf8f3);
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.submit-review-btn:hover {
+  background: var(--maroon-dark, #2a1b24);
+  transform: translateY(-1px);
+}
+
+.btn-arrow {
+  transition: transform 0.15s ease;
+}
+
+.submit-review-btn:hover .btn-arrow {
+  transform: translateX(3px);
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .reviews-section {
+    padding: 24px 4vw;
+  }
+
+  .reviews-overlay {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .reviews-form-card {
+    width: 100%;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .reviews-heading {
+    font-size: 2rem;
+  }
+
+  .sparkle-1 {
+    left: auto;
+    right: 10px;
+  }
+}
