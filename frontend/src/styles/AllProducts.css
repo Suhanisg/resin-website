@@ -177,6 +177,7 @@
 }
 
 /* CONTENT */
+/* CONTENT */
 .vf-content {
   position: absolute;
   left: 0;
@@ -185,12 +186,12 @@
   z-index: 2;
   display: flex;
   flex-direction: column;
-  padding: 48px 20px 14px;
+  padding: 56px 18px 16px;
   background: linear-gradient(
     to top,
-    rgba(20, 8, 14, 0.85) 0%,
-    rgba(20, 8, 14, 0.55) 45%,
-    rgba(20, 8, 14, 0) 100%
+    rgba(20, 8, 14, 0.92) 0%,
+    rgba(20, 8, 14, 0.75) 45%,
+    rgba(20, 8, 14, 0)100%
   );
 }
 
@@ -200,10 +201,33 @@
   font-weight: 700;
   color: #ffffff;
   letter-spacing: 0.4px;
-  margin-bottom: 0px;
-  line-height: 0.2;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  margin: 0 0 6px;
+  line-height: 1.25;                 /* pehle 0.2 tha, yahi overlap ki wajah thi */
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+
+  /* max 2 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
+
+.vf-subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.35;
+  flex: 1;
+  min-width: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+
+  /* max 2 lines, baaki ... ban jayega */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 
 .vf-bottom-row {
   display: flex;
@@ -213,13 +237,7 @@
   margin-top: auto;
 }
 
-.vf-subtitle {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.88);
-  line-height: 1.4;
-  flex: 1;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-}
+
 
 .vf-arrow-btn {
   width: 32px;
@@ -262,6 +280,7 @@
 }
 
 /* RESPONSIVE */
+/* RESPONSIVE */
 @media (max-width: 1100px) {
   .vf-card {
     flex: 0 0 calc(33.333% - 15px); /* 3 cards */
@@ -269,11 +288,14 @@
 }
 
 @media (max-width: 700px) {
-  .vf-card {
-    flex: 0 0 calc(50% - 11px); /* 2 cards */
+  .ap-section {
+    padding: 10px 12px;             /* side gap kam, taaki card ko jagah mile */
   }
   .ap-card-wrapper {
-    padding: 40px 20px 30px;
+    padding: 40px 14px 30px;
+  }
+  .ap-slider {
+    gap: 6px;
   }
   .ap-script {
     display: none;
@@ -282,14 +304,50 @@
     font-size: 28px;
   }
   .ap-nav-btn {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     font-size: 14px;
+  }
+
+  .vf-card {
+    flex: 0 0 calc(50% - 11px);     /* 2 cards */
+    height: 310px;                  /* text ke liye thodi zyada height */
+  }
+  .vf-content {
+    padding: 56px 12px 14px;
+  }
+  .vf-title {
+    font-size: 14px;
+    letter-spacing: 0.3px;
+  }
+  .vf-subtitle {
+    font-size: 11px;
+  }
+  .vf-arrow-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
   }
 }
 
 @media (max-width: 480px) {
   .vf-card {
-    flex: 0 0 85%; /* 1 card + peek of next */
+    flex: 0 0 88%;                  /* 1 card + next ki halki jhalak */
+  }
+}
+
+/* iPad Mini jaisi screens (701px - 900px) */
+@media (min-width: 701px) and (max-width: 900px) {
+  .ap-card-wrapper {
+    padding: 40px 30px 32px;
+  }
+
+  .ap-slider {
+    gap: 8px;
+  }
+
+  .vf-card {
+    flex: 0 0 calc(50% - 11px);   /* 2 cards, desktop jitni width */
+    height: 300px;
   }
 }

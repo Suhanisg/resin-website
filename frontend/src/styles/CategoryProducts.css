@@ -2,6 +2,7 @@
 .cp-back-bar {
   background: #faf6f0;
   padding: 24px 4% 10px;
+  box-sizing: border-box;
 }
 
 .cp-back-btn {
@@ -16,33 +17,41 @@
 }
 
 .cp-back-btn:hover {
-  background: #fff;
-  border-color: #c9a4c4;
+  background: #5c1d33;
+  color: #fff;
 }
+
 /* ============ SECTION 2: PRODUCTS (completely separate) ============ */
 .cp-products-section {
   background: #fdf6f0;
   padding: 30px 4% 90px;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-x: hidden; /* safety net: never lets this section itself scroll sideways */
 }
 
+/* auto-fit + minmax(min(260px, 100%), 1fr): each column grows up to a
+   normal 260px card size when there's room (so cards look full-size on
+   iPad/desktop), but the min() caps that minimum at 100% of the
+   available width on narrow screens (iPhone SE etc.), so a column can
+   never demand more space than actually exists — which is what
+   prevents the horizontal overflow, without shrinking cards
+   unnecessarily on screens that do have room. Fixed repeat(3,1fr)/
+   repeat(2,1fr) breakpoints are removed because plain 1fr tracks have
+   an implicit min-width of "auto", which refuses to shrink below the
+   card's content size and was the real cause of the overflow. */
 .cp-products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  justify-content: center;
   gap: 24px;
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-}
-
-@media (max-width: 1100px) {
-  .cp-products-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  box-sizing: border-box;
 }
 
 @media (max-width: 750px) {
-  .cp-products-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
   .cp-hero {
     height: 280px;
   }
@@ -57,11 +66,5 @@
   }
   .cp-products-section {
     padding: 40px 5% 60px;
-  }
-}
-
-@media (max-width: 500px) {
-  .cp-products-grid {
-    grid-template-columns: 1fr;
   }
 }

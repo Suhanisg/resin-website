@@ -1,26 +1,25 @@
 .fp-section {
   width: 100%;
   overflow: hidden;
+  background: #fdf3ee;
 }
 
 /* ===== FEATURES ROW ===== */
 .fp-features {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 0;
-  flex-wrap: wrap;
-  background: #fdf3ee;
-  padding: 32px 0px 3px 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);   /* desktop: 4 barabar columns */
+  gap: 24px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px 12px;
 }
 
 .fp-feature {
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  padding: 0 28px;
+  padding: 0 20px;
   position: relative;
-  max-width: 280px;
 }
 
 .fp-divider {
@@ -44,6 +43,10 @@
   flex-shrink: 0;
 }
 
+.fp-feature-text {
+  min-width: 0;
+}
+
 .fp-feature-text h4 {
   font-family: Georgia, serif;
   color: #7a2946;
@@ -59,21 +62,29 @@
   margin: 0;
 }
 
-
-
-@media (max-width: 900px) {
+/* Tablet / Surface / iPad Mini: 2 x 2 grid */
+@media (max-width: 1100px) {
   .fp-features {
-    justify-content: flex-start;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px 16px;
+    padding: 28px 56px 12px;
   }
   .fp-feature {
-    max-width: 100%;
-    padding: 8px 20px;
+    padding: 0 12px;
   }
   .fp-divider {
-    display: none;
+    display: none;                          /* 2x2 mein dividers ki zaroorat nahi */
   }
-  .fp-branch {
-    width: 70px;
-    height: 70px;
+}
+
+/* Mobile: ek ke neeche ek */
+@media (max-width: 600px) {
+  .fp-features {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 24px 22px 8px;
+  }
+  .fp-feature {
+    padding: 0;
   }
 }

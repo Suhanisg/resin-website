@@ -56,16 +56,23 @@ useEffect(() => {
     }
   }, [categories])
 
-  const scrollByCards = (direction) => {
-    const el = trackRef.current
-    if (!el) return
-    const card = el.querySelector(".vf-card")
-    if (!card) return
-    const gap = 22 // matches .ap-grid gap
-    const cardWidth = card.offsetWidth + gap
-    // ek baar mein 2 cards jitna slide karega, chaho toh 1 kar sakte ho
-    el.scrollBy({ left: direction * cardWidth * 2, behavior: "smooth" })
-  }
+const scrollByCards = (direction) => {
+  const el = trackRef.current
+  if (!el) return
+  const card = el.querySelector(".vf-card")
+  if (!card) return
+
+  const gap = parseFloat(getComputedStyle(el).columnGap) || 22
+  const cardWidth = card.offsetWidth + gap
+
+  // kitne cards ek saath dikh rahe hain (kam se kam 1)
+  const visibleCards = Math.max(1, Math.floor(el.clientWidth / cardWidth))
+
+  // ek click mein max 2 cards, lekin chhoti screen par sirf 1
+  const step = Math.min(2, visibleCards)
+
+  el.scrollBy({ left: direction * cardWidth * step, behavior: "smooth" })
+}
 
   return (
     <section className="ap-section" id="products">

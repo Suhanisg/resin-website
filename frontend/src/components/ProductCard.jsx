@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "../styles/ProductCard.css";
 import { CustomOrderForm, ThankYouCard } from "./customForm";
+
 import {
   Flower2,
   ImageDown,
@@ -49,12 +50,21 @@ function ProductCard({ product }) {
     email: "",
     customisation: "",
     eventDate: "",
+    street: "",
     city: "",
     instructions: "",
   });
-
+  const [toast, setToast] = useState(null);
   const [shippingInfoOpen, setShippingInfoOpen] = useState(false);
   const modalInfoRef = useRef(null);
+  // On mobile (<=650px) .pc-modal itself becomes the scroll container
+  // (see @media max-width:650px in ProductCard.css: height becomes
+  // "auto" and overflow-y becomes "auto" on .pc-modal), instead of
+  // .pc-modal-info. Without also resetting this ref, switching to the
+  // form/thankyou view only reset modalInfoRef's scroll — not the
+  // modal's — so on phones the new view opened wherever the page
+  // happened to be scrolled to already, instead of from the top.
+  const modalRef = useRef(null);
 
   const selected = product.variants?.[selectedIndex];
   const features =
@@ -92,27 +102,39 @@ function ProductCard({ product }) {
   const toggleSection = (key) => {
     setOpenSection(openSection === key ? null : key);
   };
- const renderAccordionContent = (content) => {
-  if (!content) return null;
-  const parts = content
-    .split("•")
-    .map((p) => p.trim())
-    .filter(Boolean);
+  const renderAccordionContent = (content) => {
+    if (!content) return null;
+    const parts = content
+      .split("•")
+      .map((p) => p.trim())
+      .filter(Boolean);
 
-  if (parts.length <= 1) {
-    return <p className="pc-accordion-text">{content}</p>;
-  }
+    if (parts.length <= 1) {
+      return <p className="pc-accordion-text">{content}</p>;
+    }
 
-  return (
-    <ul className="pc-accordion-list">
-      {parts.map((point, i) => (
-        <li key={i}>{point}</li>
-      ))}
-    </ul>
-  );
-};
+    return (
+      <ul className="pc-accordion-list">
+        {parts.map((point, i) => (
+          <li key={i}>{point}</li>
+        ))}
+      </ul>
+    );
+  };
+
+  const showToastMessage = (message, duration = 3000) => {
+    setToast(message);
+    setTimeout(() => {
+      setToast(null);
+    }, duration);
+  };
+
   const handleWishlist = () => {
+    const willBeWishlisted = !wishlisted;
     toggleWishlist(product);
+    showToastMessage(
+      willBeWishlisted ? "♥ Added to Wishlist" : "Removed from Wishlist"
+    );
   };
 
   const closeModal = () => {
@@ -131,7 +153,13 @@ function ProductCard({ product }) {
     setFlip("leaving");
     setTimeout(() => {
       setView(nextView);
-      if (modalInfoRef.current) modalInfoRef.current.scrollTop = 0; // open next view from the top
+      // Reset scroll on whichever element is the actual scroll
+      // container for this viewport — .pc-modal-info on
+      // desktop/tablet, .pc-modal itself on mobile — so the next view
+      // always opens from the top instead of wherever the previous
+      // view happened to be scrolled to.
+      if (modalInfoRef.current) modalInfoRef.current.scrollTop = 0;
+      if (modalRef.current) modalRef.current.scrollTop = 0;
       setFlip("entering-init"); // snap to the other side instantly, no transition
       requestAnimationFrame(() => {
         requestAnimationFrame(() => setFlip("idle")); // then animate back to flat
@@ -145,32 +173,48 @@ function ProductCard({ product }) {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    if (!orderForm.name || !orderForm.whatsapp || !orderForm.city) return; // basic required check
     goTo("thankyou");
   };
-
   const buildOrderMessage = () => {
-    let message = `Hi! I want to place a custom order:\n\n*${product.name}*\n`;
-    message += `Name: ${orderForm.name}\n`;
-    message += `WhatsApp: ${orderForm.whatsapp}\n`;
-    if (orderForm.email) message += `Email: ${orderForm.email}\n`;
-    message += `Size: ${selected?.size || "-"}\n`;
-    message += `Quantity: ${quantity}\n`;
-    message += `Price: ₹${selected?.price || "-"}\n`;
+    const lines = [
+      `*New Custom Order Request*`,
+      ``,
+      `Product: ${product.name}`,
+      `Size: ${selected?.size || "-"}`,
+      `Price: \u20B9${selected?.price || "-"} onwards`,
+      `Quantity: ${quantity}`,
+      `---------------------`,
+      `Name: ${orderForm.name}`,
+      `WhatsApp: ${orderForm.whatsapp}`,
+    ];
+
+    if (orderForm.email) lines.push(`Email: ${orderForm.email}`);
     if (orderForm.customisation)
-      message += `Customisation: ${orderForm.customisation}\n`;
-    if (orderForm.eventDate) message += `Event Date: ${orderForm.eventDate}\n`;
-    message += `Delivery City: ${orderForm.city}\n`;
+      lines.push(`Customisation: ${orderForm.customisation}`);
+    if (orderForm.eventDate)
+      lines.push(`Event Date: ${orderForm.eventDate}`);
+
+    lines.push(`Address: ${orderForm.street}, ${orderForm.city}`);
+
     if (orderForm.instructions)
-      message += `Special Instructions: ${orderForm.instructions}\n`;
-    return message;
+      lines.push(`Special Instructions: ${orderForm.instructions}`);
+
+    lines.push(
+      `---------------------`,
+      `Hi Resin Creations! I'd love to place this custom order.`,
+      `Please confirm the price & timeline. Thank you!`
+    );
+
+    return lines.join("\n");
   };
 
   const handleSendWhatsApp = () => {
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildOrderMessage())}`;
     window.open(url, "_blank");
-  };
 
+    closeModal();
+    showToastMessage("Message sent! We'll get back to you soon.", 5000);
+  };
   const accordionSections = [
     {
       key: "details",
@@ -232,6 +276,7 @@ function ProductCard({ product }) {
       {isOpen && (
         <div className="pc-modal-overlay" onClick={closeModal}>
           <div
+            ref={modalRef}
             className={`pc-modal ${view === "thankyou" ? "pc-modal-thankyou-only" : ""}`}
             onClick={(e) => e.stopPropagation()}
           >
@@ -239,39 +284,32 @@ function ProductCard({ product }) {
               ✕
             </button>
 
-                {view !== "thankyou" && (
-            <div className="pc-modal-left">
-              <div className="pc-modal-image">
-                {mainImage ? (
-                  <img src={mainImage} alt={product.name} />
-                ) : (
-                  <span>{product.name}</span>
-                )}
-
-                {/* {product.tagline && (
-                  <div className="pc-image-tagline">
-                    <p>{product.tagline}</p>
-                    <span>♡</span>
-                  </div>
-                )} */}
-              </div>
-
-              {galleryImages.length > 0 && (
-                <div className="pc-thumbs">
-                  {galleryImages.map((img, i) => (
-                    <button
-                      key={i}
-                      className={
-                        i === activeImage ? "pc-thumb active" : "pc-thumb"
-                      }
-                      onClick={() => setActiveImage(i)}
-                    >
-                      <img src={img} alt={`${product.name} ${i + 1}`} />
-                    </button>
-                  ))}
+            {view !== "thankyou" && (
+              <div className="pc-modal-left">
+                <div className="pc-modal-image">
+                  {mainImage ? (
+                    <img src={mainImage} alt={product.name} />
+                  ) : (
+                    <span>{product.name}</span>
+                  )}
                 </div>
-              )}
-            </div>
+
+                {galleryImages.length > 0 && (
+                  <div className="pc-thumbs">
+                    {galleryImages.map((img, i) => (
+                      <button
+                        key={i}
+                        className={
+                          i === activeImage ? "pc-thumb active" : "pc-thumb"
+                        }
+                        onClick={() => setActiveImage(i)}
+                      >
+                        <img src={img} alt={`${product.name} ${i + 1}`} />
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             )}
 
             <div className="pc-modal-info" ref={modalInfoRef}>
@@ -523,6 +561,7 @@ function ProductCard({ product }) {
                     updateOrderField={updateOrderField}
                     onSubmit={handleFormSubmit}
                     onBack={() => goTo("details")}
+                    onToast={showToastMessage}
                   />
                 )}
 
@@ -535,6 +574,13 @@ function ProductCard({ product }) {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {toast && (
+        <div className="pc-toast">
+          <span className="pc-toast-check">✓</span>
+          {toast}
         </div>
       )}
     </>

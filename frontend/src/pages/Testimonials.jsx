@@ -71,7 +71,7 @@ function Testimonials() {
 
       <div className="testimonials-count">
         <span>
-          100+ Happy Customers <Heart className="count-heart" />
+          500+ Happy Customers <Heart className="count-heart" />
         </span>
       </div>
     </section>

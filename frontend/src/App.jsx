@@ -10,7 +10,8 @@ import Reviews from './components/Reviews'
 import Testimonials from './pages/Testimonials'
 import RealReviews from './components/RealReviews'
 import { ReviewsProvider } from './context/ReviewsContext'
-import Home from './components/Home'   // 👈 path yahan components hai, pages nahi
+import Home from './components/Home'   
+import FaqPage from "./components/FaqPage"
 
 function App() {
   return (
@@ -41,6 +42,13 @@ function App() {
                 <Reviews />
                 <Testimonials />
                 <RealReviews />
+                <Footer />
+              </>
+            } />
+            <Route path="/faq" element={
+              <>
+                <Navbar/>
+                <FaqPage />
                 <Footer />
               </>
             } />

@@ -17,25 +17,26 @@
 }
 
 .nav-logo-img {
-  width: 40px;
-  height: 40px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   object-fit: cover;
+  box-shadow: 0 2px 8px rgba(122, 41, 70, 0.2);
 }
 
 .nav-brand-text {
   font-family: 'Great Vibes', cursive;
-  /* font-style: italic; */
   font-weight: 700;
-  font-size: 1.35rem;
-  letter-spacing: 0.4px;
-  background: linear-gradient(90deg, #7a2946, #a9578f, #c9935a);
-  background-size: 200% auto;
+  font-size: 24px;
+  letter-spacing: 0.8px;
+  background: linear-gradient(90deg, #4a1128, #b6396b, #e0a458, #b6396b, #4a1128);
+  background-size: 300% auto;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-color: #f0a8c4;
-  animation: brandShimmer 6s ease-in-out infinite;
+  color: #e0a458;
+  filter: drop-shadow(0 1px 1px rgba(74, 17, 40, 0.25));
+  animation: brandShimmer 5s ease-in-out infinite;
 }
 
 @keyframes brandShimmer {
@@ -51,14 +52,28 @@ color: #f0a8c4;
   padding: 0;
   margin-right: 20px;
 }
+
+/* icon upar, label neeche — currentColor se icon ka color text ke color se hamesha match karega */
 .nav-links li a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   text-decoration: none;
   color: #5c3a52;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 500;
-  padding: 8px 18px;
-  border-radius: 999px;
+  line-height: 1;
+  padding: 8px 16px;
+  border-radius: 14px;
   transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  color: currentColor;
 }
 
 .nav-links li a.active {
@@ -69,18 +84,23 @@ color: #f0a8c4;
 }
 
 .nav-links li a:hover {
-
   color: #c9a4c4;
 }
 
 
 .nav-toggle {
   display: none;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
-  font-size: 1.4rem;
   cursor: pointer;
   color: #5c3a52;
+  padding: 4px;
+}
+
+.nav-toggle-icon {
+  display: block;
 }
 
 @media (max-width: 768px) {
@@ -89,31 +109,48 @@ color: #f0a8c4;
   }
 
   .nav-toggle {
-    display: block;
+    display: flex;
   }
 
   .nav-links {
-    display: none;
+    display: flex;
     flex-direction: column;
     position: absolute;
     top: 100%;
     left: 0;
-    right: 0;
+    right: -20px;
     background-color: #fdf6f8;
-    padding: 1rem 2.5rem;
+    padding: 0 2.5rem;
     gap: 1rem;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-8px);
+    transition: max-height 0.35s ease, opacity 0.3s ease, transform 0.3s ease, padding 0.35s ease;
   }
 
   .nav-links.open {
-    display: flex;
+    max-height: 480px;
+    opacity: 1;
+    transform: translateY(0);
+    padding: 1rem 2.5rem;
+  }
+
+  /* mobile dropdown mein icon+text ek row mein, list-item jaisa */
+  .nav-links li a {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+    font-size: 15px;
+    padding: 8px 12px;
   }
 
   .nav-logo-img {
-    width: 34px;
-    height: 34px;
+    width: 44px;
+    height: 44px;
   }
 
   .nav-brand-text {
-    font-size: 1rem;
+    font-size: 1.5rem;
   }
 }

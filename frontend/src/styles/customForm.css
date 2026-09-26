@@ -13,6 +13,14 @@
   font-size: 13px;
   padding: 0;
 }
+.com-field-error .com-label {
+  color: #b03a5b;
+}
+
+.com-input-error {
+  border-color: #b03a5b !important;
+  box-shadow: 0 0 0 2px rgba(176, 58, 91, 0.12);
+}
 
 /* ===== HEADER BLOCK (title + subtitle + pink note) ===== */
 .com-form-header {

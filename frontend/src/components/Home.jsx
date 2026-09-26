@@ -7,6 +7,7 @@ import AllProducts from "../components/AllProducts"
 import FloralPage from "../components/floralPage"
 import Footer from "../components/Footer"
 import ReviewSection from "../components/ReviewSection"
+import FaqSection from "../components/FaqSection"
 
 function Home() {
   const location = useLocation()
@@ -30,6 +31,7 @@ function Home() {
       <Hero />
       <AllProducts />
       <FloralPage />
+      <FaqSection/>
       <ReviewSection/>
       <Footer />
     </>

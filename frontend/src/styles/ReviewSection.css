@@ -211,12 +211,50 @@
   font-size: 20px;
 }
 
+/* Laptop se chhoti screens (iPad, chhote laptops) */
+@media (max-width: 1100px) {
+  .rs-section {
+    padding: 70px 40px 60px;
+  }
+}
+
+/* Tablet aur mobile */
 @media (max-width: 768px) {
+  .rs-section {
+    padding: 50px 16px 40px;      /* pehle 140px side padding tha */
+  }
+
+  .rs-section::before {
+    top: 20px;
+    width: calc(100% - 32px);
+  }
+
   .rs-card {
     flex-direction: column;
-    align-items: flex-start;
-    padding: 28px 24px;
+    align-items: stretch;         /* content aur button poori width lein */
+    gap: 18px;
+    padding: 28px 22px;
     text-align: left;
+  }
+
+  .rs-icon-wrap {
+    width: 76px;
+    height: 76px;
+  }
+
+  .rs-icon {
+    width: 84px;
+    height: 84px;
+  }
+
+  .rs-content {
+    min-width: 0;                 /* pehle 200px tha, chhoti screen par overflow karta tha */
+    padding: 0;
+  }
+
+  .rs-title {
+    font-size: 24px;
+    flex-wrap: wrap;
   }
 
   .rs-btn {
@@ -227,8 +265,77 @@
   .rs-curve-wrap {
     display: none;
   }
+}
+
+/* Chhoti phones (iPhone SE wagairah) */
+@media (max-width: 380px) {
+  .rs-section {
+    padding: 44px 12px 36px;
+  }
+
+  .rs-card {
+    padding: 24px 18px;
+  }
 
   .rs-title {
-    font-size: 24px;
+    font-size: 22px;
+  }
+
+  .rs-subtitle {
+    font-size: 13px;
+  }
+}
+/* iPad Mini / tablets (601px - 900px) */
+@media (min-width: 601px) and (max-width: 900px) {
+  .rs-section {
+    padding: 60px 28px 50px;
+  }
+
+  .rs-section::before {
+    top: 24px;
+    width: calc(100% - 56px);
+  }
+
+  .rs-card {
+    flex-direction: row;          /* icon | text | button ek line mein */
+    align-items: center;
+    gap: 18px;
+    padding: 18px 24px;
+  }
+
+  .rs-icon-wrap {
+    width: 72px;
+    height: 72px;
+  }
+
+  .rs-icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .rs-content {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+  }
+
+  .rs-title {
+    font-size: 26px;
+    flex-wrap: wrap;
+  }
+
+  .rs-subtitle {
+    font-size: 13px;
+  }
+
+  .rs-btn {
+    width: auto;                  /* poori width nahi, sirf apne size ka */
+    padding: 12px 20px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .rs-curve-wrap {
+    display: none;                /* chhoti jagah mein text ke upar aa jata hai */
   }
 }

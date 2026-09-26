@@ -1,9 +1,12 @@
 .hero {
   position: relative;
   width: 100%;
-  height: 460px;
+  height: 600px;          
+  min-height: unset;
+  max-height: unset;
   overflow: hidden;
   background: #f2e4d8;
+  scroll-margin-top: 80px; 
 }
 
 /* Full-bleed background image */
@@ -17,88 +20,180 @@
   z-index: 0;
 }
 
-/* Decorative arch — subtle theme-colored accent behind the text */
-.hero-arch {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 420px;
-  height: 100%;
-  background: rgba(122, 41, 70, 0.18);
-  border-radius: 0 0 210px 210px;
-  z-index: 1;
-}
-
-/* Dark overlay for text legibility, tinted with theme maroon */
+/* Dark overlay for text legibility */
 .hero-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
     rgba(30, 14, 24, 0.35) 0%,
-    rgba(30, 14, 24, 0.6) 100%
+    rgba(30, 14, 24, 0.55) 55%,
+    rgba(30, 14, 24, 0.7) 100%
   );
   z-index: 1;
+}
+
+/* Decorative flowing line */
+.hero-line {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+.hero-line path {
+  fill: none;
+  stroke: #f0c6d8;
+  stroke-width: 1.5;
+  opacity: 0.5;
+}
+
+/* Top-right sticky note */
+.hero-sticky-note {
+  position: absolute;
+  top: 54px;
+  right: 6%;
+  z-index: 2;
+  background: #fdf6f0;
+  color: #5c1d33;
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 1.15rem;
+  line-height: 1.35;
+  padding: 14px 18px;
+  border-radius: 2px;
+  transform: rotate(4deg);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
 }
 
 /* Centered text overlay */
 .hero-overlay-content {
   position: relative;
   z-index: 2;
-  height: 100%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   color: #fff;
-  padding: 0 1.5rem;
+  padding: 90px 1.5rem 0;   /* pehle "0 1.5rem" tha, ab top padding add kiya */
+}
+
+.hero-overline {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  margin: 0;
+  color: #f5e5ec;
+}
+
+.hero-overline-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0 18px;
+  color: #f0c6d8;
+}
+.hero-overline-line {
+  width: 40px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .hero-overlay-content h1 {
   font-family: 'Playfair Display', serif;
-  font-size: 3.4rem;
+  font-size: 3.6rem;
   font-weight: 500;
-  margin-bottom: 1.1rem;
+  margin: 0 0 1.1rem;
   letter-spacing: 0.5px;
   text-shadow: 0 3px 18px rgba(0, 0, 0, 0.45);
 }
 
+.swap-word-wrap {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: 1.15;
+}
+
 .swap-word {
+  display: inline-block;
   font-style: italic;
   font-weight: 700;
   color: #f0c6d8;
   position: relative;
+  animation: slideUpIn 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.swap-word::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 100%;
-  height: 2px;
-  background: #f0c6d8;
-  opacity: 0.6;
+@keyframes slideUpIn {
+  0% {
+    transform: translateY(115%);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
-.swap-word.fade-in {
-  opacity: 1;
-  transition: opacity 0.3s ease;
-}
-
-.swap-word.fade-out {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.hero-overlay-content p {
-  font-size: 1.15rem;
-  margin-bottom: 1.8rem;
+.hero-sub {
+  font-size: 1.05rem;
+  margin: 0 0 1.6rem;
   max-width: 560px;
   line-height: 1.6;
+  color: #f0e6ea;
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.35);
+}
+
+/* Feature boxes row */
+.hero-features {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 1.8rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.hero-feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(30, 14, 24, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 12px 16px;
+  text-align: left;
+  min-width: 200px;
+  backdrop-filter: blur(2px);
+}
+.hero-feature-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(240, 198, 216, 0.18);
+  color: #f0c6d8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-feature strong {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 2px;
+}
+.hero-feature p {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #e6d8de;
+  line-height: 1.3;
 }
 
 .hero-cta {
@@ -109,72 +204,114 @@
   color: #5c1d33;
   text-decoration: none;
   padding: 0.9rem 2.2rem;
-  border-radius: 4px;
+  border-radius: 30px;
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 1.8px;
   text-transform: uppercase;
   transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  margin-bottom: 1.6rem;
 }
-
 .hero-cta:hover {
   background: #fff;
   transform: translateY(-3px);
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
 }
+.hero-cta-arrow { transition: transform 0.2s ease; }
+.hero-cta:hover .hero-cta-arrow { transform: translateX(3px); }
 
-/* Social icons bottom-left */
-.hero-socials {
-  position: absolute;
-  bottom: 18px;
-  left: 24px;
-  z-index: 2;
-  display: flex;
-  gap: 12px;
+
+
+
+
+@media (max-width: 900px) {
+  .hero-features { flex-direction: column; align-items: stretch; }
+  .hero-feature { min-width: unset; }
 }
-
-.hero-socials a {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  color: #fff;
-  font-size: 9px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  background: rgba(255, 255, 255, 0.1);
-  transition: background 0.2s ease;
-}
-
-.hero-socials a:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
 
 
 @media (max-width: 700px) {
   .hero {
-    height: 400px;
+    height: auto;
+    min-height: 100vh;                 /* fallback */
+    min-height: 100svh;                /* mobile browser bar ke hisaab se sahi */
+    padding: 0;
+    display: flex;
+    flex-direction: column;
   }
-  .hero-arch {
-    width: 260px;
-    border-radius: 0 0 130px 130px;
+
+  .hero-line { display: none; }
+  .hero-sticky-note { display: none; }
+
+  .hero-overlay-content {
+    flex: 1;                           /* poori hero height le lo */
+    height: auto;
+    justify-content: center;           /* content beech mein */
+    padding:
+      calc(var(--nav-h) + clamp(20px, 5svh, 48px))   /* navbar ke neeche gap */
+      1.25rem
+      clamp(28px, 6svh, 56px);                       /* neeche ka gap */
   }
+
+  .hero-overline-divider {
+    margin: 10px 0 clamp(18px, 3.5svh, 36px);
+  }
+
   .hero-overlay-content h1 {
-    font-size: 1.9rem;
+    font-size: clamp(1.8rem, 8vw, 2.4rem);
+    margin-bottom: clamp(1rem, 2.5svh, 1.8rem);
   }
-  .hero-overlay-content p {
-    font-size: 0.95rem;
+
+  .swap-word-wrap { white-space: nowrap; }
+
+  .hero-sub {
+    font-size: 0.9rem;
+    margin-bottom: clamp(1.4rem, 3.5svh, 2.4rem);
   }
+
+  .hero-features {
+    gap: clamp(12px, 2svh, 20px);
+    margin-bottom: clamp(1.6rem, 4svh, 3rem);
+  }
+
+  .hero-feature {
+    min-width: unset;
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
   .hero-cta {
     padding: 0.7rem 1.6rem;
     font-size: 0.75rem;
+    margin-bottom: 0;
   }
-  .hero-collection-link {
-    display: none;
+}
+/* iPad Mini jaisi screens */
+@media (min-width: 701px) and (max-width: 900px) {
+  .hero-sticky-note {
+    top: 24px;
+    right: 3%;
+    font-size: 1rem;
+    padding: 10px 14px;
+  }
+
+  .hero-line {
+    transform: translateY(-70px);
+  }
+}
+
+/* Surface Pro / chhote laptops (960px wagairah) */
+@media (min-width: 901px) and (max-width: 1100px) {
+  .hero-sticky-note {
+    top: 70px;             /* navbar se thoda door */
+    right: 4%;
+    font-size: 1.05rem;
+    padding: 12px 16px;
+  }
+
+  .hero-line {
+    transform: translateY(0px);   /* halka shift, 70px bahut zyada tha */
   }
 }
