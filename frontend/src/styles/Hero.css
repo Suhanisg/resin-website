@@ -232,63 +232,63 @@
 
 
 @media (max-width: 700px) {
-  .hero {
-    height: auto;
-    min-height: 100vh;                 /* fallback */
-    min-height: 100svh;                /* mobile browser bar ke hisaab se sahi */
-    padding: 0;
+.hero {
+    height: auto;          /* 600px hata diya, content ke hisaab se badhega */
+    min-height: 0;
     display: flex;
     flex-direction: column;
   }
 
-  .hero-line { display: none; }
-  .hero-sticky-note { display: none; }
-
   .hero-overlay-content {
-    flex: 1;                           /* poori hero height le lo */
+    flex: 1;
     height: auto;
-    justify-content: center;           /* content beech mein */
-    padding:
-      calc(var(--nav-h) + clamp(20px, 5svh, 48px))   /* navbar ke neeche gap */
-      1.25rem
-      clamp(28px, 6svh, 56px);                       /* neeche ka gap */
-  }
-
-  .hero-overline-divider {
-    margin: 10px 0 clamp(18px, 3.5svh, 36px);
-  }
-
-  .hero-overlay-content h1 {
-    font-size: clamp(1.8rem, 8vw, 2.4rem);
-    margin-bottom: clamp(1rem, 2.5svh, 1.8rem);
-  }
-
-  .swap-word-wrap { white-space: nowrap; }
-
-  .hero-sub {
-    font-size: 0.9rem;
-    margin-bottom: clamp(1.4rem, 3.5svh, 2.4rem);
-  }
-
-  .hero-features {
-    gap: clamp(12px, 2svh, 20px);
-    margin-bottom: clamp(1.6rem, 4svh, 3rem);
-  }
-
-  .hero-feature {
-    min-width: unset;
-    width: 100%;
-    max-width: 340px;
-    margin: 0 auto;
+    justify-content: center;
+    padding-top: calc(var(--nav-h, 70px) + clamp(20px, 5svh, 48px));
+    padding-bottom: 36px;  /* button ke neeche sirf halka sa gap */
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    box-sizing: border-box;
   }
 
   .hero-cta {
-    padding: 0.7rem 1.6rem;
-    font-size: 0.75rem;
-    margin-bottom: 0;
+    margin-bottom: 0;      /* extra neeche ka margin hata diya */
   }
+    .hero-line { display: none; }
+  .hero-sticky-note { display: none; }
+
+
+  .hero-overlay-content h1 {
+    font-size: clamp(1.7rem, 7.5vw, 2.2rem);
+    line-height: 1.2;
+  }
+
+  .hero-overline {
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+  }
+
+  .hero-sub {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    max-width: 300px;        /* corners se door rakhega */
+    margin-left: auto;
+    margin-right: auto;
+    text-wrap: balance;      /* lines barabar tootengi */
+  }
+
+  .hero-feature {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px 14px;
+  }
+
+  .hero-feature strong { font-size: 0.85rem; }
+  .hero-feature p { font-size: 0.72rem; }
+
 }
-/* iPad Mini jaisi screens */
+
+
+  
 @media (min-width: 701px) and (max-width: 900px) {
   .hero-sticky-note {
     top: 24px;

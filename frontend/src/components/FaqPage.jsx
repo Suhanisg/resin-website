@@ -3,7 +3,7 @@ import "../styles/FaqPage.css"
 import { ChevronDown } from "lucide-react"
 import { FaWhatsapp } from "react-icons/fa"
 
-const WHATSAPP_NUMBER = "919528633710"
+const WHATSAPP_NUMBER = "918077188283"
 
 const FAQ_DATA = [
   {

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import "../styles/ProductCard.css";
 import { CustomOrderForm, ThankYouCard } from "./customForm";
 
@@ -22,7 +23,7 @@ import {
 } from "lucide-react";
 import { useWishlist } from "../context/WishlistContext";
 
-const WHATSAPP_NUMBER = "919528633710";
+const WHATSAPP_NUMBER = "918077188283";
 
 const DEFAULT_FEATURES = [
   { icon: Flower2, label: "Real Flowers Preserved" },
@@ -577,12 +578,14 @@ function ProductCard({ product }) {
         </div>
       )}
 
-      {toast && (
-        <div className="pc-toast">
-          <span className="pc-toast-check">✓</span>
-          {toast}
-        </div>
-      )}
+      {toast &&
+        createPortal(
+          <div className="pc-toast-pill">
+            <span className="pc-toast-check">✓</span>
+            {toast}
+          </div>,
+          document.body
+        )}
     </>
   );
 }

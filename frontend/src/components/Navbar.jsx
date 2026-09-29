@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import "../styles/Navbar.css"
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import logo from '../assets/logo_circle.png'
+import logo from '../assets/logo_circle1.png'
 import {
   House,
   Sparkles,

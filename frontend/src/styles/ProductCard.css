@@ -190,7 +190,7 @@
   top: 14px;
   right: 14px;
   z-index: 2;
-  background:  #d3cecf;
+  background: #d3cecf;
   border: none;
   width: 30px;
   height: 30px;
@@ -838,19 +838,24 @@
 }
 
 /* ===== TOAST ===== */
-.pc-toast {
- position: fixed;
-  top: 30px;
-  right: 10px;
+.pc-toast-pill {
+  position: fixed;
+  top: 10px;
+  right: 1px;
+  left: auto;
+  bottom: auto;
+  width: max-content;
+  max-width: calc(100vw - 38px);
+  box-sizing: border-box;
   background: #5c1d33;
   color: #fff;
-  padding: 10px 26px;
+  padding: 10px 10px;
   border-radius: 999px;
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: 0.85rem;
+  font-weight: 600;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
   z-index: 9999;
   animation: toastSlideIn 0.4s ease;
@@ -913,28 +918,26 @@
     margin: 0 auto;
   }
 
-  .pc-toast {
-    top: 16px;
-    right: 16px;
-    left: 16px;
-    justify-content: center;
-    padding: 7px 16px;
-    font-size: 0.72rem;
+  .pc-toast-pill {
+    top: 70px;
+    right: 12px;
+    max-width: calc(100vw - 24px);
+    padding: 8px 16px;
+    font-size: 0.78rem;
     gap: 6px;
   }
 
   .pc-toast-check {
-    width: 15px;
-    height: 15px;
-    font-size: 0.6rem;
+    width: 16px;
+    height: 16px;
+    font-size: 0.62rem;
   }
 }
-
 
 @media (max-width: 650px) {
   .pc-modal-close {
     position: fixed;
-    top:20px;
+    top: 20px;
     right: 16px;
   }
 }
