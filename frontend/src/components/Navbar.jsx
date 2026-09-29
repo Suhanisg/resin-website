@@ -74,14 +74,14 @@ const sectionIds = ['home', 'products', 'faqs', 'contact', 'review-cta']
 
       <ul className={`nav-links ${menuOpen ? 'open' : ''}`}>
         <li>
-          <Link to="/#home" className={isHome && activeSection === 'home' ? 'active' : ''} onClick={() => setMenuOpen(false)}>
+          <Link to="/home" className={isHome && activeSection === 'home' ? 'active' : ''} onClick={() => setMenuOpen(false)}>
             <House className="nav-icon" strokeWidth={1.75} />
             <span>Home</span>
           </Link>
         </li>
 
         <li>
-          <Link to="/#products" className={isHome && activeSection === 'products' ? 'active' : ''} onClick={() => setMenuOpen(false)}>
+          <Link to="/products" className={isHome && activeSection === 'products' ? 'active' : ''} onClick={() => setMenuOpen(false)}>
             <Sparkles className="nav-icon" strokeWidth={1.75} />
             <span>Creations</span>
           </Link>
@@ -95,7 +95,7 @@ const sectionIds = ['home', 'products', 'faqs', 'contact', 'review-cta']
         </li>
         <li>
   <Link
-    to="/#faqs"
+    to="/faqs"
     className={isHome && activeSection === 'faqs' ? 'active' : ''}
     onClick={() => setMenuOpen(false)}
   >
@@ -106,7 +106,7 @@ const sectionIds = ['home', 'products', 'faqs', 'contact', 'review-cta']
 
        <li>
   <Link
-    to="/#review-cta"
+    to="/review-cta"
     className={isHome && activeSection === 'review-cta' ? 'active' : ''}
     onClick={() => setMenuOpen(false)}
   >
@@ -117,7 +117,7 @@ const sectionIds = ['home', 'products', 'faqs', 'contact', 'review-cta']
 
        <li>
   <Link
-    to="/#contact"
+    to="/contact"
     className={isHome && activeSection === 'contact' ? 'active' : ''}
     onClick={() => setMenuOpen(false)}
   >
