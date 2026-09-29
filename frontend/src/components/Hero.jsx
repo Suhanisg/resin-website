@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import heroImg from '../assets/heroImage.jpg'
+import heroImg from '../assets/HeroImage.jpg'
 import "../styles/Hero.css"
 import { GiSparkles } from "react-icons/gi"
 import { FaPaintBrush, FaHome, FaHeart } from "react-icons/fa"
