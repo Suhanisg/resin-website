@@ -14,7 +14,7 @@ import { GiFlowerPot } from "react-icons/gi";
 import { FaHeart } from "react-icons/fa";
 import footerFlower from "../assets/image4.png";
 
-const CATEGORIES_URL = "http://localhost:5000/api/categories";
+const CATEGORIES_URL = "https://resin-website.onrender.com/api/categories";
 
 function Footer() {
   const [categories, setCategories] = useState([]);

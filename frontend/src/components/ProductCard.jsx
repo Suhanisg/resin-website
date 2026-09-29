@@ -73,11 +73,11 @@ function ProductCard({ product }) {
 
   const galleryImages = (() => {
     const original = product.image
-      ? `http://localhost:5000${product.image}`
+      ? `https://resin-website.onrender.com${product.image}`
       : null;
     const crops =
       product.images?.length > 0
-        ? product.images.map((img) => `http://localhost:5000${img}`)
+        ? product.images.map((img) => `https://resin-website.onrender.com${img}`)
         : [];
 
     if (original) return [original, ...crops];

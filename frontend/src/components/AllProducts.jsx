@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import "../styles/AllProducts.css"
 
-const CATEGORIES_URL = "http://localhost:5000/api/categories"
+const CATEGORIES_URL = "https://resin-website.onrender.com/api/categories"
 
 function AllProducts() {
   const [categories, setCategories] = useState([])
@@ -127,7 +127,7 @@ const scrollByCards = (direction) => {
                 <div className="vf-photo">
                   {cat.image ? (
                     <img
-                      src={`http://localhost:5000${cat.image}`}
+                      src={`https://resin-website.onrender.com${cat.image}`}
                       alt={cat.name}
                       style={{ objectPosition: getPosition(cat.name) }}
                     />

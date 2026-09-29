@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react"
 import "../styles/Admin.css"
 
-const PRODUCTS_URL = "http://localhost:5000/api/products"
-const CATEGORIES_URL = "http://localhost:5000/api/categories"
+const PRODUCTS_URL = "https://resin-website.onrender.com/api/products"
+const CATEGORIES_URL = "https://resin-website.onrender.com/api/categories"
 const FRAME = 300 // crop frame ka display size (px)
 const OUTPUT = 600 // final saved image ka size (px)
 
@@ -407,7 +407,7 @@ function ProductManager() {
         {products.map((p) => (
           <div className="admin-card" key={p._id}>
             {p.image ? (
-              <img src={`http://localhost:5000${p.image}`} alt={p.name} />
+              <img src={`https://resin-website.onrender.com${p.image}`} alt={p.name} />
             ) : (
               <div className="admin-card-placeholder" />
             )}

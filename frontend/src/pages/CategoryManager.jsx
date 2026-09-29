@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import "../styles/Admin.css"
 
-const API_URL = "http://localhost:5000/api/categories"
+const API_URL = "https://resin-website.onrender.com/api/categories"
 
 function CategoryManager() {
   const [categories, setCategories] = useState([])
@@ -103,7 +103,7 @@ function CategoryManager() {
         {categories.map((cat) => (
           <div className="admin-card" key={cat._id}>
             {cat.image ? (
-              <img src={`http://localhost:5000${cat.image}`} alt={cat.name} />
+              <img src={`https://resin-website.onrender.com${cat.image}`} alt={cat.name} />
             ) : (
               <div className="admin-card-placeholder" />
             )}

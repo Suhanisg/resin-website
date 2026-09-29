@@ -21,7 +21,7 @@ function Wishlist() {
 
       <div className="wl-grid">
         {wishlist.map((product) => {
-          const image = product.image ? `http://localhost:5000${product.image}` : null
+          const image = product.image ? `https://resin-website.onrender.com${product.image}` : null
           return (
             <div className="wl-card" key={product._id}>
               <div className="wl-image">

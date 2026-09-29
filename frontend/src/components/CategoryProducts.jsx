@@ -3,8 +3,8 @@ import { useParams, useNavigate } from "react-router-dom"
 import ProductCard from "./ProductCard"
 import "../styles/CategoryProducts.css"
 
-const PRODUCTS_URL = "http://localhost:5000/api/products"
-const CATEGORIES_URL = "http://localhost:5000/api/categories"
+const PRODUCTS_URL = "https://resin-website.onrender.com/api/products"
+const CATEGORIES_URL = "https://resin-website.onrender.com/api/categories"
 
 function CategoryProducts() {
   const { categoryName } = useParams()
