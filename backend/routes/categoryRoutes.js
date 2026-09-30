@@ -1,50 +1,87 @@
-const express = require("express")
-const router = express.Router()
-const Category = require("../models/category")
-const upload = require("../middlewares/upload")
+const express = require("express");
+const router = express.Router();
+const Category = require("../models/category");
+const upload = require("../middlewares/upload");
 
+// GET all categories
 router.get("/", async (req, res) => {
   try {
-    const categories = await Category.find()
-    res.json(categories)
+    const categories = await Category.find();
+    res.json(categories);
   } catch (err) {
-    res.status(500).json({ message: err.message })
+    res.status(500).json({ message: err.message });
   }
-})
+});
 
+// CREATE category
 router.post("/", upload.single("image"), async (req, res) => {
   try {
-    const { name, description } = req.body
-    const image = req.file ? `/uploads/${req.file.filename}` : ""
+    const { name, description } = req.body;
 
-    const category = new Category({ name, description, image })
-    await category.save()
-    res.status(201).json(category)
+    // Cloudinary image URL
+    const image = req.file ? req.file.path : "";
+
+    const category = new Category({
+      name,
+      description,
+      image,
+    });
+
+    await category.save();
+
+    res.status(201).json(category);
   } catch (err) {
-    res.status(400).json({ message: err.message })
+    console.error("Category create error:", err);
+    res.status(400).json({ message: err.message });
   }
-})
+});
 
+// UPDATE category
 router.put("/:id", upload.single("image"), async (req, res) => {
   try {
-    const { name, description } = req.body
-    const updateData = { name, description }
-    if (req.file) updateData.image = `/uploads/${req.file.filename}`
+    const { name, description } = req.body;
 
-    const category = await Category.findByIdAndUpdate(req.params.id, updateData, { new: true })
-    res.json(category)
+    const updateData = {
+      name,
+      description,
+    };
+
+    // New image uploaded to Cloudinary
+    if (req.file) {
+      updateData.image = req.file.path;
+    }
+
+    const category = await Category.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    );
+
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    res.json(category);
   } catch (err) {
-    res.status(400).json({ message: err.message })
+    console.error("Category update error:", err);
+    res.status(400).json({ message: err.message });
   }
-})
+});
 
+// DELETE category
 router.delete("/:id", async (req, res) => {
   try {
-    await Category.findByIdAndDelete(req.params.id)
-    res.json({ message: "Category deleted" })
-  } catch (err) {
-    res.status(500).json({ message: err.message })
-  }
-})
+    const category = await Category.findByIdAndDelete(req.params.id);
 
-module.exports = router
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    res.json({ message: "Category deleted" });
+  } catch (err) {
+    console.error("Category delete error:", err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
+module.exports = router;

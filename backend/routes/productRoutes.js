@@ -1,31 +1,37 @@
-const express = require("express")
-const router = express.Router()
-const Product = require("../models/product")
-const upload = require("../middlewares/upload")
+const express = require("express");
+const router = express.Router();
+const Product = require("../models/product");
+const upload = require("../middlewares/upload");
 
 const uploadFields = upload.fields([
   { name: "image", maxCount: 1 },
   { name: "images", maxCount: 4 },
-])
+]);
 
+// GET all products
 router.get("/", async (req, res) => {
   try {
-    const products = await Product.find()
-    res.json(products)
+    const products = await Product.find();
+    res.json(products);
   } catch (err) {
-    res.status(500).json({ message: err.message })
+    res.status(500).json({ message: err.message });
   }
-})
+});
 
+// GET products by category
 router.get("/category/:categoryName", async (req, res) => {
   try {
-    const products = await Product.find({ category: req.params.categoryName })
-    res.json(products)
-  } catch (err) {
-    res.status(500).json({ message: err.message })
-  }
-})
+    const products = await Product.find({
+      category: req.params.categoryName,
+    });
 
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// CREATE product
 router.post("/", uploadFields, async (req, res) => {
   try {
     const {
@@ -39,12 +45,16 @@ router.post("/", uploadFields, async (req, res) => {
       processingTime,
       careInstructions,
       shippingInfo,
-    } = req.body
+    } = req.body;
 
-    const image = req.files?.image?.[0] ? `/uploads/${req.files.image[0].filename}` : ""
+    // Cloudinary URLs
+    const image = req.files?.image?.[0]
+      ? req.files.image[0].path
+      : "";
+
     const images = req.files?.images
-      ? req.files.images.map((f) => `/uploads/${f.filename}`)
-      : []
+      ? req.files.images.map((file) => file.path)
+      : [];
 
     const product = new Product({
       name,
@@ -58,15 +68,19 @@ router.post("/", uploadFields, async (req, res) => {
       processingTime,
       careInstructions,
       shippingInfo,
-      variants: JSON.parse(variants), // FormData se string aata hai
-    })
-    await product.save()
-    res.status(201).json(product)
-  } catch (err) {
-    res.status(400).json({ message: err.message })
-  }
-})
+      variants: JSON.parse(variants),
+    });
 
+    await product.save();
+
+    res.status(201).json(product);
+  } catch (err) {
+    console.error("Product create error:", err);
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// UPDATE product
 router.put("/:id", uploadFields, async (req, res) => {
   try {
     const {
@@ -80,7 +94,7 @@ router.put("/:id", uploadFields, async (req, res) => {
       processingTime,
       careInstructions,
       shippingInfo,
-    } = req.body
+    } = req.body;
 
     const updateData = {
       name,
@@ -93,29 +107,48 @@ router.put("/:id", uploadFields, async (req, res) => {
       processingTime,
       careInstructions,
       shippingInfo,
-    }
+    };
 
+    // Main image
     if (req.files?.image?.[0]) {
-      updateData.image = `/uploads/${req.files.image[0].filename}`
+      updateData.image = req.files.image[0].path;
     }
+
+    // Additional images
     if (req.files?.images?.length > 0) {
-      updateData.images = req.files.images.map((f) => `/uploads/${f.filename}`)
+      updateData.images = req.files.images.map((file) => file.path);
     }
 
-    const product = await Product.findByIdAndUpdate(req.params.id, updateData, { new: true })
-    res.json(product)
-  } catch (err) {
-    res.status(400).json({ message: err.message })
-  }
-})
+    const product = await Product.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    );
 
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.json(product);
+  } catch (err) {
+    console.error("Product update error:", err);
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// DELETE product
 router.delete("/:id", async (req, res) => {
   try {
-    await Product.findByIdAndDelete(req.params.id)
-    res.json({ message: "Product deleted" })
-  } catch (err) {
-    res.status(500).json({ message: err.message })
-  }
-})
+    const product = await Product.findByIdAndDelete(req.params.id);
 
-module.exports = router
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.json({ message: "Product deleted" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+module.exports = router;
