@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import "../styles/AllProducts.css"
-import { getImageUrl } from "../utils/imageUrl";
+import { getImageUrl } from "../utils/imageUrls";
 
 const CATEGORIES_URL =
   "https://resin-website.onrender.com/api/categories";
