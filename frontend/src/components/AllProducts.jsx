@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import "../styles/AllProducts.css"
+import { getImageUrl } from "../utils/imageUrl";
 
-const CATEGORIES_URL = "https://resin-website.onrender.com/api/categories"
+const CATEGORIES_URL =
+  "https://resin-website.onrender.com/api/categories";
 
 function AllProducts() {
   const [categories, setCategories] = useState([])
@@ -126,14 +128,14 @@ const scrollByCards = (direction) => {
               >
                 <div className="vf-photo">
                   {cat.image ? (
-                    <img
-                      src={`https://resin-website.onrender.com${cat.image}`}
-                      alt={cat.name}
-                      style={{ objectPosition: getPosition(cat.name) }}
-                    />
-                  ) : (
-                    <div className="vf-photo-fallback" />
-                  )}
+<img
+  src={getImageUrl(cat.image)}
+  alt={cat.name}
+  style={{ objectPosition: getPosition(cat.name) }}
+/>
+) : (
+  <div className="vf-photo-fallback" />
+)}
                 </div>
                 <div className="vf-content">
                   <h3 className="vf-title">{cat.name.toUpperCase()}</h3>

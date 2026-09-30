@@ -14,20 +14,32 @@ import { GiFlowerPot } from "react-icons/gi";
 import { FaHeart } from "react-icons/fa";
 import footerFlower from "../assets/image4.png";
 
-const CATEGORIES_URL = "https://resin-website.onrender.com/api/categories";
+// Live backend URL
+const CATEGORIES_URL =
+  "https://resin-website.onrender.com/api/categories";
 
 function Footer() {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     fetch(CATEGORIES_URL)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+        return res.json();
+      })
       .then(setCategories)
-      .catch((err) => console.error("Failed to load categories:", err));
+      .catch((err) =>
+        console.error("Failed to load categories:", err)
+      );
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -44,15 +56,22 @@ function Footer() {
         />
       </svg>
 
-      <img src={footerFlower} className="footer-flower" alt="" />
+      <img
+        src={footerFlower}
+        className="footer-flower"
+        alt=""
+      />
 
       <div className="footer-container">
+        {/* Brand */}
         <div className="footer-col footer-brand">
           <h3 className="footer-logo">Resin Creations</h3>
+
           <p>
-            I create personalised resin keepsakes, turning your special moments
-            into timeless treasures.
+            I create personalised resin keepsakes, turning your
+            special moments into timeless treasures.
           </p>
+
           <div className="footer-socials">
             <a
               href="https://instagram.com/Mandala_collection710"
@@ -62,6 +81,7 @@ function Footer() {
             >
               <FaInstagram size={14} />
             </a>
+
             <a
               href="https://facebook.com/Mandala_collection710"
               target="_blank"
@@ -70,6 +90,7 @@ function Footer() {
             >
               <FaFacebookF size={14} />
             </a>
+
             <a
               href="https://wa.me/918077188283"
               target="_blank"
@@ -79,51 +100,91 @@ function Footer() {
               <FaWhatsapp size={14} />
             </a>
           </div>
+
           <div className="footer-divider-1" />
+
           <p className="footer-madewithlove">
             Made with love,
             <br />
-            meant to last <FaHeart size={11} className="inline-heart" />
+            meant to last{" "}
+            <FaHeart
+              size={11}
+              className="inline-heart"
+            />
           </p>
         </div>
 
+        {/* Quick Links */}
         <div className="footer-col footer-col-links">
           <h4>Quick Links</h4>
+
           <ul className="footer-links-list">
             <li>
               <Link to="/" onClick={scrollToTop}>
-                Home <FaChevronRight size={11} className="link-arrow" />
+                Home{" "}
+                <FaChevronRight
+                  size={11}
+                  className="link-arrow"
+                />
               </Link>
             </li>
+
             <li>
               <a href="#products">
-                Creations <FaChevronRight size={11} className="link-arrow" />
+                Creations{" "}
+                <FaChevronRight
+                  size={11}
+                  className="link-arrow"
+                />
               </a>
             </li>
+
             <li>
               <Link to="/wishlist">
-                Wishlist <FaChevronRight size={11} className="link-arrow" />
+                Wishlist{" "}
+                <FaChevronRight
+                  size={11}
+                  className="link-arrow"
+                />
               </Link>
             </li>
+
             <li>
               <a href="#faqs">
-                FAQs <FaChevronRight size={11} className="link-arrow" />
+                FAQs{" "}
+                <FaChevronRight
+                  size={11}
+                  className="link-arrow"
+                />
               </a>
             </li>
+
             <li>
               <a href="#reviews">
-                Reviews <FaChevronRight size={11} className="link-arrow" />
+                Reviews{" "}
+                <FaChevronRight
+                  size={11}
+                  className="link-arrow"
+                />
               </a>
             </li>
+
             <li>
               <a href="#contact">
-                Reach Us <FaChevronRight size={11} className="link-arrow" />
+                Reach Us{" "}
+                <FaChevronRight
+                  size={11}
+                  className="link-arrow"
+                />
               </a>
             </li>
           </ul>
         </div>
+
+        {/* Categories */}
         <div className="footer-col">
           <h4>Categories</h4>
+
           <ul className="footer-links-list">
             {categories.map((cat) => (
               <li key={cat._id}>
@@ -131,31 +192,53 @@ function Footer() {
                   to={`/category/${encodeURIComponent(cat.name)}`}
                   style={{ textTransform: "capitalize" }}
                 >
-                  {cat.name} <FaChevronRight size={11} className="link-arrow" />
+                  {cat.name}{" "}
+                  <FaChevronRight
+                    size={11}
+                    className="link-arrow"
+                  />
                 </Link>
               </li>
             ))}
           </ul>
         </div>
 
+        {/* Contact */}
         <div className="footer-col footer-contact footer-col-touch">
           <h4>Get in Touch</h4>
 
           <div className="contact-row">
-            <FaMapMarkerAlt size={14} className="contact-icon" />
+            <FaMapMarkerAlt
+              size={14}
+              className="contact-icon"
+            />
             <p>Aligarh, Uttar Pradesh</p>
           </div>
 
           <div className="contact-row">
-            <FaEnvelope size={14} className="contact-icon" />
-            <a href="mailto:Pankhugoyal710@gmail.com" className="contact-link">
+            <FaEnvelope
+              size={14}
+              className="contact-icon"
+            />
+
+            <a
+              href="mailto:Pankhugoyal710@gmail.com"
+              className="contact-link"
+            >
               Pankhugoyal710@gmail.com
             </a>
           </div>
 
           <div className="contact-row">
-            <FaPhoneAlt size={14} className="contact-icon" />
-            <a href="tel:+918077188283" className="contact-link">
+            <FaPhoneAlt
+              size={14}
+              className="contact-icon"
+            />
+
+            <a
+              href="tel:+918077188283"
+              className="contact-link"
+            >
               +91 80771 88283
             </a>
           </div>
@@ -163,23 +246,34 @@ function Footer() {
           <div className="footer-divider-2" />
 
           <div className="footer-note">
-            <GiFlowerPot size={20} className="footer-note-icon" />
+            <GiFlowerPot
+              size={20}
+              className="footer-note-icon"
+            />
+
             <span>
               Let's create something
               <br />
-              beautiful together <FaHeart size={11} className="inline-heart" />
+              beautiful together{" "}
+              <FaHeart
+                size={11}
+                className="inline-heart"
+              />
             </span>
           </div>
         </div>
       </div>
 
+      {/* Bottom */}
       <div className="footer-bottom">
         <div className="footer-bottom-inner">
           <p className="footer-bottom-copyright">
-            © {new Date().getFullYear()} Resin Creation. All Rights Reserved.
+            © {new Date().getFullYear()} Resin Creation. All Rights
+            Reserved.
           </p>
 
-          {/* <div className="footer-bottom-links">
+          {/*
+          <div className="footer-bottom-links">
             <a href="#">Privacy Policy</a>
             <span>|</span>
             <a href="#">Terms &amp; Conditions</a>
@@ -187,7 +281,8 @@ function Footer() {
             <a href="#">Shipping Policy</a>
             <span>|</span>
             <a href="#">Return Policy</a>
-          </div> */}
+          </div>
+          */}
         </div>
       </div>
     </footer>

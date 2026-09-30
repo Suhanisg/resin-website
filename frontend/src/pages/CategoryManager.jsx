@@ -3,6 +3,18 @@ import "../styles/Admin.css"
 
 const API_URL = "https://resin-website.onrender.com/api/categories"
 
+const getImageUrl = (image) => {
+  if (!image) return ""
+
+  // Cloudinary ya koi bhi complete URL
+  if (image.startsWith("http://") || image.startsWith("https://")) {
+    return image
+  }
+
+  // Purani /uploads/ images ke liye
+  return `https://resin-website.onrender.com${image}`
+}
+
 function CategoryManager() {
   const [categories, setCategories] = useState([])
   const [name, setName] = useState("")
@@ -12,9 +24,18 @@ function CategoryManager() {
   const [loading, setLoading] = useState(false)
 
   const fetchCategories = async () => {
-    const res = await fetch(API_URL)
-    const data = await res.json()
-    setCategories(data)
+    try {
+      const res = await fetch(API_URL)
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch categories")
+      }
+
+      const data = await res.json()
+      setCategories(data)
+    } catch (err) {
+      console.error("Fetch categories error:", err)
+    }
   }
 
   useEffect(() => {
@@ -35,14 +56,26 @@ function CategoryManager() {
     const formData = new FormData()
     formData.append("name", name)
     formData.append("description", description)
-    if (imageFile) formData.append("image", imageFile)
+
+    if (imageFile) {
+      formData.append("image", imageFile)
+    }
 
     try {
-      const url = editingId ? `${API_URL}/${editingId}` : API_URL
+      const url = editingId
+        ? `${API_URL}/${editingId}`
+        : API_URL
+
       const method = editingId ? "PUT" : "POST"
 
-      const res = await fetch(url, { method, body: formData })
-      if (!res.ok) throw new Error("Failed to save category")
+      const res = await fetch(url, {
+        method,
+        body: formData,
+      })
+
+      if (!res.ok) {
+        throw new Error("Failed to save category")
+      }
 
       await fetchCategories()
       resetForm()
@@ -62,57 +95,123 @@ function CategoryManager() {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Ye category delete karni hai?")) return
-    await fetch(`${API_URL}/${id}`, { method: "DELETE" })
-    fetchCategories()
+
+    try {
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+      })
+
+      if (!res.ok) {
+        throw new Error("Failed to delete category")
+      }
+
+      fetchCategories()
+    } catch (err) {
+      alert(err.message)
+    }
   }
 
   return (
     <div className="admin-section">
-      <h2>{editingId ? "Category Edit Karo" : "Nayi Category Add Karo"}</h2>
+      <h2>
+        {editingId
+          ? "Category Edit Karo"
+          : "Nayi Category Add Karo"}
+      </h2>
 
       <form className="admin-form" onSubmit={handleSubmit}>
         <label>
           Category Name
-          <input value={name} onChange={(e) => setName(e.target.value)} required />
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
         </label>
 
         <label>
           Description
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2} />
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={2}
+          />
         </label>
 
         <label>
           Image {editingId && "(chhodo agar change nahi karni)"}
-          <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} />
+
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) =>
+              setImageFile(e.target.files[0])
+            }
+          />
         </label>
 
         <div className="form-actions">
-          <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? "Saving..." : editingId ? "Update Category" : "Add Category"}
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={loading}
+          >
+            {loading
+              ? "Saving..."
+              : editingId
+              ? "Update Category"
+              : "Add Category"}
           </button>
+
           {editingId && (
-            <button type="button" className="btn-secondary" onClick={resetForm}>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={resetForm}
+            >
               Cancel
             </button>
           )}
         </div>
       </form>
 
-      <h3>Existing Categories ({categories.length})</h3>
+      <h3>
+        Existing Categories ({categories.length})
+      </h3>
+
       <div className="admin-grid">
         {categories.map((cat) => (
-          <div className="admin-card" key={cat._id}>
+          <div
+            className="admin-card"
+            key={cat._id}
+          >
             {cat.image ? (
-              <img src={`https://resin-website.onrender.com${cat.image}`} alt={cat.name} />
+              <img
+                src={getImageUrl(cat.image)}
+                alt={cat.name}
+              />
             ) : (
               <div className="admin-card-placeholder" />
             )}
+
             <div className="admin-card-info">
               <h4>{cat.name}</h4>
+
               <p>{cat.description}</p>
+
               <div className="admin-card-actions">
-                <button onClick={() => handleEdit(cat)}>Edit</button>
-                <button className="danger" onClick={() => handleDelete(cat._id)}>Delete</button>
+                <button
+                  onClick={() => handleEdit(cat)}
+                >
+                  Edit
+                </button>
+
+                <button
+                  className="danger"
+                  onClick={() => handleDelete(cat._id)}
+                >
+                  Delete
+                </button>
               </div>
             </div>
           </div>
@@ -122,4 +221,4 @@ function CategoryManager() {
   )
 }
 
-export default CategoryManager;
+export default CategoryManager

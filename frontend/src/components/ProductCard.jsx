@@ -24,6 +24,19 @@ import {
 import { useWishlist } from "../context/WishlistContext";
 
 const WHATSAPP_NUMBER = "918077188283";
+const API_URL = "https://resin-website.onrender.com";
+
+const getImageUrl = (image) => {
+  if (!image) return "";
+
+  // Cloudinary / complete image URL
+  if (image.startsWith("http://") || image.startsWith("https://")) {
+    return image;
+  }
+
+  // Old /uploads image
+  return `${API_URL}${image}`;
+};
 
 const DEFAULT_FEATURES = [
   { icon: Flower2, label: "Real Flowers Preserved" },
@@ -71,18 +84,22 @@ function ProductCard({ product }) {
   const features =
     product.features?.length > 0 ? product.features : DEFAULT_FEATURES;
 
-  const galleryImages = (() => {
-    const original = product.image
-      ? `https://resin-website.onrender.com${product.image}`
-      : null;
-    const crops =
-      product.images?.length > 0
-        ? product.images.map((img) => `https://resin-website.onrender.com${img}`)
-        : [];
+ const galleryImages = (() => {
+  const original = product.image
+    ? getImageUrl(product.image)
+    : null;
 
-    if (original) return [original, ...crops];
-    return crops;
-  })();
+  const crops =
+    product.images?.length > 0
+      ? product.images.map((img) => getImageUrl(img))
+      : [];
+
+  if (original) {
+    return [original, ...crops];
+  }
+
+  return crops;
+})();
 
   const cardImage = galleryImages[0];
 

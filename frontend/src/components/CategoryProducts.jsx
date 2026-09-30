@@ -9,38 +9,86 @@ const CATEGORIES_URL = "https://resin-website.onrender.com/api/categories"
 function CategoryProducts() {
   const { categoryName } = useParams()
   const navigate = useNavigate()
+
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
 
   const decodedCategory = decodeURIComponent(categoryName)
-  const category = categories.find((c) => c.name === decodedCategory)
 
   useEffect(() => {
-    fetch(PRODUCTS_URL).then((res) => res.json()).then(setProducts)
-    fetch(CATEGORIES_URL).then((res) => res.json()).then(setCategories)
+    const fetchData = async () => {
+      try {
+        const [productsRes, categoriesRes] = await Promise.all([
+          fetch(PRODUCTS_URL),
+          fetch(CATEGORIES_URL),
+        ])
+
+        if (!productsRes.ok) {
+          throw new Error("Failed to fetch products")
+        }
+
+        if (!categoriesRes.ok) {
+          throw new Error("Failed to fetch categories")
+        }
+
+        const productsData = await productsRes.json()
+        const categoriesData = await categoriesRes.json()
+
+        setProducts(productsData)
+        setCategories(categoriesData)
+      } catch (err) {
+        console.error("Category page error:", err)
+      }
+    }
+
+    fetchData()
   }, [])
 
-  const filteredProducts = products.filter((p) => p.category === decodedCategory)
+  const category = categories.find(
+    (c) => c.name === decodedCategory
+  )
+
+  const filteredProducts = products.filter(
+    (p) => p.category === decodedCategory
+  )
 
   return (
     <>
-      {/* Simple back button bar */}
+      {/* Back button */}
       <div className="cp-back-bar">
-       <button className="cp-back-btn" onClick={() => navigate("/#products")}>
-  ← Categories
-</button>
+        <button
+          className="cp-back-btn"
+          onClick={() => navigate("/#products")}
+        >
+          ← Categories
+        </button>
       </div>
 
       {/* Products */}
       <section className="cp-products-section" id="products">
         <div className="cp-products-grid">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <ProductCard
+                key={product._id}
+                product={product}
+              />
+            ))
+          ) : (
+            <div className="cp-no-products">
+              <h3>
+                {category?.name || decodedCategory}
+              </h3>
+
+              <p>
+                No products available in this category yet.
+              </p>
+            </div>
+          )}
         </div>
       </section>
     </>
   )
 }
 
-export default CategoryProducts;
+export default CategoryProducts
