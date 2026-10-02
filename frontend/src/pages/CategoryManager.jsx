@@ -1,123 +1,119 @@
-import { useState, useEffect } from "react"
-import "../styles/Admin.css"
+import { useState, useEffect } from "react";
+import "../styles/Admin.css";
+import { adminFetch } from "../utils/adminAuth";
 
-const API_URL = "https://resin-website.onrender.com/api/categories"
+const API_URL = "https://resin-website.onrender.com/api/categories";
+const API_PATH = "/api/categories";
 
 const getImageUrl = (image) => {
-  if (!image) return ""
+  if (!image) return "";
 
   // Cloudinary ya koi bhi complete URL
   if (image.startsWith("http://") || image.startsWith("https://")) {
-    return image
+    return image;
   }
 
   // Purani /uploads/ images ke liye
-  return `https://resin-website.onrender.com${image}`
-}
+  return `https://resin-website.onrender.com${image}`;
+};
 
 function CategoryManager() {
-  const [categories, setCategories] = useState([])
-  const [name, setName] = useState("")
-  const [description, setDescription] = useState("")
-  const [imageFile, setImageFile] = useState(null)
-  const [editingId, setEditingId] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [categories, setCategories] = useState([]);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch(API_URL)
+      const res = await fetch(API_URL);
 
       if (!res.ok) {
-        throw new Error("Failed to fetch categories")
+        throw new Error("Failed to fetch categories");
       }
 
-      const data = await res.json()
-      setCategories(data)
+      const data = await res.json();
+      setCategories(data);
     } catch (err) {
-      console.error("Fetch categories error:", err)
+      console.error("Fetch categories error:", err);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchCategories()
-  }, [])
+    fetchCategories();
+  }, []);
 
   const resetForm = () => {
-    setName("")
-    setDescription("")
-    setImageFile(null)
-    setEditingId(null)
-  }
+    setName("");
+    setDescription("");
+    setImageFile(null);
+    setEditingId(null);
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
-    const formData = new FormData()
-    formData.append("name", name)
-    formData.append("description", description)
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("description", description);
 
     if (imageFile) {
-      formData.append("image", imageFile)
+      formData.append("image", imageFile);
     }
 
     try {
-      const url = editingId
-        ? `${API_URL}/${editingId}`
-        : API_URL
+      const path = editingId ? `${API_PATH}/${editingId}` : API_PATH;
 
-      const method = editingId ? "PUT" : "POST"
+      const method = editingId ? "PUT" : "POST";
 
-      const res = await fetch(url, {
+      const res = await adminFetch(path, {
         method,
         body: formData,
-      })
+      });
 
       if (!res.ok) {
-        throw new Error("Failed to save category")
+        throw new Error("Failed to save category");
       }
 
-      await fetchCategories()
-      resetForm()
+      await fetchCategories();
+      resetForm();
     } catch (err) {
-      alert(err.message)
+      alert(err.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleEdit = (cat) => {
-    setEditingId(cat._id)
-    setName(cat.name)
-    setDescription(cat.description || "")
-    setImageFile(null)
-  }
+    setEditingId(cat._id);
+    setName(cat.name);
+    setDescription(cat.description || "");
+    setImageFile(null);
+  };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Ye category delete karni hai?")) return
+    if (!window.confirm("Ye category delete karni hai?")) return;
 
     try {
-      const res = await fetch(`${API_URL}/${id}`, {
+      const res = await adminFetch(`${API_PATH}/${id}`, {
         method: "DELETE",
-      })
+      });
 
       if (!res.ok) {
-        throw new Error("Failed to delete category")
+        throw new Error("Failed to delete category");
       }
 
-      fetchCategories()
+      fetchCategories();
     } catch (err) {
-      alert(err.message)
+      alert(err.message);
     }
-  }
+  };
 
   return (
     <div className="admin-section">
-      <h2>
-        {editingId
-          ? "Category Edit Karo"
-          : "Nayi Category Add Karo"}
-      </h2>
+      <h2>{editingId ? "Category Edit Karo" : "Nayi Category Add Karo"}</h2>
 
       <form className="admin-form" onSubmit={handleSubmit}>
         <label>
@@ -140,56 +136,37 @@ function CategoryManager() {
 
         <label>
           Image {editingId && "(chhodo agar change nahi karni)"}
-
           <input
             type="file"
             accept="image/*"
-            onChange={(e) =>
-              setImageFile(e.target.files[0])
-            }
+            onChange={(e) => setImageFile(e.target.files[0])}
           />
         </label>
 
         <div className="form-actions">
-          <button
-            type="submit"
-            className="btn-primary"
-            disabled={loading}
-          >
+          <button type="submit" className="btn-primary" disabled={loading}>
             {loading
               ? "Saving..."
               : editingId
-              ? "Update Category"
-              : "Add Category"}
+                ? "Update Category"
+                : "Add Category"}
           </button>
 
           {editingId && (
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={resetForm}
-            >
+            <button type="button" className="btn-secondary" onClick={resetForm}>
               Cancel
             </button>
           )}
         </div>
       </form>
 
-      <h3>
-        Existing Categories ({categories.length})
-      </h3>
+      <h3>Existing Categories ({categories.length})</h3>
 
       <div className="admin-grid">
         {categories.map((cat) => (
-          <div
-            className="admin-card"
-            key={cat._id}
-          >
+          <div className="admin-card" key={cat._id}>
             {cat.image ? (
-              <img
-                src={getImageUrl(cat.image)}
-                alt={cat.name}
-              />
+              <img src={getImageUrl(cat.image)} alt={cat.name} />
             ) : (
               <div className="admin-card-placeholder" />
             )}
@@ -200,11 +177,7 @@ function CategoryManager() {
               <p>{cat.description}</p>
 
               <div className="admin-card-actions">
-                <button
-                  onClick={() => handleEdit(cat)}
-                >
-                  Edit
-                </button>
+                <button onClick={() => handleEdit(cat)}>Edit</button>
 
                 <button
                   className="danger"
@@ -218,7 +191,7 @@ function CategoryManager() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-export default CategoryManager
+export default CategoryManager;

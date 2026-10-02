@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react"
 import "../styles/Admin.css"
+import { adminFetch } from "../utils/adminAuth"
 
 const PRODUCTS_URL = "https://resin-website.onrender.com/api/products"
+const PRODUCTS_PATH = "/api/products"
 const CATEGORIES_URL = "https://resin-website.onrender.com/api/categories"
 
 const getImageUrl = (image) => {
@@ -370,15 +372,15 @@ function ProductManager() {
     })
 
     try {
-      const url = editingId
-        ? `${PRODUCTS_URL}/${editingId}`
-        : PRODUCTS_URL
+           const path = editingId
+        ? `${PRODUCTS_PATH}/${editingId}`
+        : PRODUCTS_PATH
 
       const method = editingId
         ? "PUT"
         : "POST"
 
-      const res = await fetch(url, {
+      const res = await adminFetch(path, {
         method,
         body: formData,
       })
@@ -440,8 +442,8 @@ function ProductManager() {
     }
 
     try {
-      const res = await fetch(
-        `${PRODUCTS_URL}/${id}`,
+          const res = await adminFetch(
+        `${PRODUCTS_PATH}/${id}`,
         {
           method: "DELETE",
         }

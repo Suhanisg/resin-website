@@ -6,37 +6,81 @@ import { getImageUrl } from "../utils/imageUrls";
 const CATEGORIES_URL =
   "https://resin-website.onrender.com/api/categories";
 
+const SKELETON_COUNT = 4
+
+const IMAGE_POSITIONS = {
+  "Resin Clock": "center 20%",
+  "Varmala Frame": "center 0%",
+  "KeyChain": "center 70%",
+  "Platter": "center 20%",
+}
+const getPosition = (catName) => IMAGE_POSITIONS[catName] || "center"
+
+// Photo aane tak shimmer dikhata hai, aate hi smoothly fade-in karta hai
+function CategoryImage({ cat }) {
+  const [loaded, setLoaded] = useState(false)
+  const [failed, setFailed] = useState(false)
+  const imgRef = useRef(null)
+
+  // agar photo browser cache se turant aa gayi ho
+  useEffect(() => {
+    const img = imgRef.current
+    if (img && img.complete && img.naturalWidth > 0) setLoaded(true)
+  }, [])
+
+  if (failed) return <div className="vf-photo-fallback" />
+
+  return (
+    <>
+      {!loaded && <div className="vf-shimmer" />}
+      <img
+        ref={imgRef}
+        src={getImageUrl(cat.image)}
+        alt={cat.name}
+        onLoad={() => setLoaded(true)}
+        onError={() => setFailed(true)}
+        style={{
+          objectPosition: getPosition(cat.name),
+          opacity: loaded ? 1 : 0,
+          transition: "opacity 0.6s ease",
+        }}
+      />
+    </>
+  )
+}
+
 function AllProducts() {
   const [categories, setCategories] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [slow, setSlow] = useState(false)
   const navigate = useNavigate()
   const trackRef = useRef(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
 
-useEffect(() => {
-  fetch(CATEGORIES_URL)
-    .then((res) => {
-      if (!res.ok) throw new Error(`HTTP error: ${res.status}`)
-      return res.json()
-    })
-    .then((data) => {
-      console.log("Categories fetched:", data)
-      setCategories(data)
-    })
-    .catch((err) => {
-      console.error("Fetch failed:", err)
-    })
-}, [])
+  useEffect(() => {
+    // server so raha ho (Render free plan) to thodi der baad halka sa message
+    const slowTimer = setTimeout(() => setSlow(true), 5000)
 
-  
+    fetch(CATEGORIES_URL)
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP error: ${res.status}`)
+        return res.json()
+      })
+      .then((data) => {
+        setCategories(data)
+      })
+      .catch((err) => {
+        console.error("Fetch failed:", err)
+      })
+      .finally(() => {
+        clearTimeout(slowTimer)
+        setLoading(false)
+        setSlow(false)
+      })
 
-  const IMAGE_POSITIONS = {
-    "Resin Clock": "center 20%",
-    "Varmala Frame": "center 0%",
-    "KeyChain": "center 70%",
-    "Platter": "center 20%",
-  }
-  const getPosition = (catName) => IMAGE_POSITIONS[catName] || "center"
+    return () => clearTimeout(slowTimer)
+  }, [])
 
   // check scroll position -> enable/disable arrows
   const updateScrollButtons = () => {
@@ -58,23 +102,23 @@ useEffect(() => {
     }
   }, [categories])
 
-const scrollByCards = (direction) => {
-  const el = trackRef.current
-  if (!el) return
-  const card = el.querySelector(".vf-card")
-  if (!card) return
+  const scrollByCards = (direction) => {
+    const el = trackRef.current
+    if (!el) return
+    const card = el.querySelector(".vf-card")
+    if (!card) return
 
-  const gap = parseFloat(getComputedStyle(el).columnGap) || 22
-  const cardWidth = card.offsetWidth + gap
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 22
+    const cardWidth = card.offsetWidth + gap
 
-  // kitne cards ek saath dikh rahe hain (kam se kam 1)
-  const visibleCards = Math.max(1, Math.floor(el.clientWidth / cardWidth))
+    // kitne cards ek saath dikh rahe hain (kam se kam 1)
+    const visibleCards = Math.max(1, Math.floor(el.clientWidth / cardWidth))
 
-  // ek click mein max 2 cards, lekin chhoti screen par sirf 1
-  const step = Math.min(2, visibleCards)
+    // ek click mein max 2 cards, lekin chhoti screen par sirf 1
+    const step = Math.min(2, visibleCards)
 
-  el.scrollBy({ left: direction * cardWidth * step, behavior: "smooth" })
-}
+    el.scrollBy({ left: direction * cardWidth * step, behavior: "smooth" })
+  }
 
   return (
     <section className="ap-section" id="products">
@@ -120,34 +164,45 @@ const scrollByCards = (direction) => {
           </button>
 
           <div className="ap-grid" ref={trackRef}>
-            {categories.map((cat) => (
-              <div
-                key={cat._id}
-                className="vf-card"
-                onClick={() => navigate(`/category/${encodeURIComponent(cat.name)}`)}
-              >
-                <div className="vf-photo">
-                  {cat.image ? (
-<img
-  src={getImageUrl(cat.image)}
-  alt={cat.name}
-  style={{ objectPosition: getPosition(cat.name) }}
-/>
-) : (
-  <div className="vf-photo-fallback" />
-)}
-                </div>
-                <div className="vf-content">
-                  <h3 className="vf-title">{cat.name.toUpperCase()}</h3>
-                  <div className="vf-bottom-row">
-                    <p className="vf-subtitle">{cat.description || "Handcrafted with love."}</p>
-                    <button className="vf-arrow-btn" aria-label={`Explore ${cat.name}`}>
-                      →
-                    </button>
+            {loading
+              ? Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+                  <div className="vf-card vf-card-skeleton" key={`sk-${i}`} aria-hidden="true">
+                    <div className="vf-photo">
+                      <div className="vf-shimmer" />
+                    </div>
+                    <div className="vf-content">
+                      <div className="vf-skel-title" />
+                      <div className="vf-bottom-row">
+                        <div className="vf-skel-sub" />
+                        <div className="vf-skel-btn" />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                ))
+              : categories.map((cat) => (
+                  <div
+                    key={cat._id}
+                    className="vf-card"
+                    onClick={() => navigate(`/category/${encodeURIComponent(cat.name)}`)}
+                  >
+                    <div className="vf-photo">
+                      {cat.image ? (
+                        <CategoryImage cat={cat} />
+                      ) : (
+                        <div className="vf-photo-fallback" />
+                      )}
+                    </div>
+                    <div className="vf-content">
+                      <h3 className="vf-title">{cat.name.toUpperCase()}</h3>
+                      <div className="vf-bottom-row">
+                        <p className="vf-subtitle">{cat.description || "Handcrafted with love."}</p>
+                        <button className="vf-arrow-btn" aria-label={`Explore ${cat.name}`}>
+                          →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
           </div>
 
           <button
@@ -159,6 +214,10 @@ const scrollByCards = (direction) => {
             →
           </button>
         </div>
+
+        {loading && slow && (
+          <p className="vf-slow-note">Resin creations aa rahi hain, bas ek pal ♡</p>
+        )}
 
         <div className="ap-leaf">🌿</div>
       </div>
