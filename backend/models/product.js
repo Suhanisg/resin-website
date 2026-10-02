@@ -19,6 +19,11 @@ const productSchema = new mongoose.Schema(
     processingTime: { type: String },
     careInstructions: { type: String },
     shippingInfo: { type: String },
+    subcategory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Subcategory",
+      default: null,
+    },
   },
   { timestamps: true }
 )

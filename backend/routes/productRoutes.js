@@ -46,6 +46,7 @@ router.post("/", protect, uploadFields, async (req, res) => {
       processingTime,
       careInstructions,
       shippingInfo,
+      subcategory,
     } = req.body;
 
     // Cloudinary URLs
@@ -69,6 +70,7 @@ router.post("/", protect, uploadFields, async (req, res) => {
       processingTime,
       careInstructions,
       shippingInfo,
+      subcategory: subcategory || null,
       variants: JSON.parse(variants),
     });
 
@@ -95,6 +97,7 @@ router.put("/:id", protect, uploadFields, async (req, res) => {
       processingTime,
       careInstructions,
       shippingInfo,
+      subcategory,
     } = req.body;
 
     const updateData = {
@@ -108,6 +111,7 @@ router.put("/:id", protect, uploadFields, async (req, res) => {
       processingTime,
       careInstructions,
       shippingInfo,
+      subcategory: subcategory || null,
     };
 
     // Main image

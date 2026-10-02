@@ -10,6 +10,7 @@ const path = require("path")
 const categoryRoutes = require("./routes/categoryRoutes")
 const productRoutes = require("./routes/productRoutes")
 const adminAuthRoutes = require("./routes/adminAuthRoutes")
+const subcategoryRoutes = require("./routes/subcategoryRoutes")
 
 const app = express()
 
@@ -34,6 +35,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 app.use("/api/admin", adminAuthRoutes)
 app.use("/api/categories", categoryRoutes)
 app.use("/api/products", productRoutes)
+app.use("/api/subcategories", subcategoryRoutes)
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
