@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import CategoryManager from "./CategoryManager"
+import SubcategoryManager from "./SubcategoryManager"
 import ProductManager from "./ProductManager"
 import ReviewManager from "./ReviewManager"
 import { useAdminAuth } from "../context/AdminAuthContext"
@@ -34,6 +35,12 @@ function AdminPanel() {
           Categories
         </button>
         <button
+          className={activeTab === "subcategories" ? "active" : ""}
+          onClick={() => setActiveTab("subcategories")}
+        >
+          Subcategories
+        </button>
+        <button
           className={activeTab === "products" ? "active" : ""}
           onClick={() => setActiveTab("products")}
         >
@@ -49,6 +56,7 @@ function AdminPanel() {
 
       <div className="admin-content">
         {activeTab === "categories" && <CategoryManager />}
+        {activeTab === "subcategories" && <SubcategoryManager />}
         {activeTab === "products" && <ProductManager />}
         {activeTab === "reviews" && <ReviewManager />}
       </div>

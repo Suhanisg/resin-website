@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import "../styles/AllProducts.css"
+import { API_URL } from "../utils/api";
 import { getImageUrl } from "../utils/imageUrls";
 
-const CATEGORIES_URL =
-  "https://resin-website.onrender.com/api/categories";
+const CATEGORIES_URL = `${API_URL}/api/categories`;
 
 const SKELETON_COUNT = 4
 
@@ -216,7 +216,7 @@ function AllProducts() {
         </div>
 
         {loading && slow && (
-          <p className="vf-slow-note">Resin creations aa rahi hain, bas ek pal ♡</p>
+          <p className="vf-slow-note">Crafting something beautiful, just a moment ♡</p>
         )}
 
         <div className="ap-leaf">🌿</div>

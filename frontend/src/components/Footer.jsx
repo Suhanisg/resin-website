@@ -13,10 +13,11 @@ import {
 import { GiFlowerPot } from "react-icons/gi";
 import { FaHeart } from "react-icons/fa";
 import footerFlower from "../assets/image4.png";
+import { API_URL } from "../utils/api"
 
 // Live backend URL
 const CATEGORIES_URL =
-  "https://resin-website.onrender.com/api/categories";
+  `${API_URL}/api/categories`;
 
 function Footer() {
   const [categories, setCategories] = useState([]);

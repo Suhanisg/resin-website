@@ -70,3 +70,128 @@
     gap: 20px;
   }
 }
+
+/* ===== Subcategory chips ===== */
+.cp-sub-wrap {
+  width: calc(100% - 8%);          /* dono side 4% gap */
+  max-width: 1200px;               /* products grid ke barabar */
+  margin: 0 auto;                  /* center, dono side gap */
+  background: #fdfcfa;             /* white box */
+  border: 1px solid #f0e4e0;
+  border-radius: 20px;
+  box-shadow: 0 2px 12px rgba(122, 41, 70, 0.05);
+  padding: 22px 28px 18px;         /* andar ka space, content box ke andar rahe */
+  box-sizing: border-box;
+}
+*:has(> .cp-sub-wrap) {
+  background: #faf6f0 !important;   /* back bar wala cream, white nahi */
+}
+.cp-sub-heading {
+  font-family: Georgia, serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: #5c1d33;
+  letter-spacing: 0.3px;
+  line-height: 1.15;
+  margin: 0 0 6px;
+  text-transform: capitalize;
+}
+
+.cp-sub-heading::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 3px;
+  margin-top: 10px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #7a2946, #e9b6c4);
+}
+
+.cp-sub-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+  padding-bottom: 4px;
+}
+
+.cp-sub-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 14px 4px 4px;
+  border: 1px solid #ecd6d9;
+  border-radius: 999px;
+  background: #fff;
+  color: #70686b;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cp-sub-chip:hover {
+  border-color: #c98ca0;
+  background: #fbeff2;
+  box-shadow: 0 3px 10px rgba(122, 41, 70, 0.12);
+}
+
+/* LIGHT active state (pehle dark #7a2946 tha) */
+.cp-sub-chip.active {
+  background: #f6dde4;         /* soft blush pink */
+  border-color: #d9a3b4;
+  color: #5c1d33;              /* heading wala maroon, text readable rahega */
+  box-shadow: 0 2px 8px rgba(122, 41, 70, 0.10);
+}
+
+/* "All" ke baad subcategory ke liye gap */
+.cp-sub-all {
+  padding: 9px 16px;
+  margin-right: 10px;          /* All ke baad extra space */
+}
+
+.cp-sub-thumb {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+}
+
+@media (max-width: 700px) {
+  .cp-sub-wrap {
+    padding: 14px 16px 4px;
+  }
+
+  .cp-sub-heading {
+    font-size: 30px;
+  }
+
+  .cp-sub-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .cp-sub-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cp-sub-chip {
+    flex: 0 0 auto;
+    font-size: 12px;
+  }
+
+  .cp-sub-thumb {
+    width: 26px;
+    height: 26px;
+  }
+
+  .cp-sub-all {
+    padding: 8px 14px;
+    margin-right: 6px;
+  }
+}

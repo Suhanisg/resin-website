@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import "../styles/Admin.css";
-import { adminFetch } from "../utils/adminAuth";
+import { API_URL as BASE_URL, adminFetch } from "../utils/adminAuth";
 
-const API_URL = "https://resin-website.onrender.com/api/categories";
 const API_PATH = "/api/categories";
 
 const getImageUrl = (image) => {
@@ -14,7 +13,7 @@ const getImageUrl = (image) => {
   }
 
   // Purani /uploads/ images ke liye
-  return `https://resin-website.onrender.com${image}`;
+  return `${BASE_URL}${image}`;
 };
 
 function CategoryManager() {
@@ -27,7 +26,7 @@ function CategoryManager() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch(API_URL);
+      const res = await fetch(`${BASE_URL}${API_PATH}`);
 
       if (!res.ok) {
         throw new Error("Failed to fetch categories");

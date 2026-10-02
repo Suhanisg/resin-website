@@ -277,3 +277,109 @@
   line-height: 1;
   cursor: pointer;
 }
+/* ============ RESPONSIVE FIX (sabse neeche paste karo) ============ */
+
+/* Sab elements ke liye padding width ke andar count ho */
+.admin-panel,
+.admin-panel * {
+  box-sizing: border-box;
+}
+
+/* Panel poori screen width le */
+.admin-panel {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;          /* page kabhi side mein scroll na ho */
+  padding: clamp(1rem, 4vw, 2.5rem);
+}
+
+.admin-header h1 {
+  font-size: clamp(1.3rem, 5vw, 1.8rem);
+}
+
+/* Form: bade screen par 600px, chhote par poori width */
+.admin-form {
+  width: 100%;
+  max-width: 600px;
+  padding: clamp(1rem, 4vw, 1.5rem);
+}
+
+.admin-form input,
+.admin-form textarea,
+.admin-form select {
+  width: 100%;
+  min-width: 0;                /* flex/grid mein bahar nikalna band */
+  max-width: 100%;
+}
+
+/* Side by side wale rows (Sizes & Price waghera) */
+.form-row,
+.form-row > * {
+  min-width: 0;
+}
+
+/* Tabs: ek line mein, zaroorat par swipe karke scroll */
+.admin-tabs {
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  gap: 0.25rem;
+}
+
+.admin-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.admin-tabs button {
+  flex: 0 0 auto;
+  padding: 0.7rem 1rem;
+}
+
+/* Cards ka grid chhote screen par bahar na nikle */
+.admin-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(230px, 100%), 1fr));
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 600px) {
+  .admin-form {
+    max-width: 100%;
+  }
+
+  /* iPhone par input zoom na ho (16px se kam par Safari zoom karta hai) */
+  .admin-form input,
+  .admin-form textarea,
+  .admin-form select {
+    font-size: 16px;
+  }
+
+  /* Do inputs ek line mein fit na ho to neeche wrap ho jayein */
+  .form-row {
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .form-row > * {
+    flex: 1 1 140px;
+  }
+
+  .form-actions {
+    flex-wrap: wrap;
+  }
+
+  .form-actions button {
+    flex: 1 1 auto;
+  }
+
+  .admin-grid {
+    grid-template-columns: 1fr 1fr;   /* mobile par 2 cards ek line mein */
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .admin-grid {
+    grid-template-columns: 1fr;       /* bahut chhote phone par 1 card */
+  }
+}

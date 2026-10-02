@@ -1,8 +1,9 @@
 import { Heart, Trash2 } from "lucide-react"
 import { useWishlist } from "../context/WishlistContext"
 import "../styles/Wishlist.css"
+import { API_URL } from "../utils/api"
 
-const API_URL = "https://resin-website.onrender.com"
+
 
 function Wishlist() {
   const { wishlist, removeFromWishlist } = useWishlist()

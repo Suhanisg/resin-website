@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://resin-website.onrender.com";
+import { API_URL as API_BASE_URL } from "./api"
 
 export const getImageUrl = (image) => {
   if (!image) return "";

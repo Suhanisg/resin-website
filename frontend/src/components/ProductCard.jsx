@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import "../styles/ProductCard.css";
 import { CustomOrderForm, ThankYouCard } from "./customForm";
+import { API_URL } from "../utils/api"
 
 import {
   Flower2,
@@ -24,7 +25,7 @@ import {
 import { useWishlist } from "../context/WishlistContext";
 
 const WHATSAPP_NUMBER = "918077188283";
-const API_URL = "https://resin-website.onrender.com";
+
 
 const getImageUrl = (image) => {
   if (!image) return "";

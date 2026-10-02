@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react"
 import "../styles/Admin.css"
-import { adminFetch } from "../utils/adminAuth"
+import { API_URL as BASE_URL, adminFetch } from "../utils/adminAuth"
 
-const PRODUCTS_URL = "https://resin-website.onrender.com/api/products"
 const PRODUCTS_PATH = "/api/products"
-const CATEGORIES_URL = "https://resin-website.onrender.com/api/categories"
+const PRODUCTS_URL = `${BASE_URL}${PRODUCTS_PATH}`
+const CATEGORIES_URL = `${BASE_URL}/api/categories`
+const SUBCATEGORIES_URL = `${BASE_URL}/api/subcategories`
 
 const getImageUrl = (image) => {
   if (!image) return ""
@@ -15,7 +16,7 @@ const getImageUrl = (image) => {
   }
 
   // Old /uploads images
-  return `https://resin-website.onrender.com${image}`
+  return `${BASE_URL}${image}`
 }
 
 const FRAME = 300
@@ -24,8 +25,10 @@ const OUTPUT = 600
 function ProductManager() {
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
+  const [subcategories, setSubcategories] = useState([])
   const [name, setName] = useState("")
   const [category, setCategory] = useState("")
+  const [subcategory, setSubcategory] = useState("")
   const [variants, setVariants] = useState([{ size: "", price: "" }])
   const [description, setDescription] = useState("")
   const [tagline, setTagline] = useState("")
@@ -84,14 +87,31 @@ function ProductManager() {
     }
   }
 
+  const fetchSubcategories = async () => {
+    try {
+      const res = await fetch(SUBCATEGORIES_URL)
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch subcategories")
+      }
+
+      const data = await res.json()
+      setSubcategories(data)
+    } catch (err) {
+      console.error("Fetch subcategories error:", err)
+    }
+  }
+
   useEffect(() => {
     fetchProducts()
     fetchCategories()
+    fetchSubcategories()
   }, [])
 
   const resetForm = () => {
     setName("")
     setCategory("")
+    setSubcategory("")
     setVariants([{ size: "", price: "" }])
     setDescription("")
     setTagline("")
@@ -339,6 +359,7 @@ function ProductManager() {
 
     formData.append("name", name)
     formData.append("category", category)
+    formData.append("subcategory", subcategory)
     formData.append(
       "variants",
       JSON.stringify(variants)
@@ -372,7 +393,7 @@ function ProductManager() {
     })
 
     try {
-           const path = editingId
+      const path = editingId
         ? `${PRODUCTS_PATH}/${editingId}`
         : PRODUCTS_PATH
 
@@ -405,6 +426,7 @@ function ProductManager() {
     setEditingId(p._id)
     setName(p.name)
     setCategory(p.category)
+    setSubcategory(p.subcategory || "")
 
     setVariants(
       p.variants?.length
@@ -442,7 +464,7 @@ function ProductManager() {
     }
 
     try {
-          const res = await adminFetch(
+      const res = await adminFetch(
         `${PRODUCTS_PATH}/${id}`,
         {
           method: "DELETE",
@@ -490,9 +512,10 @@ function ProductManager() {
 
           <select
             value={category}
-            onChange={(e) =>
+            onChange={(e) => {
               setCategory(e.target.value)
-            }
+              setSubcategory("")
+            }}
             required
           >
             <option value="">
@@ -509,6 +532,38 @@ function ProductManager() {
             ))}
           </select>
         </label>
+
+        {subcategories.some(
+          (s) => s.category === category
+        ) && (
+          <label>
+            Subcategory (optional)
+
+            <select
+              value={subcategory}
+              onChange={(e) =>
+                setSubcategory(e.target.value)
+              }
+            >
+              <option value="">
+                -- No subcategory --
+              </option>
+
+              {subcategories
+                .filter(
+                  (s) => s.category === category
+                )
+                .map((s) => (
+                  <option
+                    key={s._id}
+                    value={s._id}
+                  >
+                    {s.name}
+                  </option>
+                ))}
+            </select>
+          </label>
+        )}
 
         <label>
           Sizes & Prices
@@ -825,7 +880,17 @@ function ProductManager() {
               <h4>{p.name}</h4>
 
               <p className="admin-card-meta">
-                {p.category} ·{" "}
+                {p.category}
+                {p.subcategory &&
+                  subcategories.find(
+                    (s) => s._id === p.subcategory
+                  ) &&
+                  ` › ${
+                    subcategories.find(
+                      (s) => s._id === p.subcategory
+                    ).name
+                  }`}
+                {" · "}
                 {p.variants
                   ?.map(
                     (v) =>
