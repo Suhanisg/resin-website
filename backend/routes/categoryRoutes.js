@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Category = require("../models/category");
 const upload = require("../middlewares/upload");
+const protect = require("../middlewares/authMiddleware");
 
-// GET all categories
+// GET all categories (public)
 router.get("/", async (req, res) => {
   try {
     const categories = await Category.find();
@@ -13,8 +14,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-// CREATE category
-router.post("/", upload.single("image"), async (req, res) => {
+// CREATE category (admin only)
+router.post("/", protect, upload.single("image"), async (req, res) => {
   try {
     const { name, description } = req.body;
 
@@ -36,8 +37,8 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-// UPDATE category
-router.put("/:id", upload.single("image"), async (req, res) => {
+// UPDATE category (admin only)
+router.put("/:id", protect, upload.single("image"), async (req, res) => {
   try {
     const { name, description } = req.body;
 
@@ -68,8 +69,8 @@ router.put("/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-// DELETE category
-router.delete("/:id", async (req, res) => {
+// DELETE category (admin only)
+router.delete("/:id", protect, async (req, res) => {
   try {
     const category = await Category.findByIdAndDelete(req.params.id);
 

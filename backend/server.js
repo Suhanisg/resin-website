@@ -9,13 +9,29 @@ const path = require("path")
 
 const categoryRoutes = require("./routes/categoryRoutes")
 const productRoutes = require("./routes/productRoutes")
+const adminAuthRoutes = require("./routes/adminAuthRoutes")
 
 const app = express()
 
-app.use(cors())
+const allowedOrigins = [
+  "https://resinbyme.vercel.app",
+  process.env.LOCAL_ORIGIN, // sirf local .env mein set karna
+].filter(Boolean)
+
+app.use(
+  cors({
+    origin: (origin, cb) => {
+      if (!origin || allowedOrigins.includes(origin)) return cb(null, true)
+      cb(new Error("Not allowed by CORS"))
+    },
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+)
 app.use(express.json())
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 
+app.use("/api/admin", adminAuthRoutes)
 app.use("/api/categories", categoryRoutes)
 app.use("/api/products", productRoutes)
 

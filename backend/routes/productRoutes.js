@@ -2,13 +2,14 @@ const express = require("express");
 const router = express.Router();
 const Product = require("../models/product");
 const upload = require("../middlewares/upload");
+const protect = require("../middlewares/authMiddleware");
 
 const uploadFields = upload.fields([
   { name: "image", maxCount: 1 },
   { name: "images", maxCount: 4 },
 ]);
 
-// GET all products
+// GET all products (public)
 router.get("/", async (req, res) => {
   try {
     const products = await Product.find();
@@ -18,7 +19,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET products by category
+// GET products by category (public)
 router.get("/category/:categoryName", async (req, res) => {
   try {
     const products = await Product.find({
@@ -31,8 +32,8 @@ router.get("/category/:categoryName", async (req, res) => {
   }
 });
 
-// CREATE product
-router.post("/", uploadFields, async (req, res) => {
+// CREATE product (admin only)
+router.post("/", protect, uploadFields, async (req, res) => {
   try {
     const {
       name,
@@ -80,8 +81,8 @@ router.post("/", uploadFields, async (req, res) => {
   }
 });
 
-// UPDATE product
-router.put("/:id", uploadFields, async (req, res) => {
+// UPDATE product (admin only)
+router.put("/:id", protect, uploadFields, async (req, res) => {
   try {
     const {
       name,
@@ -136,8 +137,8 @@ router.put("/:id", uploadFields, async (req, res) => {
   }
 });
 
-// DELETE product
-router.delete("/:id", async (req, res) => {
+// DELETE product (admin only)
+router.delete("/:id", protect, async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
 
