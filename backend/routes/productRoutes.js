@@ -71,7 +71,7 @@ router.post("/", protect, uploadFields, async (req, res) => {
       careInstructions,
       shippingInfo,
       subcategory: subcategory || null,
-      variants: JSON.parse(variants),
+      variants: variants ? JSON.parse(variants) : [],
     });
 
     await product.save();
@@ -104,7 +104,6 @@ router.put("/:id", protect, uploadFields, async (req, res) => {
       name,
       category,
       description,
-      variants: JSON.parse(variants),
       tagline,
       details,
       material,
@@ -113,6 +112,11 @@ router.put("/:id", protect, uploadFields, async (req, res) => {
       shippingInfo,
       subcategory: subcategory || null,
     };
+
+    // Variants sirf tab update ho jab request me aaye
+    if (variants) {
+      updateData.variants = JSON.parse(variants);
+    }
 
     // Main image
     if (req.files?.image?.[0]) {
