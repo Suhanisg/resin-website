@@ -344,6 +344,8 @@
   margin-bottom: 14px;
 }
 
+/* Size chooser styles — details view me ab use nahi hote, par
+   CustomOrderForm inhe use kar sakta hai, isliye rakhe hain */
 .pc-modal-label {
   font-size: 12px;
   letter-spacing: 1px;
@@ -379,26 +381,124 @@
   color: #fff;
 }
 
-.pc-price-row {
+/* ===== MAKE IT YOURS ===== */
+.pc-make-yours {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 6px;
-  flex-wrap: wrap;
-  gap: 8px;
+  gap: 14px;
+  background: #fbeef0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
 }
 
-.pc-modal-price {
-  font-family: Georgia, serif;
-  font-size: 24px;
+.pc-make-yours-img {
+  width: 76px;
+  height: 56px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.pc-make-yours-line {
+  width: 1px;
+  align-self: stretch;
+  background: #e8c9d1;
+}
+
+.pc-make-yours-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-right: 24px;
+}
+
+.pc-make-yours-title {
+  font-size: 15px;
   font-weight: 700;
   color: #5c3a52;
 }
 
-.pc-price-suffix {
+.pc-make-yours-sub {
+  font-size: 12px;
+  color: #8a6a78;
+  line-height: 1.45;
+}
+
+.pc-deco-heart {
+  position: absolute;
+  color: #e48aa6;
+  fill: #f3b6c8;
+}
+
+.pc-deco-heart-1 {
+  top: 14px;
+  right: 16px;
+}
+
+.pc-deco-heart-2 {
+  top: 34px;
+  right: 8px;
+}
+
+/* ===== PRICE & SIZE | CUSTOMISATION ===== */
+.pc-info-duo {
+  display: flex;
+  align-items: stretch;
+  background: #fbf3ef;
+  border: 1px solid #f0e0d8;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.pc-info-duo-item {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+
+.pc-info-duo-divider {
+  width: 1px;
+  background: #e8d3cc;
+  margin: 0 12px;
+}
+
+.pc-info-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f6dde2;
+  color: #7a2946;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pc-tag-rotate {
+  transform: rotate(90deg);
+}
+
+.pc-info-duo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pc-info-duo-title {
   font-size: 13px;
-  font-weight: 400;
-  color: #9a8a86;
+  font-weight: 700;
+  color: #5c3a52;
+}
+
+.pc-info-duo-sub {
+  font-size: 11px;
+  color: #7d6070;
+  line-height: 1.4;
 }
 
 /* ===== SHIPPING INFO (know more / know less) ===== */
@@ -536,14 +636,7 @@
   flex-shrink: 0;
 }
 
-.pc-wishlist-link {
-  background: none;
-  border: none;
-  font-size: 12px;
-  color: #b98fa6;
-  cursor: pointer;
-}
-
+/* ===== FEATURES ===== */
 .pc-features-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -908,6 +1001,17 @@
   }
   .pc-features-row {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Price & Size / Customisation: mobile pe upar-neeche */
+  .pc-info-duo {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .pc-info-duo-divider {
+    width: 100%;
+    height: 1px;
+    margin: 0;
   }
 }
 

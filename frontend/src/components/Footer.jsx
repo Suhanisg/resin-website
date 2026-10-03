@@ -186,7 +186,7 @@ function Footer() {
         <div className="footer-col">
           <h4>Categories</h4>
 
-          <ul className="footer-links-list">
+          <ul className="footer-links-list footer-categories-scroll">
             {categories.map((cat) => (
               <li key={cat._id}>
                 <Link
@@ -269,7 +269,7 @@ function Footer() {
       <div className="footer-bottom">
         <div className="footer-bottom-inner">
           <p className="footer-bottom-copyright">
-            © {new Date().getFullYear()} Resin Creation. All Rights
+            © {new Date().getFullYear()} Resin Creations. All Rights
             Reserved.
           </p>
 

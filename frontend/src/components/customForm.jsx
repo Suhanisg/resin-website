@@ -148,38 +148,7 @@ export function CustomOrderForm({
         </div>
       </div>
 
-      {product.variants?.length > 0 && (
-        <div className="com-field">
-          <div className="com-field-icon">
-            <Scaling size={16} />
-          </div>
-          <div className="com-field-content">
-            <span className="com-label">Choose Size *</span>
-            <div className="com-size-group">
-              {product.variants.map((v, i) => (
-                <button
-                  type="button"
-                  key={i}
-                  className={
-                    i === selectedIndex ? "com-size-btn active" : "com-size-btn"
-                  }
-                  onClick={() => setSelectedIndex(i)}
-                >
-                  {v.size}
-                </button>
-              ))}
-            </div>
-            {product.variants[selectedIndex] && (
-              <span className="com-size-price">
-                ₹{product.variants[selectedIndex].price}{" "}
-                <span className="com-size-price-suffix">
-                  for this size excluding shipping charges
-                </span>
-              </span>
-            )}
-          </div>
-        </div>
-      )}
+     
 
       <div className={`com-field ${errors.customisation ? "com-field-error" : ""}`}>
         <div className="com-field-icon">
@@ -195,7 +164,7 @@ export function CustomOrderForm({
             className={errors.customisation ? "com-input-error" : ""}
             value={orderForm.customisation}
             onChange={(e) => updateOrderField("customisation", e.target.value)}
-            placeholder="E.g. couple photo, name, date, colour theme, etc."
+            placeholder="E.g. size, couple photo, name, date, colour theme, etc."
           />
         </div>
       </div>

@@ -29,7 +29,6 @@ function ProductManager() {
   const [name, setName] = useState("")
   const [category, setCategory] = useState("")
   const [subcategory, setSubcategory] = useState("")
-  const [variants, setVariants] = useState([{ size: "", price: "" }])
   const [description, setDescription] = useState("")
   const [tagline, setTagline] = useState("")
   const [details, setDetails] = useState("")
@@ -112,7 +111,6 @@ function ProductManager() {
     setName("")
     setCategory("")
     setSubcategory("")
-    setVariants([{ size: "", price: "" }])
     setDescription("")
     setTagline("")
     setDetails("")
@@ -131,25 +129,6 @@ function ProductManager() {
     if (fileInputRef.current) {
       fileInputRef.current.value = ""
     }
-  }
-
-  const updateVariant = (index, field, value) => {
-    const updated = [...variants]
-    updated[index][field] = value
-    setVariants(updated)
-  }
-
-  const addVariant = () => {
-    setVariants([
-      ...variants,
-      { size: "", price: "" },
-    ])
-  }
-
-  const removeVariant = (index) => {
-    setVariants(
-      variants.filter((_, i) => i !== index)
-    )
   }
 
   const handleImageSelect = (e) => {
@@ -361,10 +340,6 @@ function ProductManager() {
     formData.append("category", category)
     formData.append("subcategory", subcategory)
     formData.append(
-      "variants",
-      JSON.stringify(variants)
-    )
-    formData.append(
       "description",
       description
     )
@@ -427,12 +402,6 @@ function ProductManager() {
     setName(p.name)
     setCategory(p.category)
     setSubcategory(p.subcategory || "")
-
-    setVariants(
-      p.variants?.length
-        ? p.variants
-        : [{ size: "", price: "" }]
-    )
 
     setDescription(p.description || "")
     setTagline(p.tagline || "")
@@ -564,64 +533,6 @@ function ProductManager() {
             </select>
           </label>
         )}
-
-        <label>
-          Sizes & Prices
-        </label>
-
-        {variants.map((v, i) => (
-          <div
-            className="form-row"
-            key={i}
-          >
-            <input
-              placeholder="e.g. 6 x 6 inches"
-              value={v.size}
-              onChange={(e) =>
-                updateVariant(
-                  i,
-                  "size",
-                  e.target.value
-                )
-              }
-              required
-            />
-
-            <input
-              type="number"
-              placeholder="Price ₹"
-              value={v.price}
-              onChange={(e) =>
-                updateVariant(
-                  i,
-                  "price",
-                  e.target.value
-                )
-              }
-              required
-            />
-
-            {variants.length > 1 && (
-              <button
-                type="button"
-                className="btn-secondary"
-                onClick={() =>
-                  removeVariant(i)
-                }
-              >
-                ✕
-              </button>
-            )}
-          </div>
-        ))}
-
-        <button
-          type="button"
-          className="btn-secondary"
-          onClick={addVariant}
-        >
-          + Add another size
-        </button>
 
         <label>
           Short Tagline
@@ -890,13 +801,6 @@ function ProductManager() {
                       (s) => s._id === p.subcategory
                     ).name
                   }`}
-                {" · "}
-                {p.variants
-                  ?.map(
-                    (v) =>
-                      `${v.size}: ₹${v.price}`
-                  )
-                  .join(" | ")}
               </p>
 
               <div className="admin-card-actions">

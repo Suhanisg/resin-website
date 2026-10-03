@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import "../styles/ProductCard.css";
 import { CustomOrderForm, ThankYouCard } from "./customForm";
-import { API_URL } from "../utils/api"
+import { API_URL } from "../utils/api";
+import giftBox from "../assets/giftBox.png";
 
 import {
   Flower2,
@@ -21,11 +22,12 @@ import {
   Package,
   ClipboardCheck,
   Heart,
+  Tag,
+  MessageCircleMore,
 } from "lucide-react";
 import { useWishlist } from "../context/WishlistContext";
 
 const WHATSAPP_NUMBER = "918077188283";
-
 
 const getImageUrl = (image) => {
   if (!image) return "";
@@ -85,22 +87,20 @@ function ProductCard({ product }) {
   const features =
     product.features?.length > 0 ? product.features : DEFAULT_FEATURES;
 
- const galleryImages = (() => {
-  const original = product.image
-    ? getImageUrl(product.image)
-    : null;
+  const galleryImages = (() => {
+    const original = product.image ? getImageUrl(product.image) : null;
 
-  const crops =
-    product.images?.length > 0
-      ? product.images.map((img) => getImageUrl(img))
-      : [];
+    const crops =
+      product.images?.length > 0
+        ? product.images.map((img) => getImageUrl(img))
+        : [];
 
-  if (original) {
-    return [original, ...crops];
-  }
+    if (original) {
+      return [original, ...crops];
+    }
 
-  return crops;
-})();
+    return crops;
+  })();
 
   const cardImage = galleryImages[0];
 
@@ -152,7 +152,7 @@ function ProductCard({ product }) {
     const willBeWishlisted = !wishlisted;
     toggleWishlist(product);
     showToastMessage(
-      willBeWishlisted ? "♥ Added to Wishlist" : "Removed from Wishlist"
+      willBeWishlisted ? "♥ Added to Wishlist" : "Removed from Wishlist",
     );
   };
 
@@ -199,9 +199,6 @@ function ProductCard({ product }) {
       `*New Custom Order Request*`,
       ``,
       `Product: ${product.name}`,
-      `Size: ${selected?.size || "-"}`,
-      `Price: \u20B9${selected?.price || "-"} onwards`,
-      `Quantity: ${quantity}`,
       `---------------------`,
       `Name: ${orderForm.name}`,
       `WhatsApp: ${orderForm.whatsapp}`,
@@ -210,8 +207,7 @@ function ProductCard({ product }) {
     if (orderForm.email) lines.push(`Email: ${orderForm.email}`);
     if (orderForm.customisation)
       lines.push(`Customisation: ${orderForm.customisation}`);
-    if (orderForm.eventDate)
-      lines.push(`Event Date: ${orderForm.eventDate}`);
+    if (orderForm.eventDate) lines.push(`Event Date: ${orderForm.eventDate}`);
 
     lines.push(`Address: ${orderForm.street}, ${orderForm.city}`);
 
@@ -221,7 +217,7 @@ function ProductCard({ product }) {
     lines.push(
       `---------------------`,
       `Hi Resin Creations! I'd love to place this custom order.`,
-      `Please confirm the price & timeline. Thank you!`
+      `Please confirm the price & timeline. Thank you!`,
     );
 
     return lines.join("\n");
@@ -338,42 +334,69 @@ function ProductCard({ product }) {
                     <p className="pc-modal-category">{product.category}</p>
                     <h2 className="pc-modal-title">{product.name}</h2>
 
-                    {product.variants?.length > 0 && (
-                      <>
-                        <p className="pc-modal-label">Choose Size</p>
-                        <div className="pc-size-options">
-                          {product.variants.map((v, i) => (
-                            <button
-                              key={i}
-                              type="button"
-                              className={
-                                i === selectedIndex
-                                  ? "pc-size-swatch active"
-                                  : "pc-size-swatch"
-                              }
-                              onClick={() => setSelectedIndex(i)}
-                            >
-                              {v.size}
-                            </button>
-                          ))}
-                        </div>
-                      </>
-                    )}
-
-                    <div className="pc-price-row">
-                      <p className="pc-modal-price">
-                        ₹{selected?.price}{" "}
-                        <span className="pc-price-suffix">onwards</span>
-                      </p>
-                      <button
-                        className="pc-wishlist-link"
-                        onClick={handleWishlist}
-                      >
-                        {wishlisted
-                          ? "♥ Wishlisted"
-                          : "♡ Customisation available"}
-                      </button>
+                    {/* MAKE IT YOURS */}
+                    <div className="pc-make-yours">
+                      <img src={giftBox} alt="" className="pc-make-yours-img" />
+                      <div className="pc-make-yours-line" />
+                      <div className="pc-make-yours-text">
+                        <span className="pc-make-yours-title">
+                          Make it Yours
+                        </span>
+                        <span className="pc-make-yours-sub">
+                          Choose the details and create something uniquely
+                          yours.
+                        </span>
+                      </div>
+                      <Heart
+                        size={12}
+                        className="pc-deco-heart pc-deco-heart-1"
+                      />
+                      <Heart
+                        size={9}
+                        className="pc-deco-heart pc-deco-heart-2"
+                      />
                     </div>
+
+                    {/* PRICE & SIZE | CUSTOMISATION */}
+                    <div className="pc-info-duo">
+                      <div className="pc-info-duo-item">
+                        <span className="pc-info-circle">
+                          <Tag
+                            size={20}
+                            strokeWidth={1.6}
+                            className="pc-tag-rotate"
+                          />
+                        </span>
+                        <div className="pc-info-duo-text">
+                          <span className="pc-info-duo-title">
+                            Price &amp; Size
+                          </span>
+                          <span className="pc-info-duo-sub">
+                            Final price and size will be confirmed based on your
+                            design and customisation.
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="pc-info-duo-divider" />
+
+                      <div className="pc-info-duo-item">
+                        <span className="pc-info-circle">
+                          <MessageCircleMore size={20} strokeWidth={1.6} />
+                        </span>
+                        <div className="pc-info-duo-text">
+                          <span className="pc-info-duo-title">
+                            Customisation
+                          </span>
+                          <span className="pc-info-duo-sub">
+                            Share your preferences like size, frame style, name,
+                            date or any special details while placing the order.
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <hr className="pc-price-divider" />
                     <div
                       className={`pc-shipping-info ${shippingInfoOpen ? "open" : ""}`}
                     >
@@ -396,7 +419,7 @@ function ProductCard({ product }) {
                             ) : (
                               <>
                                 <span className="pc-shipping-title">
-                                  Price shown is for the product only.
+                                 Shipping Charges
                                 </span>
                                 <span className="pc-shipping-subtext">
                                   Shipping charges will be calculated separately
@@ -422,15 +445,15 @@ function ProductCard({ product }) {
                       {shippingInfoOpen && (
                         <div className="pc-shipping-body">
                           <p className="pc-shipping-lead">
-                            Shipping is not included in the displayed product
-                            price.
+                            Shipping charges are calculated separately for every
+                            order.
                           </p>
                           <p className="pc-shipping-desc">
-                            Shipping charges are calculated separately based on
-                            your location, package weight and final order
-                            requirements. Once your product all details are
-                            finalised, we will confirm the exact shipping charge
-                            with you before placing your order.
+                            Shipping cost depends on your delivery location,
+                            package size, weight, and order requirements. Once
+                            your product details are finalised, the exact
+                            shipping charge will be confirmed with you before
+                            your order is placed.
                           </p>
 
                           <div className="pc-shipping-grid">
@@ -602,7 +625,7 @@ function ProductCard({ product }) {
             <span className="pc-toast-check">✓</span>
             {toast}
           </div>,
-          document.body
+          document.body,
         )}
     </>
   );

@@ -268,6 +268,53 @@
   text-align: center;
   letter-spacing: 4px;
 }
+/* ===== CATEGORIES: 6 dikhao, baaki scroll ===== */
+.footer-categories-scroll {
+  max-height: 10.8rem;          /* exactly 6 names (har name = 1.81rem) */
+  max-width: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+}
+
+/* height fix rahe isliye line-height pakka kar di */
+.footer-categories-scroll li {
+  line-height: 1.4;
+}
+
+.footer-categories-scroll li a {
+  line-height: 1.4;
+}
+
+/* Chrome / Edge / Safari */
+.footer-categories-scroll::-webkit-scrollbar {
+ display: none;
+}
+
+.footer-categories-scroll::-webkit-scrollbar-button {
+  display: none;                /* upar-neeche ke arrows hata diye */
+}
+
+.footer-categories-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.footer-categories-scroll::-webkit-scrollbar-thumb {
+  background: #8a5568;
+  border-radius: 4px;
+}
+
+.footer-categories-scroll::-webkit-scrollbar-thumb:hover {
+  background: #f0a8c4;
+}
+
+/* Firefox ke liye */
+@supports not selector(::-webkit-scrollbar) {
+  .footer-categories-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #8a5568 transparent;
+  }
+}
 
 /* ===== TABLET (iPad Mini, Surface): brand upar, 3 columns neeche ===== */
 @media (max-width: 1100px) {
@@ -350,5 +397,12 @@
   .footer-brand,
   .footer-col-touch {
     grid-column: auto;
+  }
+}
+
+/* Sirf desktop par: Categories ko Quick Links aur Get in Touch ke beech laao */
+@media (min-width: 1101px) {
+  .footer-container > .footer-col:nth-child(3) {
+    margin-left: -2rem;
   }
 }
