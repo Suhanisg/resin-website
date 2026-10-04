@@ -16,36 +16,71 @@ const IMAGE_POSITIONS = {
 }
 const getPosition = (catName) => IMAGE_POSITIONS[catName] || "center"
 
-// Photo aane tak shimmer dikhata hai, aate hi smoothly fade-in karta hai
+// Image tabhi load hoti hai jab card viewport ke paas aaye (lazy loading).
+// Tab tak shimmer dikhta hai, aate hi smoothly fade-in hota hai.
 function CategoryImage({ cat }) {
+  const [inView, setInView] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [failed, setFailed] = useState(false)
+  const wrapRef = useRef(null)
   const imgRef = useRef(null)
+
+  // Jab ye element viewport mein aaye tabhi inView = true
+  useEffect(() => {
+    const el = wrapRef.current
+    if (!el) return
+
+    // Purane browsers jinme IntersectionObserver nahi hai, unme seedha load kar do
+    if (typeof IntersectionObserver === "undefined") {
+      setInView(true)
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true)
+          observer.disconnect() // ek baar trigger hone ke baad dobara observe nahi karna
+        }
+      },
+      {
+        // 200px pehle hi load shuru kar do (niche scroll karte waqt)
+        rootMargin: "0px 0px 200px 0px",
+        threshold: 0.01,
+      }
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   // agar photo browser cache se turant aa gayi ho
   useEffect(() => {
     const img = imgRef.current
-    if (img && img.complete && img.naturalWidth > 0) setLoaded(true)
-  }, [])
+    if (inView && img && img.complete && img.naturalWidth > 0) setLoaded(true)
+  }, [inView])
 
   if (failed) return <div className="vf-photo-fallback" />
 
   return (
-    <>
+    <div ref={wrapRef} style={{ position: "absolute", inset: 0 }}>
       {!loaded && <div className="vf-shimmer" />}
-      <img
-        ref={imgRef}
-        src={getImageUrl(cat.image)}
-        alt={cat.name}
-        onLoad={() => setLoaded(true)}
-        onError={() => setFailed(true)}
-        style={{
-          objectPosition: getPosition(cat.name),
-          opacity: loaded ? 1 : 0,
-          transition: "opacity 0.6s ease",
-        }}
-      />
-    </>
+      {inView && (
+        <img
+          ref={imgRef}
+          src={getImageUrl(cat.image)}
+          alt={cat.name}
+          decoding="async"
+          onLoad={() => setLoaded(true)}
+          onError={() => setFailed(true)}
+          style={{
+            objectPosition: getPosition(cat.name),
+            opacity: loaded ? 1 : 0,
+            transition: "opacity 0.6s ease",
+          }}
+        />
+      )}
+    </div>
   )
 }
 

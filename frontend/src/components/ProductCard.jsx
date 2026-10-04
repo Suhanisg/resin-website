@@ -4,6 +4,7 @@ import "../styles/ProductCard.css";
 import { CustomOrderForm, ThankYouCard } from "./customForm";
 import { API_URL } from "../utils/api";
 import giftBox from "../assets/giftBox.png";
+import LazyImage from "./LazyImage";
 
 import {
   Flower2,
@@ -28,6 +29,14 @@ import {
 import { useWishlist } from "../context/WishlistContext";
 
 const WHATSAPP_NUMBER = "918077188283";
+
+// Ye dono sab products ke liye same hain (admin se likhne ki zaroorat nahi).
+// Alag-alag points ko "•" se alag karein, wo bullet list ban jayegi.
+const PROCESSING_TIME =
+  "Depends on size and design • Depends on flower preservation requirements • Final timeline confirmed at the time of order";
+
+const CARE_INSTRUCTIONS =
+  "Keep away from direct sunlight • Avoid excessive heat and moisture • Clean gently with a soft, dry cloth • Do not use harsh chemicals";
 
 const getImageUrl = (image) => {
   if (!image) return "";
@@ -230,6 +239,9 @@ function ProductCard({ product }) {
     closeModal();
     showToastMessage("Message sent! We'll get back to you soon.", 5000);
   };
+
+  // Product Details & Material admin se aate hain.
+  // Processing Time & Care Instructions hardcoded hain (sab products mein same).
   const accordionSections = [
     {
       key: "details",
@@ -247,19 +259,13 @@ function ProductCard({ product }) {
       key: "processing",
       label: "Processing Time",
       icon: CalendarClock,
-      content: product.processingTime,
+      content: PROCESSING_TIME,
     },
     {
       key: "care",
       label: "Care Instructions",
       icon: HandHeart,
-      content: product.careInstructions,
-    },
-    {
-      key: "shipping",
-      label: "Shipping Information",
-      icon: Truck,
-      content: product.shippingInfo,
+      content: CARE_INSTRUCTIONS,
     },
   ].filter((s) => s.content);
 
@@ -269,7 +275,7 @@ function ProductCard({ product }) {
         <div className="pc-image">
           <div className="pc-image-inner" onClick={() => setIsOpen(true)}>
             {cardImage ? (
-              <img src={cardImage} alt={product.name} />
+              <LazyImage src={cardImage} alt={product.name} />
             ) : (
               <span>{product.name}</span>
             )}

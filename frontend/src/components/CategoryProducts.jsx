@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import ProductCard from "./ProductCard"
+import LazyImage from "./LazyImage"
 import { API_URL } from "../utils/api"
 import { getImageUrl } from "../utils/imageUrls"
 import "../styles/CategoryProducts.css"
 import smartphone from "../assets/smartphone.png"
 import { FaWhatsapp } from "react-icons/fa"
 import { ArrowRight } from "lucide-react"
+import PageLoader from "./PageLoader"
 
 const PRODUCTS_URL = `${API_URL}/api/products`
 const CATEGORIES_URL = `${API_URL}/api/categories`
@@ -25,9 +27,9 @@ function CategoryProducts() {
   const decodedCategory = decodeURIComponent(categoryName)
   const WHATSAPP_NUMBER = "918077188283"
 
-const shareIdeaUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-  `Hi Resin Creations! I have a design idea for ${decodedCategory}. I'd love to share it with you.`
-)}`
+  const shareIdeaUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+    `Hi Resin Creations! I have a design idea for ${decodedCategory}. I'd love to share it with you.`
+  )}`
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,6 +63,11 @@ const shareIdeaUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent
     setActiveSub(null)
   }, [decodedCategory])
 
+  // page khulte hi upar se start ho
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [decodedCategory])
+
   const category = categories.find((c) => c.name === decodedCategory)
 
   const categorySubs = subcategories.filter(
@@ -74,6 +81,9 @@ const shareIdeaUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent
   const filteredProducts = activeSub
     ? categoryProducts.filter((p) => p.subcategory === activeSub)
     : categoryProducts
+
+  
+    if (loading) return <PageLoader />
 
   return (
     <>
@@ -106,10 +116,11 @@ const shareIdeaUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent
                 }
               >
                 {sub.image && (
-                  <img
+                  <LazyImage
                     src={getImageUrl(sub.image)}
                     alt={sub.name}
                     className="cp-sub-thumb"
+                    rootMargin="0px 200px"
                   />
                 )}
                 <span>{sub.name}</span>
@@ -138,17 +149,18 @@ const shareIdeaUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent
             </div>
           )}
         </div>
-              {/* Products */}
-      <section className="cp-products-section" id="products">
-        <div className="cp-products-grid">
-          {/* ...tumhara existing products code same rahega... */}
-        </div>
 
         {/* SHARE YOUR IDEA */}
         {!loading && (
           <div className="cp-idea-wrap">
             <div className="cp-idea">
-              <img src={smartphone} alt="" className="cp-idea-img" />
+              <img
+                src={smartphone}
+                alt=""
+                className="cp-idea-img"
+                loading="lazy"
+                decoding="async"
+              />
 
               <div className="cp-idea-line" />
 
@@ -176,7 +188,6 @@ const shareIdeaUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent
             </div>
           </div>
         )}
-      </section>
       </section>
     </>
   )

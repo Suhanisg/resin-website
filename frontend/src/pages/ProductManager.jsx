@@ -534,7 +534,7 @@ function ProductManager() {
           </label>
         )}
 
-        <label>
+        {/* <label>
           Short Tagline
 
           <input
@@ -556,7 +556,7 @@ function ProductManager() {
             }
             rows={2}
           />
-        </label>
+        </label> */}
 
         <label>
           Product Details
@@ -582,7 +582,7 @@ function ProductManager() {
           />
         </label>
 
-        <label>
+        {/* <label>
           Processing Time
 
           <textarea
@@ -592,9 +592,9 @@ function ProductManager() {
             }
             rows={2}
           />
-        </label>
+        </label> */}
 
-        <label>
+        {/* <label>
           Care Instructions
 
           <textarea
@@ -604,9 +604,9 @@ function ProductManager() {
             }
             rows={2}
           />
-        </label>
+        </label> */}
 
-        <label>
+        {/* <label>
           Shipping Information
 
           <textarea
@@ -616,7 +616,7 @@ function ProductManager() {
             }
             rows={2}
           />
-        </label>
+        </label> */}
 
         <label>
           Main Image{" "}
