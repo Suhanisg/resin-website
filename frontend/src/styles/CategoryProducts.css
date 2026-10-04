@@ -24,7 +24,7 @@
 /* ============ SECTION 2: PRODUCTS (completely separate) ============ */
 .cp-products-section {
   background: #fdf6f0;
-  padding: 30px 4% 24px;
+  padding: 30px 4% 50px;
   box-sizing: border-box;
   width: 100%;
   overflow-x: hidden; /* safety net: never lets this section itself scroll sideways */
