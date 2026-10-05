@@ -4,6 +4,30 @@ const Category = require("../models/category");
 const upload = require("../middlewares/upload");
 const protect = require("../middlewares/authMiddleware");
 
+// FormData se string aati hai. Number mein badlo aur range ke andar rakho.
+// Value na ho ya galat ho to undefined (yaani field ko chhedna nahi).
+const toNumber = (value, min, max) => {
+  if (value === undefined || value === null || value === "") return undefined;
+  const n = Number(value);
+  if (!Number.isFinite(n)) return undefined;
+  return Math.min(max, Math.max(min, n));
+};
+
+// body se sirf wahi position fields nikalo jo bheji gayi hain
+const getPositionFields = (body) => {
+  const fields = {
+    imageX: toNumber(body.imageX, 0, 100),
+    imageY: toNumber(body.imageY, 0, 100),
+    imageZoom: toNumber(body.imageZoom, 100, 200),
+  };
+
+  Object.keys(fields).forEach((key) => {
+    if (fields[key] === undefined) delete fields[key];
+  });
+
+  return fields;
+};
+
 // GET all categories (public)
 router.get("/", async (req, res) => {
   try {
@@ -26,6 +50,7 @@ router.post("/", protect, upload.single("image"), async (req, res) => {
       name,
       description,
       image,
+      ...getPositionFields(req.body),
     });
 
     await category.save();
@@ -45,6 +70,7 @@ router.put("/:id", protect, upload.single("image"), async (req, res) => {
     const updateData = {
       name,
       description,
+      ...getPositionFields(req.body),
     };
 
     // New image uploaded to Cloudinary
@@ -55,7 +81,7 @@ router.put("/:id", protect, upload.single("image"), async (req, res) => {
     const category = await Category.findByIdAndUpdate(
       req.params.id,
       updateData,
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     if (!category) {
