@@ -32,7 +32,8 @@
 
 .cp-products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  /* auto-fill: 1 ya 2 products hone par bhi card ka size 4 cards jaisa hi rahega */
+  grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
   justify-content: center;
   justify-items: stretch;      /* card column ki poori width lega */
   gap: 24px;
@@ -47,6 +48,11 @@
   max-width: none;             /* card ki purani max-width hata di */
   margin: 0;                   /* auto margin se card sikud jata hai */
   box-sizing: border-box;
+}
+
+/* "No products" message poori row le, ek card jitni jagah mein na dabe */
+.cp-no-products {
+  grid-column: 1 / -1;
 }
 
 @media (max-width: 750px) {

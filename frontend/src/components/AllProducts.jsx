@@ -8,6 +8,7 @@ const CATEGORIES_URL = `${API_URL}/api/categories`;
 
 const SKELETON_COUNT = 4
 
+// Purani categories ke liye fallback (jinki position admin se save nahi hui hai)
 const IMAGE_POSITIONS = {
   "Resin Clock": "center 20%",
   "Varmala Frame": "center 0%",
@@ -15,6 +16,10 @@ const IMAGE_POSITIONS = {
   "Platter": "center 20%",
 }
 const getPosition = (catName) => IMAGE_POSITIONS[catName] || "center"
+
+// Admin se position set hui hai ya nahi
+const hasSavedPosition = (cat) =>
+  typeof cat.imageX === "number" && typeof cat.imageY === "number"
 
 // Image tabhi load hoti hai jab card viewport ke paas aaye (lazy loading).
 // Tab tak shimmer dikhta hai, aate hi smoothly fade-in hota hai.
@@ -62,6 +67,10 @@ function CategoryImage({ cat }) {
 
   if (failed) return <div className="vf-photo-fallback" />
 
+  const saved = hasSavedPosition(cat)
+  const origin = saved ? `${cat.imageX}% ${cat.imageY}%` : "center"
+  const zoom = typeof cat.imageZoom === "number" ? cat.imageZoom / 100 : 1
+
   return (
     <div ref={wrapRef} style={{ position: "absolute", inset: 0 }}>
       {!loaded && <div className="vf-shimmer" />}
@@ -74,7 +83,9 @@ function CategoryImage({ cat }) {
           onLoad={() => setLoaded(true)}
           onError={() => setFailed(true)}
           style={{
-            objectPosition: getPosition(cat.name),
+            objectPosition: saved ? origin : getPosition(cat.name),
+            transform: zoom !== 1 ? `scale(${zoom})` : undefined,
+            transformOrigin: origin,
             opacity: loaded ? 1 : 0,
             transition: "opacity 0.6s ease",
           }}

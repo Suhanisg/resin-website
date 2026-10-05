@@ -96,6 +96,7 @@
   padding-bottom: 4px;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  position: relative;
 }
 
 .ap-grid::-webkit-scrollbar {
