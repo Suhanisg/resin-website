@@ -79,15 +79,16 @@ function useResponsiveStack() {
 
 function RealReviews() {
   const { screenshots } = useReviews()
-  const [order, setOrder] = useState(screenshots.map((s) => s.id))
+  const [order, setOrder] = useState(screenshots.map((s) => s._id))
   const config = useResponsiveStack()
 
+  // screenshots ab API se aate hain, isliye jab bhi count badle order reset hota hai
   useEffect(() => {
-    setOrder(screenshots.map((s) => s.id))
+    setOrder(screenshots.map((s) => s._id))
   }, [screenshots.length])
 
   const orderedReviews = order
-    .map((id) => screenshots.find((s) => s.id === id))
+    .map((id) => screenshots.find((s) => s._id === id))
     .filter(Boolean)
 
   const goNext = () => {
@@ -138,7 +139,7 @@ function RealReviews() {
             const pos = config.positions[i]
             return (
               <div
-                key={r.id}
+                key={r._id}
                 className="rr-card"
                 style={{
                   width: config.cardWidth,

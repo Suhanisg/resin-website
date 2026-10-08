@@ -1,45 +1,45 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 
 const ReviewsContext = createContext(null)
-
-const TEXT_KEY = 'resin-text-reviews'      // Reviews.jsx form se (name, rating, review, photo)
-const SCREENSHOT_KEY = 'resin-screenshot-reviews' // Admin panel se (sirf photo)
-
-function loadFromStorage(key) {
-  try {
-    const saved = localStorage.getItem(key)
-    return saved ? JSON.parse(saved) : []
-  } catch {
-    return []
-  }
-}
+const API = import.meta.env.VITE_API_URL
+const authHeader = () => ({
+  Authorization: `Bearer ${localStorage.getItem('adminToken')}`, // apna token ka key daalo
+})
 
 export function ReviewsProvider({ children }) {
-  const [reviews, setReviews] = useState(() => loadFromStorage(TEXT_KEY))
-  const [screenshots, setScreenshots] = useState(() => loadFromStorage(SCREENSHOT_KEY))
+  const [reviews, setReviews] = useState([])
+  const [screenshots, setScreenshots] = useState([])
 
   useEffect(() => {
-    localStorage.setItem(TEXT_KEY, JSON.stringify(reviews))
-  }, [reviews])
+    fetch(`${API}/api/reviews`).then(r => r.json()).then(setReviews).catch(() => {})
+    fetch(`${API}/api/screenshots`).then(r => r.json()).then(setScreenshots).catch(() => {})
+  }, [])
 
-  useEffect(() => {
-    localStorage.setItem(SCREENSHOT_KEY, JSON.stringify(screenshots))
-  }, [screenshots])
-
-  const addReview = (newReview) => {
-    setReviews((prev) => [{ ...newReview, id: Date.now() }, ...prev])
+  // formData: name, rating, review, photo (optional)
+  const addReview = async (formData) => {
+    const res = await fetch(`${API}/api/reviews`, { method: 'POST', body: formData })
+    const saved = await res.json()
+    setReviews(prev => [saved, ...prev])
   }
 
-  const deleteReview = (id) => {
-    setReviews((prev) => prev.filter((r) => r.id !== id))
+  const deleteReview = async (id) => {
+    await fetch(`${API}/api/reviews/${id}`, { method: 'DELETE', headers: authHeader() })
+    setReviews(prev => prev.filter(r => r._id !== id))
   }
 
-  const addScreenshot = (newShot) => {
-    setScreenshots((prev) => [{ ...newShot, id: Date.now() }, ...prev])
+  const addScreenshot = async (file) => {
+    const fd = new FormData()
+    fd.append('photo', file)
+    const res = await fetch(`${API}/api/screenshots`, {
+      method: 'POST', headers: authHeader(), body: fd,
+    })
+    const saved = await res.json()
+    setScreenshots(prev => [saved, ...prev])
   }
 
-  const deleteScreenshot = (id) => {
-    setScreenshots((prev) => prev.filter((s) => s.id !== id))
+  const deleteScreenshot = async (id) => {
+    await fetch(`${API}/api/screenshots/${id}`, { method: 'DELETE', headers: authHeader() })
+    setScreenshots(prev => prev.filter(s => s._id !== id))
   }
 
   return (

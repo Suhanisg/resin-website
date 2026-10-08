@@ -72,6 +72,12 @@ function CategoryManager() {
     setPosTouched(true);
   };
 
+  // Puri image dikhane ke liye: zoom 100 se kam = contain mode (website pe bhi same)
+  const fitWholeImage = () => {
+    setPos({ x: 50, y: 50, zoom: 95 });
+    setPosTouched(true);
+  };
+
   const resetForm = () => {
     setName("");
     setDescription("");
@@ -214,7 +220,7 @@ function CategoryManager() {
                 style={{
                   width: "100%",
                   height: "100%",
-                  objectFit: "cover",
+                  objectFit: pos.zoom < 100 ? "contain" : "cover",
                   objectPosition: origin,
                   transform: `scale(${pos.zoom / 100})`,
                   transformOrigin: origin,
@@ -262,16 +268,29 @@ function CategoryManager() {
               Zoom ({pos.zoom}%)
               <input
                 type="range"
-                min="100"
+                min="20"
                 max="200"
                 value={pos.zoom}
                 onChange={(e) => updatePos("zoom", e.target.value)}
               />
             </label>
 
-            <button type="button" className="btn-secondary" onClick={resetPos}>
-              Reset Position
-            </button>
+            <div className="form-actions">
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={fitWholeImage}
+              >
+                Poori Image Fit Karo
+              </button>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={resetPos}
+              >
+                Reset Position
+              </button>
+            </div>
           </div>
         )}
 

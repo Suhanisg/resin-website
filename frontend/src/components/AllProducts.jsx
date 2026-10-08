@@ -70,6 +70,7 @@ function CategoryImage({ cat }) {
   const saved = hasSavedPosition(cat)
   const origin = saved ? `${cat.imageX}% ${cat.imageY}%` : "center"
   const zoom = typeof cat.imageZoom === "number" ? cat.imageZoom / 100 : 1
+  const fitWhole = zoom < 1 // zoom 100 se kam = poori image dikhao (contain)
 
   return (
     <div ref={wrapRef} style={{ position: "absolute", inset: 0 }}>
@@ -83,6 +84,7 @@ function CategoryImage({ cat }) {
           onLoad={() => setLoaded(true)}
           onError={() => setFailed(true)}
           style={{
+            objectFit: fitWhole ? "contain" : "cover",
             objectPosition: saved ? origin : getPosition(cat.name),
             transform: zoom !== 1 ? `scale(${zoom})` : undefined,
             transformOrigin: origin,

@@ -1,25 +1,44 @@
+/* ============ BASE ============ */
+.admin-panel,
+.admin-panel * {
+  box-sizing: border-box;
+}
+
 .admin-panel {
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   background-color: #faf5ef;
-  padding: 2.5rem;
+  padding: clamp(1rem, 4vw, 2.5rem);
 }
 
 .admin-header h1 {
   font-family: 'Playfair Display', serif;
   color: #5c2b45;
-  font-size: 1.8rem;
+  font-size: clamp(1.3rem, 5vw, 1.8rem);
   margin-bottom: 1.5rem;
 }
 
+/* ============ TABS ============ */
 .admin-tabs {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.25rem;
   margin-bottom: 2rem;
   border-bottom: 1px solid #e5d5da;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .admin-tabs button {
-  padding: 0.75rem 1.5rem;
+  flex: 0 0 auto;
+  padding: 0.7rem 1rem;
   border: none;
   background: transparent;
   font-weight: 600;
@@ -33,18 +52,27 @@
   border-bottom-color: #7a2848;
 }
 
+/* ============ SECTIONS ============ */
 .admin-section h2 {
   font-size: 1.3rem;
   color: #4a2340;
   margin-bottom: 1rem;
 }
 
+.admin-section h3 {
+  font-size: 1.1rem;
+  color: #4a2340;
+  margin-bottom: 1rem;
+}
+
+/* ============ FORM ============ */
 .admin-form {
+  width: 100%;
+  max-width: 600px;
   background: #fff;
   border: 1px solid #eee3da;
   border-radius: 8px;
-  padding: 1.5rem;
-  max-width: 600px;
+  padding: clamp(1rem, 4vw, 1.5rem);
   margin-bottom: 2.5rem;
   display: flex;
   flex-direction: column;
@@ -63,11 +91,41 @@
 .admin-form input,
 .admin-form textarea,
 .admin-form select {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   padding: 0.6rem 0.8rem;
   border: 1px solid #d9c9d0;
   border-radius: 5px;
   font-size: 0.95rem;
   font-family: inherit;
+}
+
+/* File input ko thoda neat dikhane ke liye */
+.admin-form input[type="file"] {
+  padding: 0.5rem;
+  background: #faf6f0;
+  cursor: pointer;
+}
+
+.admin-form input[type="file"]::file-selector-button {
+  margin-right: 0.75rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid #d9c9d0;
+  border-radius: 20px;
+  background: #fff;
+  color: #7a2848;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-form input[type="file"]::file-selector-button:hover {
+  background: #f5e9ee;
+}
+
+.form-row,
+.form-row > * {
+  min-width: 0;
 }
 
 .form-row {
@@ -85,6 +143,7 @@
   margin-top: 0.5rem;
 }
 
+/* ============ BUTTONS ============ */
 .btn-primary {
   background-color: #7a2848;
   color: #fff;
@@ -113,15 +172,10 @@
   cursor: pointer;
 }
 
-.admin-section h3 {
-  font-size: 1.1rem;
-  color: #4a2340;
-  margin-bottom: 1rem;
-}
-
+/* ============ CARDS GRID ============ */
 .admin-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(230px, 100%), 1fr));
   gap: 1.25rem;
 }
 
@@ -189,52 +243,7 @@
   background: #fbe8ec;
 }
 
-.admin-hint {
-  font-size: 12.5px;
-  color: #9a6c82;
-  margin: 4px 0;
-}
-
-.admin-crop-preview {
-  margin: 10px 0;
-}
-
-.admin-crop-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.admin-crop-thumb {
-  width: 64px;
-  height: 64px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #ddcfc2;
-}
-
-.crop-tool {
-  margin: 12px 0;
-  padding: 14px;
-  background: #faf6f0;
-  border-radius: 10px;
-  border: 1px solid #eee3da;
-}
-
-.crop-frame {
-  position: relative;
-  overflow: hidden;
-  border-radius: 8px;
-  border: 2px solid #7a2946;
-  margin-bottom: 10px;
-  background: #eee;
-}
-
-.crop-zoom {
-  width: 100%;
-  margin-bottom: 10px;
-}
-
+/* ============ HINTS + CROP TOOL ============ */
 .admin-hint {
   font-size: 12.5px;
   color: #9a6c82;
@@ -277,84 +286,91 @@
   line-height: 1;
   cursor: pointer;
 }
-/* ============ RESPONSIVE FIX (sabse neeche paste karo) ============ */
 
-/* Sab elements ke liye padding width ke andar count ho */
-.admin-panel,
-.admin-panel * {
-  box-sizing: border-box;
+.crop-tool {
+  margin: 12px 0;
+  padding: 14px;
+  background: #faf6f0;
+  border-radius: 10px;
+  border: 1px solid #eee3da;
 }
 
-/* Panel poori screen width le */
-.admin-panel {
+.crop-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 2px solid #7a2946;
+  margin-bottom: 10px;
+  background: #eee;
+}
+
+.crop-zoom {
   width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;          /* page kabhi side mein scroll na ho */
-  padding: clamp(1rem, 4vw, 2.5rem);
+  margin-bottom: 10px;
 }
 
-.admin-header h1 {
-  font-size: clamp(1.3rem, 5vw, 1.8rem);
+/* ============ REVIEWS (NEW) ============ */
+.admin-review-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(150px, 100%), 1fr));
+  gap: 1rem;
 }
 
-/* Form: bade screen par 600px, chhote par poori width */
-.admin-form {
+.admin-review-item {
+  background: #fff;
+  border: 1px solid #eee3da;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-review-thumb {
   width: 100%;
-  max-width: 600px;
-  padding: clamp(1rem, 4vw, 1.5rem);
+  aspect-ratio: 9 / 14;
+  object-fit: cover;
+  display: block;
+  background: linear-gradient(135deg, #eadfd5, #c9a6b7);
 }
 
-.admin-form input,
-.admin-form textarea,
-.admin-form select {
-  width: 100%;
-  min-width: 0;                /* flex/grid mein bahar nikalna band */
-  max-width: 100%;
+.admin-review-item .danger {
+  margin: 0.6rem;
+  padding: 0.45rem;
+  border: 1px solid #e3b8c3;
+  background: transparent;
+  color: #b0304a;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  cursor: pointer;
 }
 
-/* Side by side wale rows (Sizes & Price waghera) */
-.form-row,
-.form-row > * {
-  min-width: 0;
+.admin-review-item .danger:hover {
+  background: #fbe8ec;
 }
 
-/* Tabs: ek line mein, zaroorat par swipe karke scroll */
-.admin-tabs {
-  overflow-x: auto;
-  white-space: nowrap;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-  gap: 0.25rem;
+/* ============ TABLET ============ */
+@media (max-width: 900px) {
+  .admin-panel {
+    padding: 1.5rem;
+  }
 }
 
-.admin-tabs::-webkit-scrollbar {
-  display: none;
-}
-
-.admin-tabs button {
-  flex: 0 0 auto;
-  padding: 0.7rem 1rem;
-}
-
-/* Cards ka grid chhote screen par bahar na nikle */
-.admin-grid {
-  grid-template-columns: repeat(auto-fill, minmax(min(230px, 100%), 1fr));
-}
-
-/* ---------- Mobile ---------- */
+/* ============ MOBILE ============ */
 @media (max-width: 600px) {
   .admin-form {
     max-width: 100%;
   }
 
-  /* iPhone par input zoom na ho (16px se kam par Safari zoom karta hai) */
+  /* iPhone par input zoom na ho */
   .admin-form input,
   .admin-form textarea,
   .admin-form select {
     font-size: 16px;
   }
 
-  /* Do inputs ek line mein fit na ho to neeche wrap ho jayein */
   .form-row {
     flex-wrap: wrap;
     gap: 0.6rem;
@@ -373,13 +389,23 @@
   }
 
   .admin-grid {
-    grid-template-columns: 1fr 1fr;   /* mobile par 2 cards ek line mein */
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .admin-review-list {
+    grid-template-columns: 1fr 1fr;
     gap: 0.75rem;
   }
 }
 
+/* ============ VERY SMALL PHONES ============ */
 @media (max-width: 380px) {
   .admin-grid {
-    grid-template-columns: 1fr;       /* bahut chhote phone par 1 card */
+    grid-template-columns: 1fr;
+  }
+
+  .admin-review-list {
+    grid-template-columns: 1fr 1fr;
   }
 }
