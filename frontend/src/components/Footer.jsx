@@ -15,6 +15,8 @@ import { FaHeart } from "react-icons/fa";
 import footerFlower from "../assets/image4.png";
 import { API_URL } from "../utils/api"
 
+
+
 // Live backend URL
 const CATEGORIES_URL =
   `${API_URL}/api/categories`;
@@ -66,7 +68,7 @@ function Footer() {
       <div className="footer-container">
         {/* Brand */}
         <div className="footer-col footer-brand">
-          <h3 className="footer-logo">Resin Creations</h3>
+          <h3 className="footer-logo">Mandala Collections</h3>
 
           <p>
             I create personalised resin keepsakes, turning your
@@ -269,7 +271,7 @@ function Footer() {
       <div className="footer-bottom">
         <div className="footer-bottom-inner">
           <p className="footer-bottom-copyright">
-            © {new Date().getFullYear()} Resin Creations. All Rights
+            © {new Date().getFullYear()} Mandala Collections. All Rights
             Reserved.
           </p>
 

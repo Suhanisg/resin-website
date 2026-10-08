@@ -5,7 +5,6 @@ import { GiSparkles } from "react-icons/gi"
 import { FaPaintBrush, FaHome, FaHeart } from "react-icons/fa"
 
 const words = [
-  "Wall Art",
   "Varmala Frames",
   "Resin Clocks",
   "Coasters",
@@ -14,7 +13,6 @@ const words = [
   "Resin Platters",
   "Custom Keepsakes"
 ];
-
 function Hero() {
   const [index, setIndex] = useState(0)
 

@@ -10,23 +10,25 @@
 
 .testimonials-section {
   width: 100%;
-  padding: 60px 4vw 70px;
+  padding: clamp(36px, 8vw, 60px) 4vw clamp(44px, 9vw, 70px);
   background: var(--t-cream);
   text-align: center;
   font-family: 'Poppins', 'Segoe UI', sans-serif;
+  overflow: hidden;
 }
 
 .testimonials-heading {
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: 2.2rem;
+  font-size: clamp(1.5rem, 5.5vw, 2.2rem);   /* 24px (phone) se 35px (desktop) */
+  line-height: 1.25;
   color: var(--t-maroon);
   margin: 0 0 8px;
 }
 
 .testimonials-subtext {
   color: var(--t-maroon-soft);
-  font-size: 0.95rem;
-  margin: 0 0 34px;
+  font-size: clamp(0.8rem, 2.6vw, 0.95rem);
+  margin: 0 0 clamp(22px, 5vw, 34px);
 }
 
 .testimonials-subtext .heart {
@@ -54,7 +56,13 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  padding: 0;
   transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.carousel-arrow svg {
+  width: 20px;
+  height: 20px;
 }
 
 .carousel-arrow:hover {
@@ -65,6 +73,7 @@
 
 .testimonials-grid {
   flex: 1;
+  min-width: 0;                  /* grid ko bahar overflow hone se rokta hai */
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
@@ -76,6 +85,7 @@
   padding: 20px 20px 18px;
   text-align: left;
   box-shadow: 0 10px 24px rgba(58, 38, 50, 0.08);
+  min-width: 0;
 }
 
 .testimonial-top {
@@ -90,6 +100,7 @@
   height: 42px;
   border-radius: 50%;
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 .testimonial-avatar-fallback {
@@ -103,6 +114,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .testimonial-stars {
@@ -122,14 +134,15 @@
 }
 
 .testimonial-text {
-  font-size: 0.85rem;
+  font-size: clamp(0.8rem, 2.4vw, 0.88rem);
   line-height: 1.55;
   color: var(--t-maroon-soft);
   margin: 0 0 14px;
+  overflow-wrap: anywhere;       /* lamba word card se bahar nahi jayega */
 }
 
 .testimonial-name {
-  font-size: 0.82rem;
+  font-size: clamp(0.78rem, 2.3vw, 0.85rem);
   font-weight: 600;
   color: var(--t-maroon);
   margin: 0;
@@ -157,7 +170,7 @@
 
 .testimonials-count {
   margin-top: 22px;
-  font-size: 0.85rem;
+  font-size: clamp(0.8rem, 2.6vw, 0.9rem);
   font-weight: 600;
   color: var(--t-maroon);
 }
@@ -177,9 +190,101 @@
   fill: var(--t-pink);
 }
 
-/* responsive */
+/* ===== LAPTOP CHOTI SCREEN ===== */
+@media (max-width: 1100px) {
+  .testimonials-carousel {
+    gap: 14px;
+  }
+
+  .testimonials-grid {
+    gap: 14px;
+  }
+
+  .testimonial-card {
+    padding: 16px 16px 14px;
+  }
+}
+
+/* ===== TABLET / PHONE: cards ek ke neeche ek ===== */
 @media (max-width: 900px) {
   .testimonials-grid {
     grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .testimonial-card {
+    padding: 18px;
+  }
+}
+
+/* ===== PHONE ===== */
+@media (max-width: 600px) {
+  .testimonials-section {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .testimonials-carousel {
+    gap: 8px;
+  }
+
+  .carousel-arrow {
+    width: 30px;
+    height: 30px;
+  }
+
+  .carousel-arrow svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .testimonial-avatar,
+  .testimonial-avatar-fallback {
+    width: 38px;
+    height: 38px;
+  }
+
+  .t-star {
+    width: 14px;
+    height: 14px;
+  }
+
+  .testimonials-dots {
+    margin-top: 20px;
+  }
+
+  .testimonials-count {
+    margin-top: 18px;
+  }
+}
+
+/* ===== CHOTE PHONES (360px aur neeche) ===== */
+@media (max-width: 360px) {
+  .testimonials-section {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .testimonials-carousel {
+    gap: 6px;
+  }
+
+  .carousel-arrow {
+    width: 26px;
+    height: 26px;
+  }
+
+  .carousel-arrow svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .testimonial-card {
+    padding: 14px;
+  }
+
+  .t-star {
+    width: 12px;
+    height: 12px;
   }
 }

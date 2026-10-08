@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import "../styles/Navbar.css"
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import logo from '../assets/logo_circle1.png'
+import logo from '../assets/logo_circle.png'
 import {
   House,
   Sparkles,
@@ -53,7 +53,7 @@ const sectionIds = ['home', 'products', 'faqs', 'contact', 'review-cta']
     <nav className="navbar">
       <div className="nav-brand">
         <img src={logo} alt="Resin Creations logo" className="nav-logo-img" />
-        <span className="nav-brand-text">Resin Creations</span>
+        <span className="nav-brand-text">Mandala Collection</span>
       </div>
 
       <button className="nav-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
