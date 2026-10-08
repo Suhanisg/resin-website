@@ -53,7 +53,7 @@ const sectionIds = ['home', 'products', 'faqs', 'contact', 'review-cta']
     <nav className="navbar">
       <div className="nav-brand">
         <img src={logo} alt="Resin Creations logo" className="nav-logo-img" />
-        <span className="nav-brand-text">Mandala Collection</span>
+        <span className="nav-brand-text">Mandala Collections</span>
       </div>
 
       <button className="nav-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
