@@ -1,50 +1,71 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { API_URL } from '../utils/api'
+import { adminFetch } from '../utils/adminAuth'
 
 const ReviewsContext = createContext(null)
-const API = import.meta.env.VITE_API_URL
-const authHeader = () => ({
-  Authorization: `Bearer ${localStorage.getItem('adminToken')}`, // apna token ka key daalo
-})
 
 export function ReviewsProvider({ children }) {
   const [reviews, setReviews] = useState([])
   const [screenshots, setScreenshots] = useState([])
 
   useEffect(() => {
-    fetch(`${API}/api/reviews`).then(r => r.json()).then(setReviews).catch(() => {})
-    fetch(`${API}/api/screenshots`).then(r => r.json()).then(setScreenshots).catch(() => {})
+    fetch(`${API_URL}/api/reviews`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then(setReviews)
+      .catch((err) => console.error('Fetch reviews failed:', err))
+
+    fetch(`${API_URL}/api/screenshots`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then(setScreenshots)
+      .catch((err) => console.error('Fetch screenshots failed:', err))
   }, [])
 
-  // formData: name, rating, review, photo (optional)
+  // Customer review form: formData (name, rating, review, photo optional)
   const addReview = async (formData) => {
-    const res = await fetch(`${API}/api/reviews`, { method: 'POST', body: formData })
+    const res = await fetch(`${API_URL}/api/reviews`, {
+      method: 'POST',
+      body: formData,
+    })
+    if (!res.ok) throw new Error('Review submit nahi hua')
     const saved = await res.json()
-    setReviews(prev => [saved, ...prev])
+    setReviews((prev) => [saved, ...prev])
   }
 
   const deleteReview = async (id) => {
-    await fetch(`${API}/api/reviews/${id}`, { method: 'DELETE', headers: authHeader() })
-    setReviews(prev => prev.filter(r => r._id !== id))
+    const res = await adminFetch(`/api/reviews/${id}`, { method: 'DELETE' })
+    if (!res.ok) throw new Error('Delete nahi hua')
+    setReviews((prev) => prev.filter((r) => r._id !== id))
   }
 
+  // Admin: screenshot upload
   const addScreenshot = async (file) => {
     const fd = new FormData()
     fd.append('photo', file)
-    const res = await fetch(`${API}/api/screenshots`, {
-      method: 'POST', headers: authHeader(), body: fd,
+    const res = await adminFetch('/api/screenshots', {
+      method: 'POST',
+      body: fd,
     })
+    if (!res.ok) throw new Error('Upload nahi hua')
     const saved = await res.json()
-    setScreenshots(prev => [saved, ...prev])
+    setScreenshots((prev) => [saved, ...prev])
   }
 
   const deleteScreenshot = async (id) => {
-    await fetch(`${API}/api/screenshots/${id}`, { method: 'DELETE', headers: authHeader() })
-    setScreenshots(prev => prev.filter(s => s._id !== id))
+    const res = await adminFetch(`/api/screenshots/${id}`, { method: 'DELETE' })
+    if (!res.ok) throw new Error('Delete nahi hua')
+    setScreenshots((prev) => prev.filter((s) => s._id !== id))
   }
 
   return (
     <ReviewsContext.Provider
-      value={{ reviews, addReview, deleteReview, screenshots, addScreenshot, deleteScreenshot }}
+      value={{
+        reviews,
+        addReview,
+        deleteReview,
+        screenshots,
+        addScreenshot,
+        deleteScreenshot,
+      }}
     >
       {children}
     </ReviewsContext.Provider>
