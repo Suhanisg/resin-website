@@ -4,8 +4,7 @@ const Category = require("../models/category");
 const upload = require("../middlewares/upload");
 const protect = require("../middlewares/authMiddleware");
 
-// FormData se string aati hai. Number mein badlo aur range ke andar rakho.
-// Value na ho ya galat ho to undefined (yaani field ko chhedna nahi).
+
 const toNumber = (value, min, max) => {
   if (value === undefined || value === null || value === "") return undefined;
   const n = Number(value);
@@ -18,7 +17,7 @@ const getPositionFields = (body) => {
   const fields = {
     imageX: toNumber(body.imageX, 0, 100),
     imageY: toNumber(body.imageY, 0, 100),
-    imageZoom: toNumber(body.imageZoom, 100, 200),
+    imageZoom: toNumber(body.imageZoom, 20, 200),
   };
 
   Object.keys(fields).forEach((key) => {

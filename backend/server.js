@@ -36,6 +36,7 @@ app.use("/api/admin", adminAuthRoutes)
 app.use("/api/categories", categoryRoutes)
 app.use("/api/products", productRoutes)
 app.use("/api/subcategories", subcategoryRoutes)
+app.use('/api', require('./routes/reviews'))
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
