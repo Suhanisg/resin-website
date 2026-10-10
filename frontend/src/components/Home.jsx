@@ -13,14 +13,32 @@ function Home() {
   const location = useLocation()
 
   useEffect(() => {
-    if (location.hash) {
-      const id = location.hash.slice(1)
-      setTimeout(() => {
-        const el = document.getElementById(id)
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "start" })
-        }
-      }, 150)
+    if (!location.hash) return
+
+    const id = location.hash.slice(1)
+    const timers = []
+
+    const scrollToSection = () => {
+      const el = document.getElementById(id)
+      if (el) {
+        el.scrollIntoView({ behavior: "auto", block: "start" })
+      }
+    }
+
+    // Page load hone ke dauraan kuch baar dobara scroll karo
+   ;[100, 400, 900, 1600, 2500, 4000].forEach((delay) => {
+      timers.push(setTimeout(scrollToSection, delay))
+    })
+
+    // Agar user khud scroll kare to auto-scroll band kar do
+    const cancel = () => timers.forEach(clearTimeout)
+    window.addEventListener("wheel", cancel, { once: true })
+    window.addEventListener("touchmove", cancel, { once: true })
+
+    return () => {
+      cancel()
+      window.removeEventListener("wheel", cancel)
+      window.removeEventListener("touchmove", cancel)
     }
   }, [location])
 
@@ -28,11 +46,13 @@ function Home() {
     <>
       <TopBar />
       <Navbar />
-      <Hero />
-      <AllProducts />
-      <FloralPage />
-      <FaqSection/>
-      <ReviewSection/>
+      <main id="main-content">
+        <Hero />
+        <AllProducts />
+        <FloralPage />
+        <FaqSection />
+        <ReviewSection />
+      </main>
       <Footer />
     </>
   )

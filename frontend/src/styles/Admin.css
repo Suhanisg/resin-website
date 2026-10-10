@@ -302,6 +302,18 @@
   border: 2px solid #7a2946;
   margin-bottom: 10px;
   background: #eee;
+
+  /* Phone par touch drag ke liye zaroori:
+     browser ko page scroll karne se rokta hai jab frame par drag ho */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.crop-frame img {
+  -webkit-user-drag: none;
+  pointer-events: none; /* events frame par hi aayein, image par nahi */
 }
 
 .crop-zoom {

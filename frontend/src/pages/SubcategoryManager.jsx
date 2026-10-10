@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import { API_URL, adminFetch } from "../utils/adminAuth"
 import { getImageUrl } from "../utils/imageUrls"
+import { invalidateSubcategories } from "../utils/useCategories"
 import "../styles/Admin.css"
 
 const SUBCATEGORIES_PATH = "/api/subcategories"
@@ -11,6 +12,8 @@ function SubcategoryManager() {
   const [subcategories, setSubcategories] = useState([])
   const [category, setCategory] = useState("")
   const [name, setName] = useState("")
+  const [details, setDetails] = useState("")
+  const [material, setMaterial] = useState("")
   const [imageFile, setImageFile] = useState(null)
   const [editingId, setEditingId] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -44,6 +47,8 @@ function SubcategoryManager() {
   const resetForm = () => {
     setCategory("")
     setName("")
+    setDetails("")
+    setMaterial("")
     setImageFile(null)
     setEditingId(null)
     if (fileInputRef.current) fileInputRef.current.value = ""
@@ -56,6 +61,8 @@ function SubcategoryManager() {
     const formData = new FormData()
     formData.append("category", category)
     formData.append("name", name)
+    formData.append("details", details)
+    formData.append("material", material)
     if (imageFile) formData.append("image", imageFile)
 
     try {
@@ -67,6 +74,7 @@ function SubcategoryManager() {
       const res = await adminFetch(path, { method, body: formData })
       if (!res.ok) throw new Error("Failed to save subcategory")
 
+      invalidateSubcategories()
       await fetchSubcategories()
       resetForm()
     } catch (err) {
@@ -80,6 +88,8 @@ function SubcategoryManager() {
     setEditingId(sub._id)
     setCategory(sub.category)
     setName(sub.name)
+    setDetails(sub.details || "")
+    setMaterial(sub.material || "")
     setImageFile(null)
     if (fileInputRef.current) fileInputRef.current.value = ""
     window.scrollTo({ top: 0, behavior: "smooth" })
@@ -122,6 +132,45 @@ function SubcategoryManager() {
           </select>
         </label>
 
+        {/* Category chunne par uski bani hui subcategories yahan aati hain.
+            Koi chuno to form us subcategory ke Edit mode mein khul jata hai
+            (naam, details, material sab bhara hua). */}
+        {subcategories.some((s) => s.category === category) && (
+          <label>
+            Pehle se bani subcategory (edit karne ke liye chuno)
+            <select
+              value={
+                subcategories.some(
+                  (s) => s._id === editingId && s.category === category
+                )
+                  ? editingId
+                  : ""
+              }
+              onChange={(e) => {
+                const sub = subcategories.find((s) => s._id === e.target.value)
+
+                if (sub) {
+                  handleEdit(sub)
+                } else {
+                  const keepCategory = category
+                  resetForm()
+                  setCategory(keepCategory)
+                }
+              }}
+            >
+              <option value="">-- Nayi subcategory banani hai --</option>
+
+              {subcategories
+                .filter((s) => s.category === category)
+                .map((s) => (
+                  <option key={s._id} value={s._id}>
+                    {s.name}
+                  </option>
+                ))}
+            </select>
+          </label>
+        )}
+
         <label>
           Subcategory Name
           <input
@@ -129,6 +178,26 @@ function SubcategoryManager() {
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Photo Frame"
             required
+          />
+        </label>
+
+        <label>
+          Product Details (is subcategory ke saare products ke liye)
+          <textarea
+            value={details}
+            onChange={(e) => setDetails(e.target.value)}
+            rows={4}
+            placeholder="Har point ko • se alag karo, e.g. Handmade resin frame • Real flowers preserved • Custom photo option"
+          />
+        </label>
+
+        <label>
+          Material &amp; Quality (is subcategory ke saare products ke liye)
+          <textarea
+            value={material}
+            onChange={(e) => setMaterial(e.target.value)}
+            rows={4}
+            placeholder="Har point ko • se alag karo, e.g. Premium epoxy resin • Natural dried flowers • Glossy finish"
           />
         </label>
 

@@ -190,6 +190,181 @@
   fill: var(--t-pink);
 }
 
+/* ===== PHOTO WALE REVIEWS (badi photo + tap karke zoom) ===== */
+.testimonial-top.has-photo {
+  align-items: flex-start;
+}
+
+.t-photo-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.t-photo-btn {
+  position: relative;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: 12px;
+  line-height: 0;
+  cursor: zoom-in;
+}
+
+.t-photo {
+  width: 84px;
+  height: 84px;
+  border-radius: 12px;
+  object-fit: cover;
+  display: block;
+  box-shadow: 0 4px 12px rgba(58, 38, 50, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.t-photo-btn:hover .t-photo,
+.t-photo-btn:focus-visible .t-photo {
+  transform: scale(1.04);
+  box-shadow: 0 8px 18px rgba(58, 38, 50, 0.25);
+}
+
+.t-photo-btn:focus-visible {
+  outline: 2px solid var(--t-pink);
+  outline-offset: 3px;
+}
+
+/* chhota zoom icon, hamesha dikhta hai (touch pe bhi) */
+.t-photo-badge {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(58, 38, 50, 0.78);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* tooltip: mouse le jane / keyboard focus pe dikhta hai (desktop) */
+.t-photo-tip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  white-space: nowrap;
+  background: var(--t-maroon);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1;
+  padding: 7px 10px;
+  border-radius: 8px;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 5;
+}
+
+.t-photo-tip::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 18px;
+  border: 5px solid transparent;
+  border-bottom-color: var(--t-maroon);
+}
+
+.t-photo-btn:hover .t-photo-tip,
+.t-photo-btn:focus-visible .t-photo-tip {
+  opacity: 1;
+  transform: none;
+}
+
+/* touch devices (mobile/tablet) pe hover hota hi nahi, isliye
+   photo ke neeche chhota sa "Tap to enlarge" likha rehta hai */
+.t-photo-hint {
+  display: none;
+  font-size: 0.66rem;
+  color: var(--t-maroon-soft);
+  line-height: 1.2;
+}
+
+@media (hover: none) {
+  .t-photo-hint {
+    display: block;
+  }
+
+  .t-photo-tip {
+    display: none;
+  }
+}
+
+/* ===== BADI PHOTO (lightbox) ===== */
+.t-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(30, 15, 24, 0.88);
+  backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  cursor: zoom-out;
+  animation: tLightboxIn 0.2s ease;
+}
+
+.t-lightbox-img {
+  max-width: min(92vw, 900px);
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  cursor: default;
+}
+
+.t-lightbox-caption {
+  margin: 0;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.t-lightbox-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.t-lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes tLightboxIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* ===== LAPTOP CHOTI SCREEN ===== */
 @media (max-width: 1100px) {
   .testimonials-carousel {
@@ -242,6 +417,11 @@
   .testimonial-avatar-fallback {
     width: 38px;
     height: 38px;
+  }
+
+  .t-photo {
+    width: 72px;
+    height: 72px;
   }
 
   .t-star {

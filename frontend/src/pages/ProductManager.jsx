@@ -36,6 +36,7 @@ function ProductManager() {
   const [processingTime, setProcessingTime] = useState("")
   const [careInstructions, setCareInstructions] = useState("")
   const [shippingInfo, setShippingInfo] = useState("")
+  const [size, setSize] = useState("")
   const [imageFile, setImageFile] = useState(null)
   const [editingId, setEditingId] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -118,6 +119,7 @@ function ProductManager() {
     setProcessingTime("")
     setCareInstructions("")
     setShippingInfo("")
+    setSize("")
     setImageFile(null)
     setSourceImg(null)
     setZoom(1)
@@ -157,6 +159,7 @@ function ProductManager() {
         w: 0,
         h: 0,
         baseScale: 1,
+        totalScale: 1,
       }
     }
 
@@ -178,29 +181,21 @@ function ProductManager() {
   const clampPan = (x, y) => {
     const { w, h } = getDisplayedSize()
 
-    const maxX = Math.max(
-      0,
-      (w - FRAME) / 2
-    )
-
-    const maxY = Math.max(
-      0,
-      (h - FRAME) / 2
-    )
+    const maxX = Math.max(0, (w - FRAME) / 2)
+    const maxY = Math.max(0, (h - FRAME) / 2)
 
     return {
-      x: Math.min(
-        maxX,
-        Math.max(-maxX, x)
-      ),
-      y: Math.min(
-        maxY,
-        Math.max(-maxY, y)
-      ),
+      x: Math.min(maxX, Math.max(-maxX, x)),
+      y: Math.min(maxY, Math.max(-maxY, y)),
     }
   }
 
-  const onMouseDown = (e) => {
+  // ===== Pointer events: mouse + touch dono ke liye =====
+  const onPointerDown = (e) => {
+    // Sirf left mouse button ya touch/pen
+    if (e.pointerType === "mouse" && e.button !== 0) return
+
+    e.currentTarget.setPointerCapture(e.pointerId)
     setDragging(true)
 
     dragStart.current = {
@@ -211,14 +206,11 @@ function ProductManager() {
     }
   }
 
-  const onMouseMove = (e) => {
+  const onPointerMove = (e) => {
     if (!dragging) return
 
-    const dx =
-      e.clientX - dragStart.current.x
-
-    const dy =
-      e.clientY - dragStart.current.y
+    const dx = e.clientX - dragStart.current.x
+    const dy = e.clientY - dragStart.current.y
 
     setPan(
       clampPan(
@@ -228,16 +220,39 @@ function ProductManager() {
     )
   }
 
-  const onMouseUp = () => {
+  const onPointerUp = (e) => {
+    if (
+      e.currentTarget.hasPointerCapture &&
+      e.currentTarget.hasPointerCapture(e.pointerId)
+    ) {
+      e.currentTarget.releasePointerCapture(e.pointerId)
+    }
+
     setDragging(false)
   }
 
   const handleZoomChange = (val) => {
     setZoom(val)
 
-    setPan((p) =>
-      clampPan(p.x, p.y)
-    )
+    // zoom change ke baad pan ko naye size ke hisaab se clamp karo
+    const baseScale =
+      sourceImg
+        ? Math.max(
+            FRAME / sourceImg.width,
+            FRAME / sourceImg.height
+          ) * 1.15
+        : 1
+
+    const w = sourceImg ? sourceImg.width * baseScale * val : 0
+    const h = sourceImg ? sourceImg.height * baseScale * val : 0
+
+    const maxX = Math.max(0, (w - FRAME) / 2)
+    const maxY = Math.max(0, (h - FRAME) / 2)
+
+    setPan((p) => ({
+      x: Math.min(maxX, Math.max(-maxX, p.x)),
+      y: Math.min(maxY, Math.max(-maxY, p.y)),
+    }))
   }
 
   const saveCurrentCrop = () => {
@@ -245,38 +260,24 @@ function ProductManager() {
       return
     }
 
-    const { totalScale } =
-      getDisplayedSize()
+    const { totalScale } = getDisplayedSize()
 
     const imgLeft =
-      (FRAME -
-        sourceImg.width * totalScale) /
-        2 +
-      pan.x
+      (FRAME - sourceImg.width * totalScale) / 2 + pan.x
 
     const imgTop =
-      (FRAME -
-        sourceImg.height * totalScale) /
-        2 +
-      pan.y
+      (FRAME - sourceImg.height * totalScale) / 2 + pan.y
 
-    const sx =
-      -imgLeft / totalScale
+    const sx = -imgLeft / totalScale
+    const sy = -imgTop / totalScale
+    const sSize = FRAME / totalScale
 
-    const sy =
-      -imgTop / totalScale
-
-    const sSize =
-      FRAME / totalScale
-
-    const canvas =
-      document.createElement("canvas")
+    const canvas = document.createElement("canvas")
 
     canvas.width = OUTPUT
     canvas.height = OUTPUT
 
-    const ctx =
-      canvas.getContext("2d")
+    const ctx = canvas.getContext("2d")
 
     ctx.drawImage(
       sourceImg,
@@ -302,10 +303,7 @@ function ProductManager() {
           }
         )
 
-        setCroppedFiles((prev) => [
-          ...prev,
-          file,
-        ])
+        setCroppedFiles((prev) => [...prev, file])
 
         setCroppedPreviews((prev) => [
           ...prev,
@@ -339,25 +337,14 @@ function ProductManager() {
     formData.append("name", name)
     formData.append("category", category)
     formData.append("subcategory", subcategory)
-    formData.append(
-      "description",
-      description
-    )
+    formData.append("description", description)
     formData.append("tagline", tagline)
     formData.append("details", details)
     formData.append("material", material)
-    formData.append(
-      "processingTime",
-      processingTime
-    )
-    formData.append(
-      "careInstructions",
-      careInstructions
-    )
-    formData.append(
-      "shippingInfo",
-      shippingInfo
-    )
+    formData.append("processingTime", processingTime)
+    formData.append("careInstructions", careInstructions)
+    formData.append("shippingInfo", shippingInfo)
+    formData.append("size", size)
 
     if (imageFile) {
       formData.append("image", imageFile)
@@ -372,9 +359,7 @@ function ProductManager() {
         ? `${PRODUCTS_PATH}/${editingId}`
         : PRODUCTS_PATH
 
-      const method = editingId
-        ? "PUT"
-        : "POST"
+      const method = editingId ? "PUT" : "POST"
 
       const res = await adminFetch(path, {
         method,
@@ -382,9 +367,7 @@ function ProductManager() {
       })
 
       if (!res.ok) {
-        throw new Error(
-          "Failed to save product"
-        )
+        throw new Error("Failed to save product")
       }
 
       await fetchProducts()
@@ -407,15 +390,10 @@ function ProductManager() {
     setTagline(p.tagline || "")
     setDetails(p.details || "")
     setMaterial(p.material || "")
-    setProcessingTime(
-      p.processingTime || ""
-    )
-    setCareInstructions(
-      p.careInstructions || ""
-    )
-    setShippingInfo(
-      p.shippingInfo || ""
-    )
+    setProcessingTime(p.processingTime || "")
+    setCareInstructions(p.careInstructions || "")
+    setShippingInfo(p.shippingInfo || "")
+    setSize(p.size || "")
 
     setImageFile(null)
     setSourceImg(null)
@@ -424,11 +402,7 @@ function ProductManager() {
   }
 
   const handleDelete = async (id) => {
-    if (
-      !window.confirm(
-        "Ye product delete karna hai?"
-      )
-    ) {
+    if (!window.confirm("Ye product delete karna hai?")) {
       return
     }
 
@@ -441,9 +415,7 @@ function ProductManager() {
       )
 
       if (!res.ok) {
-        throw new Error(
-          "Failed to delete product"
-        )
+        throw new Error("Failed to delete product")
       }
 
       fetchProducts()
@@ -469,9 +441,7 @@ function ProductManager() {
 
           <input
             value={name}
-            onChange={(e) =>
-              setName(e.target.value)
-            }
+            onChange={(e) => setName(e.target.value)}
             required
           />
         </label>
@@ -563,9 +533,7 @@ function ProductManager() {
 
           <textarea
             value={details}
-            onChange={(e) =>
-              setDetails(e.target.value)
-            }
+            onChange={(e) => setDetails(e.target.value)}
             rows={2}
           />
         </label>
@@ -575,9 +543,7 @@ function ProductManager() {
 
           <textarea
             value={material}
-            onChange={(e) =>
-              setMaterial(e.target.value)
-            }
+            onChange={(e) => setMaterial(e.target.value)}
             rows={2}
           />
         </label>
@@ -619,6 +585,16 @@ function ProductManager() {
         </label> */}
 
         <label>
+          Size
+
+          <input
+            placeholder="e.g. 6 inch, 8 x 10 inch, 12 inch"
+            value={size}
+            onChange={(e) => setSize(e.target.value)}
+          />
+        </label>
+
+        <label>
           Main Image{" "}
           {editingId &&
             "(chhodo agar change nahi karni)"}
@@ -649,33 +625,30 @@ function ProductManager() {
                   width: FRAME,
                   height: FRAME,
                 }}
-                onMouseDown={onMouseDown}
-                onMouseMove={onMouseMove}
-                onMouseUp={onMouseUp}
-                onMouseLeave={onMouseUp}
+                onPointerDown={onPointerDown}
+                onPointerMove={onPointerMove}
+                onPointerUp={onPointerUp}
+                onPointerCancel={onPointerUp}
               >
                 <img
                   src={sourceImg.src}
                   alt="crop-source"
                   draggable={false}
                   style={{
-                    width:
-                      getDisplayedSize().w,
-                    height:
-                      getDisplayedSize().h,
+                    width: getDisplayedSize().w,
+                    height: getDisplayedSize().h,
                     transform: `translate(${pan.x}px, ${pan.y}px)`,
                     position: "absolute",
                     left: "50%",
                     top: "50%",
                     marginLeft:
-                      -getDisplayedSize().w /
-                      2,
+                      -getDisplayedSize().w / 2,
                     marginTop:
-                      -getDisplayedSize().h /
-                      2,
+                      -getDisplayedSize().h / 2,
                     cursor: dragging
                       ? "grabbing"
                       : "grab",
+                    maxWidth: "none",
                   }}
                 />
               </div>
@@ -688,9 +661,7 @@ function ProductManager() {
                 value={zoom}
                 onChange={(e) =>
                   handleZoomChange(
-                    parseFloat(
-                      e.target.value
-                    )
+                    parseFloat(e.target.value)
                   )
                 }
                 className="crop-zoom"
@@ -715,30 +686,26 @@ function ProductManager() {
             </p>
 
             <div className="admin-crop-row">
-              {croppedPreviews.map(
-                (src, i) => (
-                  <div
-                    key={i}
-                    className="admin-crop-thumb-wrap"
-                  >
-                    <img
-                      src={src}
-                      alt={`crop-${i}`}
-                      className="admin-crop-thumb"
-                    />
+              {croppedPreviews.map((src, i) => (
+                <div
+                  key={i}
+                  className="admin-crop-thumb-wrap"
+                >
+                  <img
+                    src={src}
+                    alt={`crop-${i}`}
+                    className="admin-crop-thumb"
+                  />
 
-                    <button
-                      type="button"
-                      className="admin-crop-remove"
-                      onClick={() =>
-                        removeCrop(i)
-                      }
-                    >
-                      ✕
-                    </button>
-                  </div>
-                )
-              )}
+                  <button
+                    type="button"
+                    className="admin-crop-remove"
+                    onClick={() => removeCrop(i)}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -805,9 +772,7 @@ function ProductManager() {
 
               <div className="admin-card-actions">
                 <button
-                  onClick={() =>
-                    handleEdit(p)
-                  }
+                  onClick={() => handleEdit(p)}
                 >
                   Edit
                 </button>

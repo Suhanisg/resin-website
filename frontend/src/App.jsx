@@ -1,7 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
+import Layout from './components/Layout'
 import ProtectedAdminRoute from './components/ProtectedAdminRoute'
 import { AdminAuthProvider } from './context/AdminAuthContext'
 import { WishlistProvider } from './context/WishlistContext'
@@ -30,41 +29,35 @@ function App() {
             <Suspense fallback={<PageLoader />}>
               <Routes>
                 <Route path="/" element={<Home />} />
+
                 <Route path="/category/:categoryName" element={
-                  <>
-                    <Navbar />
-                    <CategoryProducts />
-                    <Footer />
-                  </>
+                  <Layout><CategoryProducts /></Layout>
                 } />
+
                 <Route path="/wishlist" element={
-                  <>
-                    <Navbar />
-                    <Wishlist />
-                    <Footer />
-                  </>
+                  <Layout><Wishlist /></Layout>
                 } />
-                <Route path="/admin-login" element={<AdminLogin />} />
-                <Route path="/admin" element={
-                  <ProtectedAdminRoute>
-                    <AdminPanel />
-                  </ProtectedAdminRoute>
-                } />
+
                 <Route path="/reviews" element={
-                  <>
-                    <Navbar />
+                  <Layout>
                     <Reviews />
                     <Testimonials />
                     <RealReviews />
-                    <Footer />
-                  </>
+                  </Layout>
                 } />
+
                 <Route path="/faq" element={
-                  <>
-                    <Navbar />
-                    <FaqPage />
-                    <Footer />
-                  </>
+                  <Layout><FaqPage /></Layout>
+                } />
+
+                <Route path="/admin-login" element={
+                  <main id="main-content"><AdminLogin /></main>
+                } />
+
+                <Route path="/admin" element={
+                  <ProtectedAdminRoute>
+                    <main id="main-content"><AdminPanel /></main>
+                  </ProtectedAdminRoute>
                 } />
               </Routes>
             </Suspense>

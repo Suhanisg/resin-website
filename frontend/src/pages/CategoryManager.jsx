@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "../styles/Admin.css";
 import { API_URL as BASE_URL, adminFetch } from "../utils/adminAuth";
+import { invalidateCategories } from "../utils/useCategories";
 
 const API_PATH = "/api/categories";
 
@@ -22,6 +23,8 @@ function CategoryManager() {
   const [categories, setCategories] = useState([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [details, setDetails] = useState("");
+  const [material, setMaterial] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [existingImage, setExistingImage] = useState("");
   const [pos, setPos] = useState(DEFAULT_POS);
@@ -81,6 +84,8 @@ function CategoryManager() {
   const resetForm = () => {
     setName("");
     setDescription("");
+    setDetails("");
+    setMaterial("");
     setImageFile(null);
     setExistingImage("");
     setPos(DEFAULT_POS);
@@ -95,6 +100,8 @@ function CategoryManager() {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("description", description);
+    formData.append("details", details);
+    formData.append("material", material);
 
     if (imageFile) {
       formData.append("image", imageFile);
@@ -120,6 +127,7 @@ function CategoryManager() {
         throw new Error("Failed to save category");
       }
 
+      invalidateCategories();
       await fetchCategories();
       resetForm();
     } catch (err) {
@@ -133,6 +141,8 @@ function CategoryManager() {
     setEditingId(cat._id);
     setName(cat.name);
     setDescription(cat.description || "");
+    setDetails(cat.details || "");
+    setMaterial(cat.material || "");
     setImageFile(null);
     setExistingImage(cat.image || "");
     setPos({
@@ -184,6 +194,26 @@ function CategoryManager() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={2}
+          />
+        </label>
+
+        <label>
+          Product Details (is category ke saare products ke liye)
+          <textarea
+            value={details}
+            onChange={(e) => setDetails(e.target.value)}
+            rows={4}
+            placeholder="Har point ko • se alag karo, e.g. Handmade resin frame • Real flowers preserved • Custom photo option"
+          />
+        </label>
+
+        <label>
+          Material &amp; Quality (is category ke saare products ke liye)
+          <textarea
+            value={material}
+            onChange={(e) => setMaterial(e.target.value)}
+            rows={4}
+            placeholder="Har point ko • se alag karo, e.g. Premium epoxy resin • Natural dried flowers • Glossy finish"
           />
         </label>
 

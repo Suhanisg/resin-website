@@ -5,6 +5,7 @@ import { CustomOrderForm, ThankYouCard } from "./customForm";
 import { API_URL } from "../utils/api";
 import giftBox from "../assets/giftBox.png";
 import LazyImage from "./LazyImage";
+import useCategories, { useSubcategories } from "../utils/useCategories";
 
 import {
   Flower2,
@@ -25,6 +26,7 @@ import {
   Heart,
   Tag,
   MessageCircleMore,
+  Ruler,
 } from "lucide-react";
 import { useWishlist } from "../context/WishlistContext";
 
@@ -91,6 +93,29 @@ function ProductCard({ product }) {
   // modal's — so on phones the new view opened wherever the page
   // happened to be scrolled to already, instead of from the top.
   const modalRef = useRef(null);
+
+  // Product Details & Material & Quality ye order follow karte hain:
+  // 1) subcategory ka text  2) category ka text  3) product ka apna text.
+  // Admin -> Category / Subcategory form mein bhare jaate hain, to nayi
+  // category ya subcategory add karne par bhi ye apne aap kaam karta hai.
+  const categories = useCategories();
+  const subcategories = useSubcategories();
+
+  const productCategory = (product.category || "").trim().toLowerCase();
+  const categoryContent =
+    categories.find((c) => (c.name || "").trim().toLowerCase() === productCategory) || {};
+
+  const productSubId =
+    typeof product.subcategory === "object"
+      ? product.subcategory?._id
+      : product.subcategory;
+  const subcategoryContent =
+    (productSubId && subcategories.find((s) => s._id === productSubId)) || {};
+
+  const contentDetails =
+    subcategoryContent.details || categoryContent.details || product.details;
+  const contentMaterial =
+    subcategoryContent.material || categoryContent.material || product.material;
 
   const selected = product.variants?.[selectedIndex];
   const features =
@@ -240,20 +265,20 @@ function ProductCard({ product }) {
     showToastMessage("Message sent! We'll get back to you soon.", 5000);
   };
 
-  // Product Details & Material admin se aate hain.
+  // Product Details & Material subcategory / category se aate hain (product ka apna fallback).
   // Processing Time & Care Instructions hardcoded hain (sab products mein same).
   const accordionSections = [
     {
       key: "details",
       label: "Product Details",
       icon: ReceiptText,
-      content: product.details,
+      content: contentDetails,
     },
     {
       key: "material",
       label: "Material & Quality",
       icon: Leaf,
-      content: product.material,
+      content: contentMaterial,
     },
     {
       key: "processing",
@@ -286,6 +311,16 @@ function ProductCard({ product }) {
           <p className="pc-kicker">{product.category}</p>
 
           <h3 className="pc-name">{product.name}</h3>
+
+          {product.size && (
+            <div className="pc-size-row">
+              <span className="pc-size-badge">
+                <Ruler size={14} strokeWidth={1.8} />
+                {product.size}
+              </span>
+              <span className="pc-size-label">Size</span>
+            </div>
+          )}
 
           <button className="pc-cta" onClick={() => setIsOpen(true)}>
             <span>See the full vibe</span>

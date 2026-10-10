@@ -14,6 +14,9 @@ function Reviews() {
   const [photo, setPhoto] = useState(null)
   const [showToast, setShowToast] = useState(false)
   const [toastType, setToastType] = useState('success')
+  const [submitting, setSubmitting] = useState(false)
+  // file input ko reset karne ke liye (submit ke baad same photo dobara chun sako)
+  const [fileKey, setFileKey] = useState(0)
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -31,25 +34,40 @@ function Reviews() {
     }, type === 'error' ? 3500 : 5000)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!form.name || !form.review || rating === 0) {
+    if (submitting) return
+
+    if (!form.name.trim() || !form.review.trim() || rating === 0) {
       triggerToast('error')
       return
     }
 
-    addReview({
-      name: form.name,
-      rating,
-      review: form.review,
-      photo: photo ? URL.createObjectURL(photo) : null,
-    })
+    // Backend (POST /api/reviews) multipart FormData leta hai:
+    // name, rating, review, aur optional photo (asli file, blob URL nahi)
+    const formData = new FormData()
+    formData.append('name', form.name.trim())
+    formData.append('rating', String(rating))
+    formData.append('review', form.review.trim())
+    if (photo) formData.append('photo', photo)
 
-    setForm({ name: '', review: '' })
-    setRating(0)
-    setPhoto(null)
+    setSubmitting(true)
 
-    triggerToast('success')
+    try {
+      await addReview(formData)
+
+      setForm({ name: '', review: '' })
+      setRating(0)
+      setPhoto(null)
+      setFileKey((k) => k + 1)
+
+      triggerToast('success')
+    } catch (err) {
+      console.error('Review submit failed:', err)
+      triggerToast('fail')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -132,6 +150,7 @@ function Reviews() {
               <label htmlFor="reviewPhoto">Upload Photo (Optional)</label>
               <div className="file-upload">
                 <input
+                  key={fileKey}
                   type="file"
                   id="reviewPhoto"
                   accept="image/*"
@@ -143,8 +162,13 @@ function Reviews() {
                 </label>
               </div>
 
-              <button type="submit" className="submit-review-btn">
-                Submit Review <span className="btn-arrow">→</span>
+              <button
+                type="submit"
+                className="submit-review-btn"
+                disabled={submitting}
+              >
+                {submitting ? 'Submitting...' : 'Submit Review'}{' '}
+                <span className="btn-arrow">→</span>
               </button>
             </form>
           </div>
@@ -153,10 +177,12 @@ function Reviews() {
 
       {showToast && (
         <div className="rv-toast">
-          <span className="rv-toast-check">{toastType === 'error' ? '!' : '✓'}</span>
+          <span className="rv-toast-check">{toastType === 'success' ? '✓' : '!'}</span>
           {toastType === 'error'
             ? 'Please fill all required fields.'
-            : 'Review submitted! Thank you for sharing.'}
+            : toastType === 'fail'
+              ? "Couldn't submit your review. Please try again."
+              : 'Review submitted! Thank you for sharing.'}
         </div>
       )}
     </>

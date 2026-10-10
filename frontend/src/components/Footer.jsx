@@ -121,67 +121,49 @@ function Footer() {
         <div className="footer-col footer-col-links">
           <h4>Quick Links</h4>
 
-          <ul className="footer-links-list">
-            <li>
-              <Link to="/" onClick={scrollToTop}>
-                Home{" "}
-                <FaChevronRight
-                  size={11}
-                  className="link-arrow"
-                />
-              </Link>
-            </li>
+     <ul className="footer-links-list">
+  <li>
+    <Link to="/" onClick={scrollToTop}>
+      Home{" "}
+      <FaChevronRight size={11} className="link-arrow" />
+    </Link>
+  </li>
 
-            <li>
-              <a href="#products">
-                Creations{" "}
-                <FaChevronRight
-                  size={11}
-                  className="link-arrow"
-                />
-              </a>
-            </li>
+  <li>
+    <Link to="/#products">
+      Creations{" "}
+      <FaChevronRight size={11} className="link-arrow" />
+    </Link>
+  </li>
 
-            <li>
-              <Link to="/wishlist">
-                Wishlist{" "}
-                <FaChevronRight
-                  size={11}
-                  className="link-arrow"
-                />
-              </Link>
-            </li>
+  <li>
+    <Link to="/wishlist">
+      Wishlist{" "}
+      <FaChevronRight size={11} className="link-arrow" />
+    </Link>
+  </li>
 
-            <li>
-              <a href="#faqs">
-                FAQs{" "}
-                <FaChevronRight
-                  size={11}
-                  className="link-arrow"
-                />
-              </a>
-            </li>
+  <li>
+    <Link to="/#faqs">
+      FAQs{" "}
+      <FaChevronRight size={11} className="link-arrow" />
+    </Link>
+  </li>
 
-            <li>
-              <a href="#reviews">
-                Reviews{" "}
-                <FaChevronRight
-                  size={11}
-                  className="link-arrow"
-                />
-              </a>
-            </li>
+  <li>
+    <Link to="/#reviews">
+      Reviews{" "}
+      <FaChevronRight size={11} className="link-arrow" />
+    </Link>
+  </li>
 
-            <li>
-              <a href="#contact">
-                Reach Us{" "}
-                <FaChevronRight
-                  size={11}
-                  className="link-arrow"
-                />
-              </a>
-            </li>
-          </ul>
+  <li>
+    <a href="#contact">
+      Reach Us{" "}
+      <FaChevronRight size={11} className="link-arrow" />
+    </a>
+  </li>
+</ul>
         </div>
 
         {/* Categories */}
