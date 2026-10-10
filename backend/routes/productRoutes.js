@@ -46,6 +46,7 @@ router.post("/", protect, uploadFields, async (req, res) => {
       processingTime,
       careInstructions,
       shippingInfo,
+      size,
       subcategory,
     } = req.body;
 
@@ -70,6 +71,7 @@ router.post("/", protect, uploadFields, async (req, res) => {
       processingTime,
       careInstructions,
       shippingInfo,
+      size: size ? size.trim() : "",
       subcategory: subcategory || null,
       variants: variants ? JSON.parse(variants) : [],
     });
@@ -97,6 +99,7 @@ router.put("/:id", protect, uploadFields, async (req, res) => {
       processingTime,
       careInstructions,
       shippingInfo,
+      size,
       subcategory,
     } = req.body;
 
@@ -112,6 +115,12 @@ router.put("/:id", protect, uploadFields, async (req, res) => {
       shippingInfo,
       subcategory: subcategory || null,
     };
+
+    // Size sirf tab update ho jab request me aaye
+    // (khali bhejne par size hat jayegi)
+    if (size !== undefined) {
+      updateData.size = size.trim();
+    }
 
     // Variants sirf tab update ho jab request me aaye
     if (variants) {

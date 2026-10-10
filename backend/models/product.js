@@ -19,6 +19,8 @@ const productSchema = new mongoose.Schema(
     processingTime: { type: String },
     careInstructions: { type: String },
     shippingInfo: { type: String },
+    // Card par dikhne wala size badge (e.g. "6 inch"), admin se aata hai
+    size: { type: String, default: "" },
     subcategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Subcategory",

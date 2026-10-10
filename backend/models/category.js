@@ -6,6 +6,9 @@ const categorySchema = new mongoose.Schema(
     description: { type: String },
     image: { type: String },
 
+    // Is category ke saare products ke popup mein dikhne wale sections
+    details: { type: String, default: "" },
+    material: { type: String, default: "" },
 
     imageX: { type: Number, min: 0, max: 100 },     // left -> right (%)
     imageY: { type: Number, min: 0, max: 100 },     // top -> bottom (%)

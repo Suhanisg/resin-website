@@ -19,10 +19,16 @@ router.get("/", async (req, res) => {
 // CREATE subcategory (admin only)
 router.post("/", protect, upload.single("image"), async (req, res) => {
   try {
-    const { name, category } = req.body;
+    const { name, category, details, material } = req.body;
     const image = req.file ? req.file.path : "";
 
-    const subcategory = new Subcategory({ name, category, image });
+    const subcategory = new Subcategory({
+      name,
+      category,
+      image,
+      details: details || "",
+      material: material || "",
+    });
     await subcategory.save();
 
     res.status(201).json(subcategory);
@@ -35,8 +41,13 @@ router.post("/", protect, upload.single("image"), async (req, res) => {
 // UPDATE subcategory (admin only)
 router.put("/:id", protect, upload.single("image"), async (req, res) => {
   try {
-    const { name, category } = req.body;
+    const { name, category, details, material } = req.body;
     const updateData = { name, category };
+
+    // details / material sirf tab update ho jab request me aayein
+    // (khali bhejne par hat jayenge)
+    if (details !== undefined) updateData.details = details;
+    if (material !== undefined) updateData.material = material;
 
     if (req.file) {
       updateData.image = req.file.path;

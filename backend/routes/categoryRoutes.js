@@ -40,7 +40,7 @@ router.get("/", async (req, res) => {
 // CREATE category (admin only)
 router.post("/", protect, upload.single("image"), async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, details, material } = req.body;
 
     // Cloudinary image URL
     const image = req.file ? req.file.path : "";
@@ -48,6 +48,8 @@ router.post("/", protect, upload.single("image"), async (req, res) => {
     const category = new Category({
       name,
       description,
+      details: details || "",
+      material: material || "",
       image,
       ...getPositionFields(req.body),
     });
@@ -64,13 +66,18 @@ router.post("/", protect, upload.single("image"), async (req, res) => {
 // UPDATE category (admin only)
 router.put("/:id", protect, upload.single("image"), async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, details, material } = req.body;
 
     const updateData = {
       name,
       description,
       ...getPositionFields(req.body),
     };
+
+    // details / material sirf tab update ho jab request me aayein
+    // (khali bhejne par hat jayenge)
+    if (details !== undefined) updateData.details = details;
+    if (material !== undefined) updateData.material = material;
 
     // New image uploaded to Cloudinary
     if (req.file) {
