@@ -125,12 +125,12 @@
 .t-star {
   width: 15px;
   height: 15px;
-  color: var(--t-maroon);
+  color: var(--t-pink);
   fill: none;
 }
 
 .t-star.filled {
-  fill: var(--t-maroon);
+  fill: var(--t-pink);
 }
 
 .testimonial-text {
@@ -248,6 +248,23 @@
   justify-content: center;
 }
 
+/* "+2" badge: batata hai ki review mein aur photos bhi hain */
+.t-photo-count {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(58, 38, 50, 0.78);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 22px;
+  text-align: center;
+}
+
 /* tooltip: mouse le jane / keyboard focus pe dikhta hai (desktop) */
 .t-photo-tip {
   position: absolute;
@@ -302,7 +319,7 @@
   }
 }
 
-/* ===== BADI PHOTO (lightbox) ===== */
+/* ===== BADI PHOTO (lightbox + slider) ===== */
 .t-lightbox {
   position: fixed;
   inset: 0;
@@ -326,6 +343,7 @@
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
   cursor: default;
+  animation: tSlideIn 0.25s ease;   /* slide badalne par halka fade */
 }
 
 .t-lightbox-caption {
@@ -356,12 +374,73 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
+/* slider arrows (left / right) */
+.t-lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease;
+}
+
+.t-lightbox-arrow:hover {
+  background: rgba(255, 255, 255, 0.32);
+}
+
+.t-lightbox-arrow.prev {
+  left: 16px;
+}
+
+.t-lightbox-arrow.next {
+  right: 16px;
+}
+
+/* neeche ke dots */
+.t-lightbox-dots {
+  display: flex;
+  gap: 8px;
+  cursor: default;
+}
+
+.t-lightbox-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  cursor: pointer;
+}
+
+.t-lightbox-dot.active {
+  background: #fff;
+}
+
 @keyframes tLightboxIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes tSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
@@ -435,6 +514,19 @@
 
   .testimonials-count {
     margin-top: 18px;
+  }
+
+  .t-lightbox-arrow {
+    width: 36px;
+    height: 36px;
+  }
+
+  .t-lightbox-arrow.prev {
+    left: 8px;
+  }
+
+  .t-lightbox-arrow.next {
+    right: 8px;
   }
 }
 
