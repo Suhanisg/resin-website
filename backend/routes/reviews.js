@@ -41,14 +41,19 @@ router.get('/reviews', async (req, res) => {
   }
 })
 
-router.post('/reviews', upload.single('photo'), async (req, res) => {
+// Customer max 4 photos bhej sakta hai (field name: "photos")
+router.post('/reviews', upload.array('photos', 4), async (req, res) => {
   try {
     const { name, rating, review } = req.body
+    const photos = (req.files || []).map((f) => f.path)
+
     const saved = await Review.create({
       name,
       rating: Number(rating),
       review,
-      photo: req.file ? req.file.path : undefined,
+      photos,
+      // purane code/admin panel ke liye pehli photo `photo` mein bhi rakhi hai
+      photo: photos[0],
     })
     res.status(201).json(saved)
   } catch (err) {
