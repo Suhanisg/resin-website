@@ -47,7 +47,7 @@ export default function DiwaliHero() {
           keepsakes to make your celebrations brighter and more special.
         </p>
 
-        <a href="#diwali-collection" className="diwali-hero__btn">
+        <a href="#products" className="diwali-hero__btn">
           EXPLORE DIWALI COLLECTION <span>→</span>
         </a>
 
