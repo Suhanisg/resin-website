@@ -26,6 +26,9 @@ const productSchema = new mongoose.Schema(
       ref: "Subcategory",
       default: null,
     },
+
+    // Category ke andar dikhne ka order (chhota number = pehle)
+    order: { type: Number, default: 0 },
   },
   { timestamps: true }
 )

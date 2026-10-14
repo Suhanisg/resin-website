@@ -9,10 +9,10 @@ const uploadFields = upload.fields([
   { name: "images", maxCount: 4 },
 ]);
 
-// GET all products (public)
+// GET all products (public) - order ke hisaab se
 router.get("/", async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().sort({ order: 1, createdAt: 1 });
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -24,10 +24,33 @@ router.get("/category/:categoryName", async (req, res) => {
   try {
     const products = await Product.find({
       category: req.params.categoryName,
-    });
+    }).sort({ order: 1, createdAt: 1 });
 
     res.json(products);
   } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// REORDER products (admin only)
+// NOTE: ye "/:id" wale routes se upar hona zaroori hai
+router.put("/reorder", protect, async (req, res) => {
+  try {
+    const { ids } = req.body; // ek category ke products, naye order mein
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: "ids array chahiye" });
+    }
+
+    await Product.bulkWrite(
+      ids.map((id, index) => ({
+        updateOne: { filter: { _id: id }, update: { $set: { order: index } } },
+      }))
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Product reorder error:", err);
     res.status(500).json({ message: err.message });
   }
 });
@@ -48,6 +71,7 @@ router.post("/", protect, uploadFields, async (req, res) => {
       shippingInfo,
       size,
       subcategory,
+      pinFirst,
     } = req.body;
 
     // Cloudinary URLs
@@ -58,6 +82,16 @@ router.post("/", protect, uploadFields, async (req, res) => {
     const images = req.files?.images
       ? req.files.images.map((file) => file.path)
       : [];
+
+    // Default: category mein sabse last. pinFirst ho to sabse pehle.
+    let order = 0;
+    if (pinFirst === "true") {
+      const first = await Product.findOne({ category }).sort({ order: 1 });
+      order = first ? first.order - 1 : 0;
+    } else {
+      const last = await Product.findOne({ category }).sort({ order: -1 });
+      order = last ? last.order + 1 : 0;
+    }
 
     const product = new Product({
       name,
@@ -74,6 +108,7 @@ router.post("/", protect, uploadFields, async (req, res) => {
       size: size ? size.trim() : "",
       subcategory: subcategory || null,
       variants: variants ? JSON.parse(variants) : [],
+      order,
     });
 
     await product.save();

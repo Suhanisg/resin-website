@@ -4,7 +4,6 @@ const Category = require("../models/category");
 const upload = require("../middlewares/upload");
 const protect = require("../middlewares/authMiddleware");
 
-
 const toNumber = (value, min, max) => {
   if (value === undefined || value === null || value === "") return undefined;
   const n = Number(value);
@@ -27,12 +26,59 @@ const getPositionFields = (body) => {
   return fields;
 };
 
-// GET all categories (public)
+// GET all categories
+// Website: sirf active categories. Admin: ?all=1 bheje to hidden bhi aayengi.
 router.get("/", async (req, res) => {
   try {
-    const categories = await Category.find();
+    const filter = req.query.all ? {} : { isActive: { $ne: false } };
+    const categories = await Category.find(filter).sort({
+      order: 1,
+      createdAt: 1,
+    });
     res.json(categories);
   } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// REORDER categories (admin only)
+// NOTE: ye "/:id" wale routes se upar hona zaroori hai
+router.put("/reorder", protect, async (req, res) => {
+  try {
+    const { ids } = req.body;
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: "ids array chahiye" });
+    }
+
+    await Category.bulkWrite(
+      ids.map((id, index) => ({
+        updateOne: { filter: { _id: id }, update: { $set: { order: index } } },
+      }))
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Category reorder error:", err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// SHOW / HIDE toggle (admin only)
+router.put("/:id/toggle", protect, async (req, res) => {
+  try {
+    const category = await Category.findById(req.params.id);
+
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    category.isActive = category.isActive === false;
+    await category.save();
+
+    res.json(category);
+  } catch (err) {
+    console.error("Category toggle error:", err);
     res.status(500).json({ message: err.message });
   }
 });
@@ -40,10 +86,18 @@ router.get("/", async (req, res) => {
 // CREATE category (admin only)
 router.post("/", protect, upload.single("image"), async (req, res) => {
   try {
-    const { name, description, details, material } = req.body;
+    const { name, description, details, material, pinFirst } = req.body;
 
     // Cloudinary image URL
     const image = req.file ? req.file.path : "";
+
+    // Default: sabse last. pinFirst ho to sabse pehle.
+    let order = await Category.countDocuments();
+
+    if (pinFirst === "true") {
+      await Category.updateMany({}, { $inc: { order: 1 } });
+      order = 0;
+    }
 
     const category = new Category({
       name,
@@ -51,6 +105,7 @@ router.post("/", protect, upload.single("image"), async (req, res) => {
       details: details || "",
       material: material || "",
       image,
+      order,
       ...getPositionFields(req.body),
     });
 
