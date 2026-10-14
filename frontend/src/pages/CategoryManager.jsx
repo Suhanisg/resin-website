@@ -34,9 +34,15 @@ function CategoryManager() {
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // sabse pehle dikhao + drag and drop
+  const [pinFirst, setPinFirst] = useState(false);
+  const [dragId, setDragId] = useState(null);
+  const [overId, setOverId] = useState(null);
+
   const fetchCategories = async () => {
     try {
-      const res = await fetch(`${BASE_URL}${API_PATH}`);
+      // ?all=1 se hidden categories bhi admin ko dikhengi
+      const res = await fetch(`${BASE_URL}${API_PATH}?all=1`);
 
       if (!res.ok) {
         throw new Error("Failed to fetch categories");
@@ -90,6 +96,7 @@ function CategoryManager() {
     setExistingImage("");
     setPos(DEFAULT_POS);
     setPosTouched(false);
+    setPinFirst(false);
     setEditingId(null);
   };
 
@@ -111,6 +118,11 @@ function CategoryManager() {
       formData.append("imageX", String(pos.x));
       formData.append("imageY", String(pos.y));
       formData.append("imageZoom", String(pos.zoom));
+    }
+
+    // sirf nayi category ke liye
+    if (!editingId && pinFirst) {
+      formData.append("pinFirst", "true");
     }
 
     try {
@@ -151,6 +163,7 @@ function CategoryManager() {
       zoom: typeof cat.imageZoom === "number" ? cat.imageZoom : DEFAULT_POS.zoom,
     });
     setPosTouched(false);
+    setPinFirst(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -166,10 +179,81 @@ function CategoryManager() {
         throw new Error("Failed to delete category");
       }
 
+      invalidateCategories();
       fetchCategories();
     } catch (err) {
       alert(err.message);
     }
+  };
+
+  // Show / Hide
+  const handleToggle = async (id) => {
+    try {
+      const res = await adminFetch(`${API_PATH}/${id}/toggle`, {
+        method: "PUT",
+      });
+
+      if (!res.ok) {
+        throw new Error("Show/Hide update nahi hua");
+      }
+
+      invalidateCategories();
+      fetchCategories();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  // Naya order server par save karna (drag aur arrows dono yahi use karte hain)
+  const saveOrder = async (list) => {
+    setCategories(list); // turant screen par dikhao
+
+    try {
+      const res = await adminFetch(`${API_PATH}/reorder`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: list.map((c) => c._id) }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Order save nahi hua");
+      }
+
+      invalidateCategories();
+    } catch (err) {
+      alert(err.message);
+      fetchCategories(); // purana order wapas
+    }
+  };
+
+  // Laptop: drag and drop se order badalna
+  const handleDrop = (targetId) => {
+    const sourceId = dragId;
+    setDragId(null);
+    setOverId(null);
+
+    if (!sourceId || sourceId === targetId) return;
+
+    const list = [...categories];
+    const from = list.findIndex((c) => c._id === sourceId);
+    const to = list.findIndex((c) => c._id === targetId);
+    if (from === -1 || to === -1) return;
+
+    const [moved] = list.splice(from, 1);
+    list.splice(to, 0, moved);
+    saveOrder(list);
+  };
+
+  // Phone + laptop: ▲ ▼ buttons se ek jagah upar / neeche
+  const handleMove = (id, direction) => {
+    const list = [...categories];
+    const from = list.findIndex((c) => c._id === id);
+    const to = from + direction;
+    if (from === -1 || to < 0 || to >= list.length) return;
+
+    const [moved] = list.splice(from, 1);
+    list.splice(to, 0, moved);
+    saveOrder(list);
   };
 
   const origin = `${pos.x}% ${pos.y}%`;
@@ -225,6 +309,19 @@ function CategoryManager() {
             onChange={(e) => setImageFile(e.target.files[0] || null)}
           />
         </label>
+
+        {/* Nayi category ko website par sabse pehle dikhane ke liye */}
+        {!editingId && (
+          <label style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <input
+              type="checkbox"
+              checked={pinFirst}
+              onChange={(e) => setPinFirst(e.target.checked)}
+              style={{ width: "auto" }}
+            />
+            Sabse pehle dikhao (website par first position)
+          </label>
+        )}
 
         {/* Image position: live preview + sliders */}
         {previewUrl && (
@@ -343,9 +440,33 @@ function CategoryManager() {
 
       <h3>Existing Categories ({categories.length})</h3>
 
+      <p style={{ fontSize: 13, opacity: 0.7, marginBottom: 12 }}>
+        Order badalne ke liye laptop par card ko drag karo, ya phone par ▲ ▼
+        buttons dabao. Pehli category website par sabse pehle dikhegi. Hide
+        karne par category website se hat jati hai lekin delete nahi hoti.
+      </p>
+
       <div className="admin-grid">
-        {categories.map((cat) => (
-          <div className="admin-card" key={cat._id}>
+        {categories.map((cat, index) => (
+          <div
+            className={`admin-card draggable-card ${
+              cat.isActive === false ? "is-hidden" : ""
+            } ${dragId === cat._id ? "is-dragging" : ""} ${
+              overId === cat._id && dragId !== cat._id ? "drag-over" : ""
+            }`}
+            key={cat._id}
+            draggable
+            onDragStart={() => setDragId(cat._id)}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setOverId(cat._id);
+            }}
+            onDrop={() => handleDrop(cat._id)}
+            onDragEnd={() => {
+              setDragId(null);
+              setOverId(null);
+            }}
+          >
             {cat.image ? (
               <img src={getImageUrl(cat.image)} alt={cat.name} />
             ) : (
@@ -353,12 +474,42 @@ function CategoryManager() {
             )}
 
             <div className="admin-card-info">
-              <h4>{cat.name}</h4>
+              <h4>
+                <span className="admin-card-num">{index + 1}.</span> {cat.name}
+                {cat.isActive === false && (
+                  <span style={{ fontSize: 12, opacity: 0.7 }}> (Hidden)</span>
+                )}
+              </h4>
 
               <p>{cat.description}</p>
 
+              {/* Phone ke liye: ek jagah upar / neeche */}
+              <div className="admin-card-actions admin-card-order">
+                <button
+                  type="button"
+                  onClick={() => handleMove(cat._id, -1)}
+                  disabled={index === 0}
+                  aria-label="Upar le jao"
+                >
+                  ▲ Upar
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleMove(cat._id, 1)}
+                  disabled={index === categories.length - 1}
+                  aria-label="Neeche le jao"
+                >
+                  ▼ Neeche
+                </button>
+              </div>
+
               <div className="admin-card-actions">
                 <button onClick={() => handleEdit(cat)}>Edit</button>
+
+                <button onClick={() => handleToggle(cat._id)}>
+                  {cat.isActive === false ? "Show" : "Hide"}
+                </button>
 
                 <button
                   className="danger"

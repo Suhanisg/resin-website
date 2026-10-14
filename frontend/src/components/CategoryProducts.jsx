@@ -5,6 +5,7 @@ import LazyImage from "./LazyImage"
 import { API_URL } from "../utils/api"
 import { getImageUrl } from "../utils/imageUrls"
 import "../styles/CategoryProducts.css"
+import "../diwali/DiwaliLine.css"
 import smartphone from "../assets/smartphone.png"
 import { FaWhatsapp } from "react-icons/fa"
 import { ArrowRight } from "lucide-react"
@@ -26,6 +27,9 @@ function CategoryProducts() {
 
   const decodedCategory = decodeURIComponent(categoryName)
   const WHATSAPP_NUMBER = "918077188283"
+
+  // Naam mein "diwali" ho to Diwali design lagega
+  const isDiwaliCategory = decodedCategory.toLowerCase().includes("diwali")
 
   const shareIdeaUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
     `Hi Resin Creations! I have a design idea for ${decodedCategory}. I'd love to share it with you.`
@@ -82,11 +86,10 @@ function CategoryProducts() {
     ? categoryProducts.filter((p) => p.subcategory === activeSub)
     : categoryProducts
 
-  
-    if (loading) return <PageLoader />
+  if (loading) return <PageLoader />
 
   return (
-    <>
+    <div className={isDiwaliCategory ? "diwali-page" : undefined}>
       {/* Back button */}
       <div className="cp-back-bar">
         <button className="cp-back-btn" onClick={() => navigate("/#products")}>
@@ -133,7 +136,7 @@ function CategoryProducts() {
       {/* Products */}
       <section className="cp-products-section" id="products">
         <div className="cp-products-grid">
-          {loading ? null : filteredProducts.length > 0 ? (
+          {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))
@@ -151,45 +154,43 @@ function CategoryProducts() {
         </div>
 
         {/* SHARE YOUR IDEA */}
-        {!loading && (
-          <div className="cp-idea-wrap">
-            <div className="cp-idea">
-              <img
-                src={smartphone}
-                alt=""
-                className="cp-idea-img"
-                loading="lazy"
-                decoding="async"
-              />
+        <div className="cp-idea-wrap">
+          <div className="cp-idea">
+            <img
+              src={smartphone}
+              alt=""
+              className="cp-idea-img"
+              loading="lazy"
+              decoding="async"
+            />
 
-              <div className="cp-idea-line" />
+            <div className="cp-idea-line" />
 
-              <div className="cp-idea-text">
-                <span className="cp-idea-kicker">
-                  Have a different design in mind?
-                </span>
-                <h3 className="cp-idea-title">Share Your Idea With Us</h3>
-                <p className="cp-idea-sub">
-                  Send your design, photo or reference and we'll help you
-                  create a custom resin keepsake just the way you imagine.
-                </p>
-              </div>
-
-              <a
-                href={shareIdeaUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="cp-idea-btn"
-              >
-                <FaWhatsapp size={18} />
-                <span>Share on WhatsApp</span>
-                <ArrowRight size={16} />
-              </a>
+            <div className="cp-idea-text">
+              <span className="cp-idea-kicker">
+                Have a different design in mind?
+              </span>
+              <h3 className="cp-idea-title">Share Your Idea With Us</h3>
+              <p className="cp-idea-sub">
+                Send your design, photo or reference and we'll help you
+                create a custom resin keepsake just the way you imagine.
+              </p>
             </div>
+
+            <a
+              href={shareIdeaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cp-idea-btn"
+            >
+              <FaWhatsapp size={18} />
+              <span>Share on WhatsApp</span>
+              <ArrowRight size={16} />
+            </a>
           </div>
-        )}
+        </div>
       </section>
-    </>
+    </div>
   )
 }
 

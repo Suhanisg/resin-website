@@ -1,0 +1,190 @@
+/* ============ Scrolling strip ============ */
+.diwali-line {
+  background: linear-gradient(90deg, #7d2f43, #8b3a4c 50%, #7d2f43);
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255, 217, 160, 0.35);
+  border-bottom: 1px solid rgba(255, 217, 160, 0.35);
+}
+
+.diwali-line__track {
+  display: flex;
+  width: max-content;
+  /* left se right chalega */
+  animation: diwaliScroll 28s linear infinite;
+}
+
+.diwali-line:hover .diwali-line__track {
+  animation-play-state: paused;
+}
+
+.diwali-line__group {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.diwali-line__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 22px;
+  font-family: Georgia, "Playfair Display", serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: #fff3e0;
+}
+
+.diwali-line__item b {
+  font-weight: 500;
+  color: #ffc98a;
+}
+
+.diwali-line__icon {
+  font-size: 1.1rem;
+}
+
+.dl-heart {
+  color: #ffd76a;
+}
+
+.diwali-line__sep {
+  color: rgba(255, 217, 160, 0.6);
+  margin-left: 22px;
+  font-style: normal;
+}
+
+@keyframes diwaliScroll {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diwali-line__track { animation: none; }
+}
+
+/* Phone par strip thodi chhoti */
+@media (max-width: 600px) {
+  .diwali-line {
+    padding: 9px 0;
+  }
+  .diwali-line__item {
+    font-size: 0.78rem;
+    padding: 0 16px;
+  }
+  .diwali-line__sep {
+    margin-left: 16px;
+  }
+}
+
+/* ============ Diwali background wrapper (Home page) ============ */
+.diwali-bg {
+  position: relative;
+  background-color: #fcf3ef;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Left (lantern) aur right (rangoli) strips */
+.diwali-bg::before,
+.diwali-bg::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 12vw;
+  background-image: url("../assets/DiwaliBg.png");
+  background-repeat: repeat-y;
+  background-size: auto 560px; /* desktop: image ki height */
+  pointer-events: none;
+  z-index: 0;
+}
+
+.diwali-bg::before {
+  left: 0;
+  background-position: left top;
+}
+
+.diwali-bg::after {
+  right: 0;
+  background-position: right top;
+}
+
+/* Content strips ke upar rahe */
+.diwali-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* AllProducts ka apna background hata do taaki Diwali bg dikhe */
+.diwali-bg > *,
+.diwali-bg > * > * {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .diwali-bg::before,
+  .diwali-bg::after {
+    width: 14vw;
+    background-size: auto 420px;
+  }
+}
+
+/* Phone */
+@media (max-width: 600px) {
+  .diwali-bg::before,
+  .diwali-bg::after {
+    width: 54px;
+    background-size: auto 240px;
+  }
+}
+
+/* ============ Diwali category PAGE: top par toran banner ============ */
+.diwali-page {
+  position: relative;
+  background-color: #fffaf3;
+  --toran-h: clamp(110px, 17vw, 260px); /* banner ki height, ek hi jagah se control */
+  /* NOTE: yahan isolation / z-index / overflow mat lagana,
+     warna product popup navbar ke neeche chala jata hai */
+}
+
+/* Poori width ka toran, sirf top par ek baar */
+.diwali-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--toran-h);
+  background-image: url("../assets/DiwaliProduct.png");
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: center top;
+  pointer-events: none;
+}
+
+.diwali-page::after {
+  content: none;
+}
+
+/* z-index NAHI: sirf position, taaki content toran ke upar rahe
+   par popup ki alag layer na bane */
+.diwali-page .cp-back-bar,
+.diwali-page .cp-sub-wrap,
+.diwali-page .cp-products-section {
+  position: relative;
+  background: transparent;
+}
+
+/* Back button banner ki height ke neeche shuru ho */
+.diwali-page .cp-back-bar {
+  padding-top: calc(var(--toran-h) + 8px);
+}
+
+@media (max-width: 600px) {
+  .diwali-page {
+    --toran-h: 100px;
+  }
+}

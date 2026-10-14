@@ -42,6 +42,12 @@ function ProductManager() {
   const [loading, setLoading] = useState(false)
   const fileInputRef = useRef(null)
 
+  // Order: sabse pehle dikhao + category filter + drag and drop
+  const [pinFirst, setPinFirst] = useState(false)
+  const [filterCat, setFilterCat] = useState("")
+  const [dragId, setDragId] = useState(null)
+  const [overId, setOverId] = useState(null)
+
   // Manual crop tool
   const [sourceImg, setSourceImg] = useState(null)
   const [zoom, setZoom] = useState(1)
@@ -74,7 +80,8 @@ function ProductManager() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch(CATEGORIES_URL)
+      // ?all=1 se hidden categories bhi dropdown mein aayengi
+      const res = await fetch(`${CATEGORIES_URL}?all=1`)
 
       if (!res.ok) {
         throw new Error("Failed to fetch categories")
@@ -126,6 +133,7 @@ function ProductManager() {
     setPan({ x: 0, y: 0 })
     setCroppedFiles([])
     setCroppedPreviews([])
+    setPinFirst(false)
     setEditingId(null)
 
     if (fileInputRef.current) {
@@ -354,6 +362,11 @@ function ProductManager() {
       formData.append("images", file)
     })
 
+    // sirf naye product ke liye
+    if (!editingId && pinFirst) {
+      formData.append("pinFirst", "true")
+    }
+
     try {
       const path = editingId
         ? `${PRODUCTS_PATH}/${editingId}`
@@ -399,6 +412,8 @@ function ProductManager() {
     setSourceImg(null)
     setCroppedFiles([])
     setCroppedPreviews([])
+    setPinFirst(false)
+    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   const handleDelete = async (id) => {
@@ -422,6 +437,75 @@ function ProductManager() {
     } catch (err) {
       alert(err.message)
     }
+  }
+
+  // ===== Order badalna (drag + arrows) =====
+  // Jo products abhi screen par dikh rahe hain, order ke hisaab se sorted
+  const visibleProducts = (
+    filterCat ? products.filter((p) => p.category === filterCat) : products
+  )
+    .slice()
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+
+  const canReorder = Boolean(filterCat)
+
+  // Naya order server par save karna
+  const saveOrder = async (list) => {
+    const orderMap = new Map(list.map((p, idx) => [p._id, idx]))
+
+    // screen par turant dikhao: in products ka order naye index se set karo
+    setProducts((prev) =>
+      prev.map((p) =>
+        orderMap.has(p._id) ? { ...p, order: orderMap.get(p._id) } : p
+      )
+    )
+
+    try {
+      const res = await adminFetch(`${PRODUCTS_PATH}/reorder`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: list.map((p) => p._id) }),
+      })
+
+      if (!res.ok) {
+        throw new Error("Order save nahi hua")
+      }
+    } catch (err) {
+      alert(err.message)
+      fetchProducts() // purana order wapas
+    }
+  }
+
+  // Laptop: drag and drop
+  const handleDrop = (targetId) => {
+    const sourceId = dragId
+    setDragId(null)
+    setOverId(null)
+
+    if (!canReorder || !sourceId || sourceId === targetId) return
+
+    const list = [...visibleProducts]
+    const from = list.findIndex((p) => p._id === sourceId)
+    const to = list.findIndex((p) => p._id === targetId)
+    if (from === -1 || to === -1) return
+
+    const [moved] = list.splice(from, 1)
+    list.splice(to, 0, moved)
+    saveOrder(list)
+  }
+
+  // Phone + laptop: ▲ ▼ buttons
+  const handleMove = (id, direction) => {
+    if (!canReorder) return
+
+    const list = [...visibleProducts]
+    const from = list.findIndex((p) => p._id === id)
+    const to = from + direction
+    if (from === -1 || to < 0 || to >= list.length) return
+
+    const [moved] = list.splice(from, 1)
+    list.splice(to, 0, moved)
+    saveOrder(list)
   }
 
   return (
@@ -504,30 +588,6 @@ function ProductManager() {
           </label>
         )}
 
-        {/* <label>
-          Short Tagline
-
-          <input
-            placeholder="e.g. Your special day, preserved forever"
-            value={tagline}
-            onChange={(e) =>
-              setTagline(e.target.value)
-            }
-          />
-        </label>
-
-        <label>
-          Description
-
-          <textarea
-            value={description}
-            onChange={(e) =>
-              setDescription(e.target.value)
-            }
-            rows={2}
-          />
-        </label> */}
-
         <label>
           Product Details
 
@@ -547,42 +607,6 @@ function ProductManager() {
             rows={2}
           />
         </label>
-
-        {/* <label>
-          Processing Time
-
-          <textarea
-            value={processingTime}
-            onChange={(e) =>
-              setProcessingTime(e.target.value)
-            }
-            rows={2}
-          />
-        </label> */}
-
-        {/* <label>
-          Care Instructions
-
-          <textarea
-            value={careInstructions}
-            onChange={(e) =>
-              setCareInstructions(e.target.value)
-            }
-            rows={2}
-          />
-        </label> */}
-
-        {/* <label>
-          Shipping Information
-
-          <textarea
-            value={shippingInfo}
-            onChange={(e) =>
-              setShippingInfo(e.target.value)
-            }
-            rows={2}
-          />
-        </label> */}
 
         <label>
           Size
@@ -606,6 +630,18 @@ function ProductManager() {
             onChange={handleImageSelect}
           />
         </label>
+
+        {/* Naya product category mein sabse pehle dikhane ke liye */}
+        {!editingId && (
+          <label style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+            <input
+              type="checkbox"
+              checked={pinFirst}
+              onChange={(e) => setPinFirst(e.target.checked)}
+            />
+            Sabse pehle dikhao (is category mein first position)
+          </label>
+        )}
 
         {/* Manual Crop Tool */}
         {sourceImg &&
@@ -736,14 +772,54 @@ function ProductManager() {
       </form>
 
       <h3>
-        Existing Products ({products.length})
+        Existing Products ({visibleProducts.length})
       </h3>
 
+      {/* Category filter: order badalne ke liye pehle category chuno */}
+      <div className="admin-form" style={{ maxWidth: 600, padding: "1rem", marginBottom: "1rem" }}>
+        <label>
+          Category dikhao
+          <select
+            value={filterCat}
+            onChange={(e) => setFilterCat(e.target.value)}
+          >
+            <option value="">-- Saari categories --</option>
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat.name}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <p style={{ fontSize: 13, opacity: 0.7, marginBottom: 12 }}>
+        {canReorder
+          ? "Order badalne ke liye laptop par card ko drag karo, ya phone par ▲ ▼ buttons dabao. Pehla product website par sabse pehle dikhega."
+          : "Products ka order badalne ke liye upar se pehle ek category chuno."}
+      </p>
+
       <div className="admin-grid">
-        {products.map((p) => (
+        {visibleProducts.map((p, index) => (
           <div
-            className="admin-card"
+            className={`admin-card ${canReorder ? "draggable-card" : ""} ${
+              dragId === p._id ? "is-dragging" : ""
+            } ${
+              overId === p._id && dragId !== p._id ? "drag-over" : ""
+            }`}
             key={p._id}
+            draggable={canReorder}
+            onDragStart={() => canReorder && setDragId(p._id)}
+            onDragOver={(e) => {
+              if (!canReorder) return
+              e.preventDefault()
+              setOverId(p._id)
+            }}
+            onDrop={() => handleDrop(p._id)}
+            onDragEnd={() => {
+              setDragId(null)
+              setOverId(null)
+            }}
           >
             {p.image ? (
               <img
@@ -755,7 +831,12 @@ function ProductManager() {
             )}
 
             <div className="admin-card-info">
-              <h4>{p.name}</h4>
+              <h4>
+                {canReorder && (
+                  <span className="admin-card-num">{index + 1}. </span>
+                )}
+                {p.name}
+              </h4>
 
               <p className="admin-card-meta">
                 {p.category}
@@ -769,6 +850,29 @@ function ProductManager() {
                     ).name
                   }`}
               </p>
+
+              {/* Phone ke liye: ek jagah upar / neeche */}
+              {canReorder && (
+                <div className="admin-card-actions admin-card-order">
+                  <button
+                    type="button"
+                    onClick={() => handleMove(p._id, -1)}
+                    disabled={index === 0}
+                    aria-label="Upar le jao"
+                  >
+                    ▲ Upar
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleMove(p._id, 1)}
+                    disabled={index === visibleProducts.length - 1}
+                    aria-label="Neeche le jao"
+                  >
+                    ▼ Neeche
+                  </button>
+                </div>
+              )}
 
               <div className="admin-card-actions">
                 <button
