@@ -55,7 +55,7 @@ function Reviews() {
     setShowToast(true)
     setTimeout(() => {
       setShowToast(false)
-    }, type === 'error' || type === 'limit' ? 3500 : 5000)
+    }, type === 'error' || type === 'limit' ? 3500 : 7000)
   }
 
   const handleSubmit = async (e) => {
@@ -78,6 +78,7 @@ function Reviews() {
     setSubmitting(true)
 
     try {
+      // review ab "pending" status se save hota hai, admin approve karega tab dikhega
       await addReview(formData)
 
       setForm({ name: '', review: '' })
@@ -236,7 +237,7 @@ function Reviews() {
               ? `You can upload up to ${MAX_PHOTOS} photos only.`
               : toastType === 'fail'
                 ? "Couldn't submit your review. Please try again."
-                : 'Review submitted! Thank you for sharing.'}
+                : 'Thank you! Your review has been submitted and will appear once approved by admin. 💖'}
         </div>
       )}
     </>

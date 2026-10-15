@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
 import Layout from './components/Layout'
 import ProtectedAdminRoute from './components/ProtectedAdminRoute'
 import { AdminAuthProvider } from './context/AdminAuthContext'
@@ -8,6 +9,7 @@ import ScrollToTop from './components/ScrollToTop'
 import { ReviewsProvider } from './context/ReviewsContext'
 import Home from './components/Home'
 import PageLoader from './components/PageLoader'
+
 
 // Ye pages tabhi download honge jab user inhe khole
 const CategoryProducts = lazy(() => import('./components/CategoryProducts'))
@@ -26,6 +28,7 @@ function App() {
         <ReviewsProvider>
           <BrowserRouter>
             <ScrollToTop />
+            <Toaster position="top-center" />
             <Suspense fallback={<PageLoader />}>
               <Routes>
                 <Route path="/" element={<Home />} />

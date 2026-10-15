@@ -7,7 +7,6 @@ import {
   FaWhatsapp,
   FaMapMarkerAlt,
   FaEnvelope,
-  FaPhoneAlt,
   FaChevronRight,
 } from "react-icons/fa";
 import { GiFlowerPot } from "react-icons/gi";
@@ -20,6 +19,16 @@ import { API_URL } from "../utils/api"
 // Live backend URL
 const CATEGORIES_URL =
   `${API_URL}/api/categories`;
+
+// Contact links (number / email screen par nahi dikhte, sirf click par khulte hain)
+const CONTACT_EMAIL = "Pankhugoyal710@gmail.com";
+const CONTACT_WHATSAPP = "918077188283";
+
+const MAIL_HREF =
+  `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Enquiry - Mandala Collections")}`;
+
+const WHATSAPP_HREF =
+  `https://wa.me/${CONTACT_WHATSAPP}?text=${encodeURIComponent("Hi! I'd like to know more about your resin creations.")}`;
 
 function Footer() {
   const [categories, setCategories] = useState([]);
@@ -95,7 +104,7 @@ function Footer() {
             </a>
 
             <a
-              href="https://wa.me/918077188283"
+              href={`https://wa.me/${CONTACT_WHATSAPP}`}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="WhatsApp"
@@ -200,6 +209,7 @@ function Footer() {
             <p>Aligarh, Uttar Pradesh</p>
           </div>
 
+          {/* Email: address chhupa hai, click par mail app khulta hai */}
           <div className="contact-row">
             <FaEnvelope
               size={14}
@@ -207,24 +217,29 @@ function Footer() {
             />
 
             <a
-              href="mailto:Pankhugoyal710@gmail.com"
+              href={MAIL_HREF}
               className="contact-link"
+              aria-label="Send us an email enquiry"
             >
-              Pankhugoyal710@gmail.com
+              Email — Send us an enquiry
             </a>
           </div>
 
+          {/* WhatsApp: number chhupa hai, click par seedha WhatsApp chat khulta hai */}
           <div className="contact-row">
-            <FaPhoneAlt
+            <FaWhatsapp
               size={14}
               className="contact-icon"
             />
 
             <a
-              href="tel:+918077188283"
+              href={WHATSAPP_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
               className="contact-link"
+              aria-label="Chat with us on WhatsApp about your order"
             >
-              +91 80771 88283
+              WhatsApp — Chat with us about your order
             </a>
           </div>
 
