@@ -1,0 +1,50 @@
+.wsd {
+  position: absolute;
+  top: -4px;
+  width: 190px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* right side: image jaisi hai waisi */
+.wsd--right {
+  right: 0;
+}
+
+/* left side: mirror, taaki upar-left corner se latke */
+.wsd--left {
+  left: 0;
+  transform: scaleX(-1);
+}
+
+.wsd__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* jahan se garland tangi hai (top-right corner) wahi se jhoolegi */
+  transform-origin: 92% 0;
+  animation: wsd-sway 6s ease-in-out infinite;
+  filter: drop-shadow(0 8px 10px rgba(90, 18, 38, 0.28));
+  user-select: none;
+}
+
+.wsd--right .wsd__img {
+  animation-delay: 1.5s;
+}
+
+@keyframes wsd-sway {
+  0%, 100% { transform: rotate(-1.2deg); }
+  50%      { transform: rotate(1.2deg); }
+}
+
+@media (max-width: 1200px) {
+  .wsd { width: 140px; }
+}
+
+@media (max-width: 900px) {
+  .wsd { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wsd__img { animation: none; }
+}

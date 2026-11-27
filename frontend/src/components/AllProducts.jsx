@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import "../styles/AllProducts.css"
 import { API_URL } from "../utils/api";
 import { getImageUrl } from "../utils/imageUrls";
+import WeddingSideDecor from "./WeddingSideDecor"
 
 const CATEGORIES_URL = `${API_URL}/api/categories`;
 
@@ -186,6 +187,7 @@ function AllProducts() {
         </defs>
       </svg>
       <div className="ap-card-wrapper">
+         <WeddingSideDecor />
         <div className="ap-header">
           <div className="ap-eyebrow-row">
             <span className="ap-line" />

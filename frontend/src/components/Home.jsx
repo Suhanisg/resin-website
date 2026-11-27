@@ -8,11 +8,13 @@ import DiwaliLine from "../diwali/DiwaliLine"
 import "../diwali/DiwaliLine.css"
 import AllProducts from "../components/AllProducts"
 import FloralPage from "../components/floralPage"
+import WeddingHero from "../components/WeddingHero"
 import Footer from "../components/Footer"
 import ReviewSection from "../components/ReviewSection"
 import FaqSection from "../components/FaqSection"
 
-const isDiwali = true // Diwali ke baad false kar dena
+const isDiwali = false // Diwali ke baad false kar dena
+const isWedding = true // wedding season ke baad false kar dena
 
 function Home() {
   const location = useLocation()
@@ -60,7 +62,7 @@ function Home() {
           </>
         ) : (
           <>
-            <Hero />
+            {isWedding ? <WeddingHero /> : <Hero />}
             <AllProducts />
           </>
         )}
